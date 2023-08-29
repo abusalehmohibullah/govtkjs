@@ -24,6 +24,11 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/login-options', function () {
+    return Inertia::render('LoginOptions');
+})->name('loginOptions');
+
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
