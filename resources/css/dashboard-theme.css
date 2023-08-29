@@ -162,6 +162,20 @@ hr {
     opacity: .25
 }
 
+::-webkit-scrollbar {
+    background: rgba(59, 125, 221, .1);
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #a8c5f0;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #8eb7f5;
+}
+
 .h1,
 .h2,
 .h3,
@@ -33662,9 +33676,7 @@ text {
 
 .simplebar-content-wrapper::-webkit-scrollbar,
 .simplebar-hide-scrollbar::-webkit-scrollbar {
-    display: none;
-    height: 0;
-    width: 0
+    width: 7px !important;
 }
 
 .simplebar-content:after,

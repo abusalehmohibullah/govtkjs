@@ -41,10 +41,10 @@ const logout = () => {
 
             <div class="wrapper">
 
-                <aside>
+          
                     <Sidebar :isCollapsed="isCollapsed" />
 
-                </aside>
+           
                 <div class="main">
 
                     <Topbar  :isCollapsed="isCollapsed" @toggleSidebar="toggleSidebar" />
