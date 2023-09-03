@@ -54,7 +54,9 @@ const logout = () => {
             <div class="offcanvas-body">
                 <!-- Replace Bootstrap classes with Tailwind CSS classes -->
                 <ul class="flex flex-col items-end space-y-2 pr-3">
-                    <!-- Add your navigation links here -->
+                    <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                                    Dashboard
+                                </NavLink>
                 </ul>
             </div>
         </div>
