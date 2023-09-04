@@ -1,14 +1,67 @@
 <script setup>
 import GeneralLayout from '@/Layouts/GeneralLayout.vue';
+import Slider from '@/Components/General/Slider.vue';
+import About from '@/Components/General/About.vue';
 </script>
 
 <template>
-    <GeneralLayout title="Dashboard">
-        <template>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Dashsssboard
-            </h2>
-        </template>
+    <GeneralLayout>
+
+        <Slider />
+
+        <div class="container flex">
+            <div class="w-2/3">
+                <About />
+
+                <div class="container flex gap-5">
+                    <div class="w-1/2">
+                        <div class="card m-0">
+                            <div class="card-body">
+                                <h5 class="card-title">Card title</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-1/2">
+                        <div class="card m-0">
+                            <div class="card-body">
+                                <h5 class="card-title">Card title</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="w-1/3">
+                <div class="notice-box shadow-sm bg-white px-3 py-2 h-100">
+                    <div class="d-flex jusify-content-center align-items-center">
+                        <h3 class="alert-heading deep-color mt-2 large-text">MDCH News</h3>
+                        <div class="ms-auto"><a href="https://mdch.edu.bd/education/news">See All</a></div>
+                    </div>
+                    <hr>
+                    <div class="notices">
+                        <ul>
+                                                        <li class="animate-on-scroll animate__animated animate__fadeInDown" data-animation="fadeInDown" style="animation-delay: 0s;">
+                                <a href="https://mdch.edu.bd/education/news/2022-2023-sikshabrshe-dental-klej-oo-medikel-klej-dental-iunitsmuuhe-bidies-korse-vrti-bijngpti" class="hover-deep text-reset text-decoration-none text-nowrap">
+                                    <div class="text-truncate mini-text">
+                                        ২০২২-২০২৩ শিক্ষাবর্ষে ডেন্টাল কলেজ ও মেডিকেল কলেজ ডেন্টাল ইউনিটসমূহে বিডিএস কোর্সে ভর্তি বিজ্ঞপ্তি:
+                                    </div>
+                                    <div class="text-end mb-2 text-muted"><small>25 July, 2023</small></div>
+                                </a>
+                            </li>
+                                                        <li class="animate-on-scroll animate__animated animate__fadeInDown" data-animation="fadeInDown" style="animation-delay: 0s;">
+                                <a href="https://mdch.edu.bd/education/news/2022-2023-sikshabrshe-dental-klej-oo-medikel-klej-dental-iunitsmuuhe-bidies-korse-vrti-bijngpti-oo-smuuh-tarikh" class="hover-deep text-reset text-decoration-none text-nowrap">
+                                    <div class="text-truncate mini-text">
+                                        ২০২২-২০২৩ শিক্ষাবর্ষে ডেন্টাল কলেজ ও মেডিকেল কলেজ ডেন্টাল ইউনিটসমূহে বিডিএস কোর্সে ভর্তি বিজ্ঞপ্তি ও সমূহ তারিখ
+                                    </div>
+                                    <div class="text-end mb-2 text-muted"><small>25 July, 2023</small></div>
+                                </a>
+                            </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
     </GeneralLayout>
 </template>

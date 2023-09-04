@@ -10,6 +10,7 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 
 import Topbar from '@/Components/General/Topbar.vue';
 
+
 defineProps({
     title: String,
 });
