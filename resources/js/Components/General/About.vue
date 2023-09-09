@@ -38,6 +38,7 @@ const logout = () => {
 
 
 <template>
+    <h1>Welcome to our school</h1>
     <div class="text-lg">
         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Non aliquam incidunt nesciunt sit
         inventore amet, officia tenetur accusantium quibusdam recusandae voluptas voluptate eveniet ratione

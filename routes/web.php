@@ -38,3 +38,36 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+
+
+// Route::get('/run-migrations', function () {
+//     try {
+//         \Artisan::call('migrate');
+//         return 'Migrations successfully executed.';
+//     } catch (\Exception $e) {
+//         return 'Error running migrations: ' . $e->getMessage();
+//     }
+// });
+
+// Route::get('/clear-cache', function () {
+//     try {
+//         \Artisan::call('cache:clear');
+//         return 'Cache cleared successfully.';
+//     } catch (\Exception $e) {
+//         return 'Error clearing cache: ' . $e->getMessage();
+//     }
+// });
+
+// Route::get('/clear-cache-and-seed', function () {
+//     try {
+//         // Clear cache
+//         \Artisan::call('cache:clear');
+
+//         // Run database seed(s)
+//         \Artisan::call('db:seed'); // Replace with specific seed command if needed
+
+//         return 'Cache cleared and seeds executed successfully.';
+//     } catch (\Exception $e) {
+//         return 'Error: ' . $e->getMessage();
+//     }
+// });

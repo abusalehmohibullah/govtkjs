@@ -38,20 +38,24 @@ const logout = () => {
 
 
 <template>
-    <div class="container relative p-0">
+    <div class="relative p-0">
         <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img src="https://th.bing.com/th/id/R.edbe374164ba72dc1ee43e17832ea835?rik=Lioc2fSX%2bat1%2fA&pid=ImgRaw&r=0"
-                        class="d-block w-100" alt="...">
+                    <img src="https://th.bing.com/th/id/R.d9b13865b20fcd868bc85359a85ec5a4?rik=joI6nep0Y9Ik8A&riu=http%3a%2f%2fwww.officialgazette.gov.ph%2fimages%2fuploads%2fFeaturedImage_school_150818_1056.jpg&ehk=3GnbUiem4aNIPEBFO97fK%2bnERIAjvFvvkY8B5d7ZFlo%3d&risl=&pid=ImgRaw&r=0"
+                        class="d-block w-full aspect-video" alt="...">
                 </div>
                 <div class="carousel-item">
-                    <img src="https://th.bing.com/th/id/R.edbe374164ba72dc1ee43e17832ea835?rik=Lioc2fSX%2bat1%2fA&pid=ImgRaw&r=0"
-                        class="d-block w-100" alt="...">
+                    <img src="https://th.bing.com/th/id/OIP.Lo8ULbsLNs3OlUJsMv4FhgHaDf?pid=ImgDet&rs=1"
+                        class="d-block w-full aspect-video" alt="...">
                 </div>
                 <div class="carousel-item">
-                    <img src="https://th.bing.com/th/id/R.edbe374164ba72dc1ee43e17832ea835?rik=Lioc2fSX%2bat1%2fA&pid=ImgRaw&r=0"
-                        class="d-block w-100" alt="...">
+                    <img src="https://th.bing.com/th/id/OIP._6Xvi4vwg4VfZi-keJRw0AHaEK?pid=ImgDet&rs=1"
+                        class="d-block w-full aspect-video" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://cdn-ds.com/media/sz_860878/3285/gp-about.jpg"
+                        class="d-block w-full aspect-video" alt="...">
                 </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"

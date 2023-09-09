@@ -7,8 +7,10 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import Sidebar from '@/Components/Sidebar.vue';
-import Topbar from '@/Components/Topbar.vue';
+import Sidebar from '@/Components/Shared/Sidebar.vue';
+import Topbar from '@/Components/Shared/Topbar.vue';
+import Footer from '@/Components/Shared/Footer.vue';
+
 
 defineProps({
     title: String,
@@ -38,77 +40,49 @@ const logout = () => {
 
         <div class="bg-gray-100">
 
-
             <div class="wrapper">
+                <nav id="sidebar" class="sidebar js-sidebar" :class="{ 'collapsed': isCollapsed }">
+                    <Sidebar />
+                </nav>
 
-          
-                    <Sidebar :isCollapsed="isCollapsed" />
-
-           
                 <div class="main">
+                    <nav class="navbar navbar-expand navbar-light navbar-bg">
+                        <button class="ml-4 p-3" @click="toggleSidebar">
 
-                    <Topbar  :isCollapsed="isCollapsed" @toggleSidebar="toggleSidebar" />
-                    <!-- Page Heading -->
-
+                            <div class="flex justify-center items-center">
+                                <i class="hamburger align-self-center"></i>
+                            </div>
+                            
+                        </button>
+                        <Topbar />
+                    </nav>
 
 
 
                     <!-- Page Content -->
-
                     <main class="content">
-
                         <slot />
                     </main>
 
-                    <footer class="footer">
-                        <div class="container-fluid">
-                            <div class="row text-muted">
-                                <div class="col-6 text-start">
-                                    <p class="mb-0">
-                                        <a href="https://adminkit.io/" target="_blank"
-                                            class="text-muted"><strong>AdminKit</strong></a> &copy;
-                                    </p>
-                                </div>
-                                <div class="col-6 text-end">
-                                    <ul class="list-inline">
-                                        <li class="list-inline-item">
-                                            <a class="text-muted" href="#">Support</a>
-                                        </li>
-                                        <li class="list-inline-item">
-                                            <a class="text-muted" href="#">Help Center</a>
-                                        </li>
-                                        <li class="list-inline-item">
-                                            <a class="text-muted" href="#">Privacy</a>
-                                        </li>
-                                        <li class="list-inline-item">
-                                            <a class="text-muted" href="#">Terms</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </footer>
+                    <Footer />
 
                 </div>
             </div>
-
-
         </div>
     </div>
 </template>
 
-
 <script>
 export default {
-  data() {
-    return {
-      isCollapsed: false, // Initially, the sidebar is not collapsed
-    };
-  },
-  methods: {
-    toggleSidebar() {
-      this.isCollapsed = !this.isCollapsed;
+    data() {
+        return {
+            isCollapsed: false, // Initially, the sidebar is not collapsed
+        };
     },
-  },
+    methods: {
+        toggleSidebar() {
+            this.isCollapsed = !this.isCollapsed;
+        },
+    },
 };
 </script>
