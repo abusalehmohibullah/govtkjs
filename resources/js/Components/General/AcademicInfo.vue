@@ -1,5 +1,5 @@
 <template>
-    <div class="grid gap-4 grid-cols-4 grid-rows-1 mt-5">
+    <div class="grid gap-1 grid-cols-2 grid-rows-2 sm:gap-4 sm:grid-cols-4 sm:grid-rows-1 mt-5">
                 <div class="card m-0">
                     <div class="card-body">
                         <h5 class="card-title text-center">Class Routine</h5>

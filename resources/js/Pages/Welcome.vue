@@ -20,15 +20,15 @@ import Contact from '@/Components/General/Contact.vue';
             <Slider />
             <QuickAccess />
 
-            <div class="flex gap-5 mb-5">
-                <div class="w-2/3">
+            <div class="sm:flex gap-5 mb-5">
+                <div class="sm:w-2/3">
                     <About />
                     <Compliance />
 
 
 
                 </div>
-                <div class="w-1/3">
+                <div class="sm:w-1/3">
                     <Notice />
                 </div>
             </div>

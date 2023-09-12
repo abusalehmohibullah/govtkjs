@@ -11,9 +11,9 @@
                     <div class="col-8 col-lg-8">
 
                         <div class="h5 mt-3">Contact</div>
-                        <div><small><strong>Address: </strong>{!! nl2br(e(config('informations.address'))) !!}</small></div>
-                        <div><small><strong>Cell: </strong> </small></div>
-                        <div><small><strong>Hours: </strong> 09:00 - 14:30, Sat - Thu</small></div>
+                        <div><small><strong>Address: </strong>Rajoir, Madaripur</small></div>
+                        <div><small><strong>Cell: </strong>01716682779</small></div>
+                        <div><small><strong>Hours: </strong> 10:00 AM - 4.00 PM, Sat - Thu</small></div>
 
                         <div class="follow">
                             <div class="h5 mt-3">Follow Us</div>
@@ -34,7 +34,7 @@
 
                     <div class="col-4 col-lg-4">
                         <div class="h5 mt-3">About</div>
-                        <div class="d-flex flex-column gap-2">
+                        <div class="flex flex-col gap-2">
                             <a class="footer-link text-reset text-decoration-none"
                                 href="/education/about/about"><small>About
                                     Us</small></a>
@@ -59,7 +59,7 @@
                     </div>
                 </div>
                 <div class="text-center medium-text mt-3">
-                    © Mandy Dental College and Hospital.
+                    © Govt. Rajoir Gopalganj K.J.S Pilot Model Institution & College.
                 </div>
                 <div class="text-center mini-text mt-1">
                     <small>

@@ -4,7 +4,7 @@
 
 <div class="shadow-sm bg-white pt-2">
     <div class="h3 p-2 deep-color large-text">Student's Life</div>
-    <div class="grid grid-cols-4 grid-rows-1 gap-4 parent-container">
+    <div class="grid grid-cols-3 grid-rows-1 gap-2 sm:grid-cols-4 sm:grid-rows-1 sm:gap-4 parent-container">
 
         <div id="album-container" class="child-container mb-2 animate-on-scroll" data-animation="fadeInUp"
             onclick="openAlbum(<?php echo $id ?>)">

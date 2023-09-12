@@ -1,5 +1,5 @@
 <template>
-    <div class="grid gap-10 grid-cols-3 grid-rows-1 my-5">
+    <div class="grid gap-4 grid-cols-1 grid-rows-3 sm:gap-10 sm:grid-cols-3 sm:grid-rows-1 my-5">
 
     <div class="card m-0">
         <div class="card-body bg-gradient-to-r from-cyan-300 to-blue-300">

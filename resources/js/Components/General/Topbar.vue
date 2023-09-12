@@ -43,28 +43,28 @@ const logout = () => {
             <div class="flex w-full gap-4 content-center">
                 <!-- Logo -->
                 <div class="shrink-0 flex justify-center content-center items-center">
-                        <Link :href="route('dashboard')" class="w-24 h-24">
+                        <Link :href="route('dashboard')" class="w-16 h-16 sm:w-24 sm:h-24">
                         <ApplicationLogo class="block" />
                         </Link>
                 </div>
 
                 <div class="flex flex-col justify-center content-center">
-                    <div class="text-[42px] font-bold text-gray-700">
-                        Govt. Rajoir Gopalganj K.J.S. Pilot Institution & College
+                    <div class="text-xl sm:text-[45px] sm:leading-10 font-medium text-gray-700 font-['Oswald']">
+                        Govt. Rajoir Gopalganj K.J.S. Pilot Model Institution & College
                     </div>
-                    <div class="text-xl font-bold">
+                    <div class="text-sm sm:text-xl sm:leading-10 font-bold mt-2">
                         Established: 1929 | EIIN No: 110791 | School Code: 5553 | College Code: 5630
                     </div>
                 </div>
             </div>
-            <button class="navbar-toggler lg:hidden" type="button" data-bs-toggle="offcanvas"
+            <button class="navbar-toggler lg:hidden m-4" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
                 <span><i class="fa-solid fa-bars text-xl"></i></span>
             </button>
         </div>
     </nav>
 
-    <nav class="navbar bg-sky-200 border-b border-gray-100 navbar-expand-lg p-0">
+    <nav class="navbar bg-sky-200 border-b border-gray-100 navbar-expand-lg p-0 hidden sm:block">
         <div class="container mx-auto max-w-screen-xl">
 
             <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">

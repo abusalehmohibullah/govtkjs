@@ -34,10 +34,41 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+
+    // Dashboard
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
+    // Basic Information
+    Route::prefix('basic-info')->group(function () {
+
+        // List Basic Information
+        Route::get('/', function () {
+            return Inertia::render('Admin/BasicInfo');
+        })->name('basic-info.index');
+
+        // Create Basic Information
+        Route::get('/create', function () {
+            return Inertia::render('Admin/BasicInfoCreate');
+        })->name('basic-info.create');
+
+        // Store Basic Information (form submission)
+        Route::post('/', 'BasicInfoController@store')->name('basic-info.store');
+
+        // Edit Basic Information
+        Route::get('/{basicInfo}/edit', function ($basicInfo) {
+            return Inertia::render('Admin/BasicInfoEdit', compact('basicInfo'));
+        })->name('basic-info.edit');
+
+        // Update Basic Information (form submission)
+        Route::put('/{basicInfo}', 'BasicInfoController@update')->name('basic-info.update');
+
+        // Delete Basic Information (form submission or confirmation)
+        Route::delete('/{basicInfo}', 'BasicInfoController@destroy')->name('basic-info.destroy');
+    });
 });
+
 
 
 // Route::get('/run-migrations', function () {
