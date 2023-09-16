@@ -4,6 +4,9 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+use App\Http\Controllers\Admin\BasicInfoController;
+use App\Http\Controllers\Admin\NoticeController;
+use App\Http\Controllers\Admin\FaqController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -43,30 +46,22 @@ Route::middleware([
     // Basic Information
     Route::prefix('basic-info')->group(function () {
 
-        // List Basic Information
-        Route::get('/', function () {
-            return Inertia::render('Admin/BasicInfo');
-        })->name('basic-info.index');
-
-        // Create Basic Information
-        Route::get('/create', function () {
-            return Inertia::render('Admin/BasicInfoCreate');
-        })->name('basic-info.create');
-
         // Store Basic Information (form submission)
-        Route::post('/', 'BasicInfoController@store')->name('basic-info.store');
+        Route::get('/', [BasicInfoController::class, 'show'])->name('admin.basic-info.show');
 
-        // Edit Basic Information
-        Route::get('/{basicInfo}/edit', function ($basicInfo) {
-            return Inertia::render('Admin/BasicInfoEdit', compact('basicInfo'));
-        })->name('basic-info.edit');
+        // Route::post('/', [BasicInfoController::class, 'store'])->name('basic-info.store');
 
         // Update Basic Information (form submission)
-        Route::put('/{basicInfo}', 'BasicInfoController@update')->name('basic-info.update');
+        Route::put('/', [BasicInfoController::class, 'update'])->name('admin.basic-info.update');
 
-        // Delete Basic Information (form submission or confirmation)
-        Route::delete('/{basicInfo}', 'BasicInfoController@destroy')->name('basic-info.destroy');
     });
+
+    Route::resource('notices', NoticeController::class, [
+        'names' => 'admin.notices',
+    ]);
+    Route::resource('faqs', FaqController::class, [
+        'names' => 'admin.faqs',
+    ]);
 });
 
 

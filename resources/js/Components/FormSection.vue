@@ -4,6 +4,10 @@ import SectionTitle from './SectionTitle.vue';
 
 defineEmits(['submitted']);
 
+defineProps({
+  enctype: String, // Define the enctype prop
+});
+
 const hasActions = computed(() => !! useSlots().actions);
 </script>
 
@@ -19,12 +23,13 @@ const hasActions = computed(() => !! useSlots().actions);
         </SectionTitle>
 
         <div class="mt-5 md:mt-0 md:col-span-2">
-            <form @submit.prevent="$emit('submitted')">
+            <form @submit.prevent="$emit('submitted')" :enctype="enctype">
                 <div
                     class="px-4 py-5 bg-white sm:p-6 shadow"
                     :class="hasActions ? 'sm:rounded-tl-md sm:rounded-tr-md' : 'sm:rounded-md'"
                 >
-                    <div class="grid grid-cols-6 gap-6">
+                    <!-- <div class="grid grid-cols-6 gap-6"> -->
+                    <div class="flex flex-col gap-6 px-1">
                         <slot name="form" />
                     </div>
                 </div>

@@ -32,11 +32,11 @@ const logout = () => {
 </script>
 
 <template>
+    <Banner />
     <div>
 
         <Head :title="title" />
 
-        <Banner />
 
         <div class="bg-gray-100">
 
@@ -61,6 +61,7 @@ const logout = () => {
 
                     <!-- Page Content -->
                     <main class="content">
+                        <!-- <slot name="header" /> -->
                         <slot />
                     </main>
 

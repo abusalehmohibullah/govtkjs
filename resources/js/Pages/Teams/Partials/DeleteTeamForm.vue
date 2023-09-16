@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import ActionSection from '@/Components/ActionSection.vue';
+import ActionMessage from '@/Components/ActionMessage.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
@@ -36,7 +37,8 @@ const deleteTeam = () => {
 
         <template #content>
             <div class="max-w-xl text-sm text-gray-600">
-                Once a team is deleted, all of its resources and data will be permanently deleted. Before deleting this team, please download any data or information regarding this team that you wish to retain.
+                Once a team is deleted, all of its resources and data will be permanently deleted. Before deleting this
+                team, please download any data or information regarding this team that you wish to retain.
             </div>
 
             <div class="mt-5">
@@ -52,22 +54,26 @@ const deleteTeam = () => {
                 </template>
 
                 <template #content>
-                    Are you sure you want to delete this team? Once a team is deleted, all of its resources and data will be permanently deleted.
+                    Are you sure you want to delete this team? Once a team is deleted, all of its resources and data will be
+                    permanently deleted.
                 </template>
 
                 <template #footer>
-                    <SecondaryButton @click="confirmingTeamDeletion = false">
-                        Cancel
-                    </SecondaryButton>
+                    <div class="flex justify-center items-center">
+                        <ActionMessage :on="form.processing" class="mr-3"
+                            :class="{ 'text-green-600': form.recentlySuccessful, ' text-red-600': form.processing }">
+                            {{ form.processing ? 'Deleting...' : (form.recentlySuccessful ? 'Deleted!' : 'Failed') }}
+                        </ActionMessage>
 
-                    <DangerButton
-                        class="ml-3"
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
-                        @click="deleteTeam"
-                    >
-                        Delete Team
-                    </DangerButton>
+                        <SecondaryButton @click="confirmingTeamDeletion = false">
+                            Cancel
+                        </SecondaryButton>
+
+                        <DangerButton class="ml-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing"
+                            @click="deleteTeam">
+                            Delete Team
+                        </DangerButton>
+                    </div>
                 </template>
             </ConfirmationModal>
         </template>

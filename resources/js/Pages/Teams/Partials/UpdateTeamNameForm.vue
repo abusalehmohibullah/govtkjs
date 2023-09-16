@@ -40,7 +40,8 @@ const updateTeamName = () => {
                 <InputLabel value="Team Owner" />
 
                 <div class="flex items-center mt-2">
-                    <img class="w-12 h-12 rounded-full object-cover" :src="team.owner.profile_photo_url" :alt="team.owner.name">
+                    <img class="w-12 h-12 rounded-full object-cover" :src="team.owner.profile_photo_url"
+                        :alt="team.owner.name">
 
                     <div class="ml-4 leading-tight">
                         <div class="text-gray-900">{{ team.owner.name }}</div>
@@ -55,21 +56,17 @@ const updateTeamName = () => {
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="name" value="Team Name" />
 
-                <TextInput
-                    id="name"
-                    v-model="form.name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    :disabled="! permissions.canUpdateTeam"
-                />
+                <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full"
+                    :disabled="!permissions.canUpdateTeam" />
 
                 <InputError :message="form.errors.name" class="mt-2" />
             </div>
         </template>
 
         <template v-if="permissions.canUpdateTeam" #actions>
-            <ActionMessage :on="form.recentlySuccessful" class="mr-3">
-                Saved.
+            <ActionMessage :on="form.processing" class="mr-3"
+                :class="{ 'text-green-600': form.recentlySuccessful, ' text-gray-600': form.processing }">
+                {{ form.processing ? 'Saving...' : (form.recentlySuccessful ? 'Saved!' : 'Failed') }}
             </ActionMessage>
 
             <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">

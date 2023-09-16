@@ -106,15 +106,40 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
                 <span class="align-middle">Dashboard</span>
             </SideNavLink>
 
-            <SideNavLink :href="route('basic-info.index')" :active="route().current('basic-info.index')">
+            <SideNavLink :href="route('admin.basic-info.show')" :active="route().current('admin.basic-info.show')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="feather feather-layout align-middle">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="3" y1="9" x2="21" y2="9"></line>
-                        <line x1="9" y1="21" x2="9" y2="9"></line>
-                    </svg>
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-layout align-middle">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                    <line x1="9" y1="21" x2="9" y2="9"></line>
+                </svg>
                 <span class="align-middle">Basic Info</span>
+            </SideNavLink>
+
+            <SideNavLink :href="route('admin.notices.index')" :active="route().current('admin.notices.index')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-list align-middle me-2">
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
+                <span class="align-middle">Notice</span>
+            </SideNavLink>
+
+            <SideNavLink :href="route('admin.faqs.index')" :active="route().current('admin.faqs.index')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-help-circle align-middle me-2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <span class="align-middle">FAQ</span>
             </SideNavLink>
 
             <li class="sidebar-item">
@@ -385,16 +410,15 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
                                     <li class="sidebar-item">
                                         <a class="sidebar-link d-flex" href="#">Item 2</a>
                                     </li>
-                                </ul>
-                            </li>
-                            <li class="sidebar-item">
-                                <a class="sidebar-link d-flex" href="#">Item 2</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-</template>
+                            </ul>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link d-flex" href="#">Item 2</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div></template>
 

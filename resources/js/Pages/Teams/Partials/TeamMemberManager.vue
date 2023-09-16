@@ -163,9 +163,9 @@ const displayableRole = (role) => {
                 </template>
 
                 <template #actions>
-                    <ActionMessage :on="addTeamMemberForm.recentlySuccessful" class="mr-3">
-                        Added.
-                    </ActionMessage>
+                    <ActionMessage :on="addTeamMemberForm.processing" class="mr-3" :class=" {'text-green-600' : addTeamMemberForm.recentlySuccessful, ' text-gray-600' : addTeamMemberForm.processing}">
+                    {{ addTeamMemberForm.processing ? 'Adding...' : (addTeamMemberForm.recentlySuccessful ? 'Added!' : 'Failed') }}
+                </ActionMessage>
 
                     <PrimaryButton :class="{ 'opacity-25': addTeamMemberForm.processing }" :disabled="addTeamMemberForm.processing">
                         Add

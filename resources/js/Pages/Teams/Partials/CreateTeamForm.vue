@@ -1,6 +1,7 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
 import FormSection from '@/Components/FormSection.vue';
+import ActionMessage from '@/Components/ActionMessage.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
@@ -58,6 +59,10 @@ const createTeam = () => {
         </template>
 
         <template #actions>
+            <ActionMessage :on="form.processing" class="mr-3" :class=" {'text-green-600' : form.recentlySuccessful, ' text-gray-600' : form.processing}">
+                    {{ form.processing ? 'Creating...' : (form.recentlySuccessful ? 'Created!' : 'Failed') }}
+                </ActionMessage>
+
             <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                 Create
             </PrimaryButton>

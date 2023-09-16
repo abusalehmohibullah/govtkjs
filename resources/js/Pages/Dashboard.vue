@@ -6,9 +6,11 @@ import Welcome from '@/Components/Welcome.vue';
 <template>
     <AdminLayout title="Dashboard">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Dashsssboard
-            </h2>
+            <div class="">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    Dashboard
+                </h2>
+            </div>
         </template>
         <Welcome />
     </AdminLayout>

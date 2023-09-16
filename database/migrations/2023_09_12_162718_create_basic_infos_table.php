@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('basic_info', function (Blueprint $table) {
+        Schema::create('basic_infos', function (Blueprint $table) {
             $table->id();
-            $table->string('info_type');
-            $table->string('slug')->unique();
-            $table->string('content');
+            $table->string('name');
+            $table->string('key')->unique();
+            $table->longText('content')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
 
-            $table->foreign('updated_by')->references('id')->on('admins');
+            $table->foreign('updated_by')->references('id')->on('users');
         });
     }
 
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('basic_info');
+        Schema::dropIfExists('basic_infos');
     }
 };
