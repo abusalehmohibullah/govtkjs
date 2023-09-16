@@ -142,6 +142,16 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
                 <span class="align-middle">FAQ</span>
             </SideNavLink>
 
+            <SideNavLink :href="route('admin.sliders.index')" :active="route().current('admin.sliders.index')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-code align-middle me-2">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                </svg>
+                <span class="align-middle">Slider</span>
+            </SideNavLink>
+
             <li class="sidebar-item">
                 <a data-bs-target="#pages" data-bs-toggle="collapse" class="sidebar-link d-flex collapsed">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -410,15 +420,15 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
                                     <li class="sidebar-item">
                                         <a class="sidebar-link d-flex" href="#">Item 2</a>
                                     </li>
-                            </ul>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link d-flex" href="#">Item 2</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
+                                </ul>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link d-flex" href="#">Item 2</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
     </ul>
 </div></template>
 

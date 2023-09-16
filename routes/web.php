@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\Admin\BasicInfoController;
 use App\Http\Controllers\Admin\NoticeController;
 use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\Admin\SliderController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -61,6 +62,9 @@ Route::middleware([
     ]);
     Route::resource('faqs', FaqController::class, [
         'names' => 'admin.faqs',
+    ]);
+    Route::resource('sliders', SliderController::class, [
+        'names' => 'admin.sliders',
     ]);
 });
 
