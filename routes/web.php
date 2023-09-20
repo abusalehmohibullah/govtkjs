@@ -8,6 +8,13 @@ use App\Http\Controllers\Admin\BasicInfoController;
 use App\Http\Controllers\Admin\NoticeController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\SliderController;
+
+use App\Models\Admin\BasicInfo;
+use App\Models\Admin\Notice;
+use App\Models\Admin\Faq;
+use App\Models\Admin\Slider;
+
+use Illuminate\Support\Facades\Artisan;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,14 +26,58 @@ use App\Http\Controllers\Admin\SliderController;
 |
 */
 
+// Route::get('/', function () {
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
+
+
 Route::get('/', function () {
+    // Fetch data from multiple tables using Eloquent or database queries
+    $infos = BasicInfo::orderByDesc('created_at') // Order by created_at in descending order
+        ->get();
+
+    $notices = Notice::where('status', 1) // Filter by status = 1
+        ->orderByDesc('created_at') // Order by created_at in descending order
+        ->get();
+
+    $scrolls = Notice::where('status', 1) // Filter by status = 1
+        ->where('scroll', '1') // Add your additional condition here
+        ->orderByDesc('created_at') // Order by created_at in descending order
+        ->get();
+
+
+    $faqs = Faq::where('status', 1) // Filter by status = 1
+        ->orderByDesc('created_at') // Order by created_at in descending order
+        ->get();
+
+
+    $sliders = Slider::where('status', 1) // Filter by status = 1
+        ->orderByDesc('created_at') // Order by created_at in descending order
+        ->get()->map(function ($slider) {
+            return asset('storage/' . $slider->path);
+        });
+
+
+
+    // Pass the fetched data to the Inertia view
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        'infos' => $infos->pluck('content', 'key')->toArray(),
+        'faqs' => $faqs,
+        'scrolls' => $scrolls,
+        'notices' => $notices,
+        'sliders' => $sliders,
     ]);
-});
+})->name('home');
+
 
 Route::get('/login-options', function () {
     return Inertia::render('LoginOptions');
@@ -54,7 +105,6 @@ Route::middleware([
 
         // Update Basic Information (form submission)
         Route::put('/', [BasicInfoController::class, 'update'])->name('admin.basic-info.update');
-
     });
 
     Route::resource('notices', NoticeController::class, [
@@ -67,6 +117,7 @@ Route::middleware([
         'names' => 'admin.sliders',
     ]);
 });
+
 
 
 
@@ -83,6 +134,42 @@ Route::middleware([
 //     try {
 //         \Artisan::call('cache:clear');
 //         return 'Cache cleared successfully.';
+//     } catch (\Exception $e) {
+//         return 'Error clearing cache: ' . $e->getMessage();
+//     }
+// });
+
+// Route::get('/clear-routes', function () {
+//     try {
+//         \Artisan::call('route:clear');
+//         return 'routes cleared successfully.';
+//     } catch (\Exception $e) {
+//         return 'Error clearing routes: ' . $e->getMessage();
+//     }
+// });
+
+// Route::get('/clear-config', function () {
+//     try {
+//         \Artisan::call('config:clear');
+//         return 'config cleared successfully.';
+//     } catch (\Exception $e) {
+//         return 'Error clearing config: ' . $e->getMessage();
+//     }
+// });
+
+// Route::get('/optimize', function () {
+//     try {
+//         \Artisan::call('optimize');
+//         return 'optimized successfully.';
+//     } catch (\Exception $e) {
+//         return 'Error optimizing: ' . $e->getMessage();
+//     }
+// });
+
+// Route::get('/create-link', function () {
+//     try {
+//         \Artisan::call('storage:link');
+//         return 'link created successfully.';
 //     } catch (\Exception $e) {
 //         return 'Error clearing cache: ' . $e->getMessage();
 //     }

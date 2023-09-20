@@ -9,6 +9,7 @@ import Info from '@/Pages/Admin/BasicInfo/Partials/Info.vue';
 import About from '@/Pages/Admin/BasicInfo/Partials/About.vue';
 import Message from '@/Pages/Admin/BasicInfo/Partials/Message.vue';
 import Contact from '@/Pages/Admin/BasicInfo/Partials/Contact.vue';
+import Social from '@/Pages/Admin/BasicInfo/Partials/Social.vue';
 
 // Receive the basicInfo object from props
 const { basicInfo } = defineProps(['basicInfo']);
@@ -40,9 +41,14 @@ const { basicInfo } = defineProps(['basicInfo']);
                 <Message :basicInfo="basicInfo"/>
                 <SectionBorder />
             </div>
-
+            
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <Contact :basicInfo="basicInfo"/>
+                <SectionBorder />
+            </div>
+            
+            <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+                <Social :basicInfo="basicInfo"/>
             </div>
 
         </div>

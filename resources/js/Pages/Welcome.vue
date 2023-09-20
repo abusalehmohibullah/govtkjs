@@ -1,4 +1,7 @@
 <script setup>
+
+import { ref, computed, onMounted } from 'vue';
+import { Head, Link } from '@inertiajs/vue3';
 import GeneralLayout from '@/Layouts/GeneralLayout.vue';
 import ScrollingNotice from '@/Components/General/ScrollingNotice.vue';
 import Slider from '@/Components/General/Slider.vue';
@@ -11,35 +14,88 @@ import AcademicInfo from '@/Components/General/AcademicInfo.vue';
 import FAQ from '@/Components/General/FAQ.vue';
 import Album from '@/Components/General/Album.vue';
 import Contact from '@/Components/General/Contact.vue';
+
+defineProps({
+    canLogin: Boolean,
+    canRegister: Boolean,
+    laravelVersion: String,
+    phpVersion: String,
+    infos: Object,
+    notices: Object,
+    sliders: Object,
+    faqs: Object,
+    scrolls: Object,
+});
+
+const notice = ref(null);
+const about = ref(null);
+const compliance = ref(null);
+
+const noticeHeight = computed(() => {
+    if (notice.value) {
+        return notice.value.clientHeight;
+    }
+    return 'auto'; // Default height if notice is not available
+});
+
+const complianceHeight = computed(() => {
+    if (compliance.value) {
+        return compliance.value.clientHeight;
+    }
+    return 'auto'; // Default height if compliance is not available
+});
+
+// Function to update the height of about based on notice's height
+const updateDiv2Height = () => {
+    if (about.value) {
+        about.value.style.height = `${noticeHeight.value - complianceHeight.value}px`;
+        about.value.style.display = `block`;
+    }
+};
+
+// Watch for changes to notice's content and update about's height
+onMounted(() => {
+    updateDiv2Height();
+});
+
+// You can also watch for changes to notice's content if needed
+// watch(() => notice.value.innerHTML, () => {
+//   updateDiv2Height();
+// });
+
 </script>
 
 <template>
     <GeneralLayout>
         <div class="container">
-            <ScrollingNotice />
-            <Slider />
+            <ScrollingNotice :scrolls="scrolls" />
+            <Slider :sliders="sliders" />
             <QuickAccess />
 
             <div class="sm:flex gap-5 mb-5">
                 <div class="sm:w-2/3">
-                    <About />
-                    <Compliance />
-
-
-
+                    <div ref="about" class="hidden overflow-hidden">
+                        <About :infos="infos" />
+                    </div>
+                    <div ref="compliance">
+                        <Compliance />
+                    </div>
                 </div>
                 <div class="sm:w-1/3">
-                    <Notice />
+                    <div ref="notice" class="h-full">
+                        <Notice :notices="notices" />
+                    </div>
                 </div>
             </div>
-            <FAQ />
-            <Message />
+
+            <FAQ :faqs="faqs" />
+            <Message :infos="infos" />
 
             <AcademicInfo />
             <Album />
 
 
-            <Contact />
+            <Contact :infos="infos" />
 
 
         </div>

@@ -46,14 +46,14 @@ const updateAbout = () => {
 
                 <div class="col-span-6 sm:col-span-4">
                     <InputLabel for="history_title" value="History Title" />
-                    <TextInput id="history_title" v-model="form.history_title" @input="validateName"
+                    <TextInput id="history_title" v-model="form.history_title"
                         class="mt-1 block w-full"
                         :class="{ 'border-red-500 focus:border-red-500': form.errors.history_title }" type="text" />
                     <InputError :message="form.errors.history_title" class="text-red-500" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">
                     <InputLabel for="history_content" value="History Content" />
-                    <TextArea id="history_content" v-model="form.history_content" @input="validateName"
+                    <TextArea id="history_content" v-model="form.history_content"
                         class="mt-1 block w-full"
                         :class="{ 'border-red-500 focus:border-red-500': form.errors.history_content }" type="text" />
                     <InputError :message="form.errors.history_content" class="text-red-500" />

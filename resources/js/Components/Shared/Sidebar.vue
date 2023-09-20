@@ -1,23 +1,7 @@
 <script setup>
-import { ref, watchEffect } from 'vue';
-import { usePage } from '@inertiajs/vue3';
+
 import AdminSidebar from '@/Components/Admin/AdminSidebar.vue';
 
-const page = usePage();
-const show = ref(true);
-const style = ref('success');
-const message = ref('');
-
-watchEffect(async () => {
-    style.value = page.props.jetstream.flash?.bannerStyle || 'success';
-    message.value = page.props.jetstream.flash?.banner || '';
-    show.value = true;
-});
-
-
-// function toggleSubMenu () {
-	
-// }
 </script>
 
 <template>

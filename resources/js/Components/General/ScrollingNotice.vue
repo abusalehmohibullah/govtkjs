@@ -1,76 +1,63 @@
 <template>
   <div
-    class="container notice-container overflow-hidden light-bg flex my-3 p-0 shadow-sm animate-on-load animate__backInUp animate__delay-1s">
-    <div class="title flex items-center font-bold z-50 py-1 px-3 bg-white">
-      <a href="#" class="text-decoration-none light-color mini-text">Notice</a>
+    class="container notice-container overflow-hidden bg-white flex my-3 p-0 shadow-sm animate-on-load animate__backInUp animate__delay-1s">
+    <div class="title flex items-center font-bold z-50 py-1 px-3 bg-gray-800">
+      <a href="#" class="text-decoration-none text-white mini-text">Notice</a>
     </div>
 
     <ul class="d-flex align-items-center text-nowrap" ref="noticeList">
-      <li v-for="(notice, index) in notices" :key="index"
+      <li v-for="(scroll, index) in scrolls" :key="index"
         class="whitespace-nowrap px-5 py-1 relative after:content-[''] after:w-1 after:h-1 after:rounded-full after:absolute after:top-1/2 after:right-0 after:bg-black after:last:hidden">
-        <a href="#" class="hover-deep text-reset text-decoration-none mini-text">{{ notice }}</a>
+        <a href="#" class="hover-deep text-reset text-decoration-none mini-text">{{ scroll.title }}</a>
       </li>
     </ul>
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      notices: [
-        "Lorem ipsum dolor sit",
-        "Lorem ipsum dolor sit",
-        "Lorem ipsum dolor sit",
-        "Lorem ipsum dolor sit",
-        "Lorem ipsum dolor sit",
-        "Lorem ipsum dolor sit",
-        "Lorem ipsum dolor sit",
-        "Lorem ipsum dolor sit",
-        "Lorem ipsum dolor sit",
-        // Add more notices here
-      ],
-      animationDuration: 0,
-      containerWidth: 0,
-      ulWidth: 0,
-    };
-  },
-  mounted() {
-    this.initializeScrollAnimation();
-  },
-  methods: {
-    initializeScrollAnimation() {
-      const ul = this.$refs.noticeList;
-      const container = ul.parentElement;
-      this.ulWidth = ul.scrollWidth;
-      this.containerWidth = container.offsetWidth;
-      this.animationDuration = this.ulWidth / 50; // Adjust this value to change the animation speed
+<script setup>
+import { ref, onMounted } from 'vue';
+defineProps({
+    scrolls : Object,
+});
+const animationDuration = ref(0);
+const containerWidth = ref(0);
+const ulWidth = ref(0);
 
-      const style = document.createElement("style");
-      style.textContent = `
-        .notice-container ul {
-          animation: scroll ${this.animationDuration}s infinite linear;
-        }
+const initializeScrollAnimation = () => {
+  const ul = document.querySelector('.notice-container ul');
+  const container = ul.parentElement;
+  ulWidth.value = ul.scrollWidth;
+  containerWidth.value = container.offsetWidth;
+  animationDuration.value = ulWidth.value / 50; // Adjust this value to change the animation speed
 
-        .notice-container:hover ul {
-          animation-play-state: paused;
-        }
+  const style = document.createElement("style");
+  style.textContent = `
+    .notice-container ul {
+      animation: scroll ${animationDuration.value}s infinite linear;
+    }
 
-        @keyframes scroll {
-          from {
-            transform: translateX(calc(${this.containerWidth}px));
-          }
-        
-          to {
-            transform: translateX(calc(-${this.ulWidth}px));
-          }
-        }
-      `;
-      document.head.appendChild(style);
-    },
-  },
+    .notice-container:hover ul {
+      animation-play-state: paused;
+    }
+
+    @keyframes scroll {
+      from {
+        transform: translateX(calc(${containerWidth.value}px));
+      }
+    
+      to {
+        transform: translateX(calc(-${ulWidth.value}px));
+      }
+    }
+  `;
+  document.head.appendChild(style);
 };
+
+onMounted(() => {
+  initializeScrollAnimation();
+});
 </script>
+
 
 <style scoped>
 @keyframes scroll {

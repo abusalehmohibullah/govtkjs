@@ -40,7 +40,7 @@ const logout = () => {
 <template>
 
 
-        <div class="flex">
+        <div class="flex w-full mr-2">
 
 
             <div class="max-w-7xl px-2">
@@ -56,7 +56,7 @@ const logout = () => {
 
                 </div>
             </div>
-            <form class="d-none d-sm-inline-block">
+            <form class="hidden sm:flex items-center justify-center">
                 <div class="input-group input-group-navbar">
                     <input type="text" class="form-control" placeholder="Search…" aria-label="Search">
                     <button class="btn" type="button">
@@ -65,7 +65,7 @@ const logout = () => {
                 </div>
             </form>
 
-            <div class="hidden sm:flex sm:items-center sm:ml-6 ms-auto">
+            <div class="flex justify-end sm:items-center sm:ml-auto ml-auto w-full">
                 <div class="ml-3 relative">
                     <!-- Teams Dropdown -->
                     <Dropdown v-if="$page.props.jetstream.hasTeamFeatures" align="right" width="60">
@@ -132,16 +132,17 @@ const logout = () => {
                 </div>
 
                 <!-- Settings Dropdown -->
-                <div class="ml-3 relative">
+                <div class="mx-3 relative">
                     <Dropdown align="right" width="48">
                         <template #trigger>
-                            <button v-if="$page.props.jetstream.managesProfilePhotos"
+                            <!-- <button v-if="$page.props.jetstream.managesProfilePhotos" -->
+                            <button
                                 class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
                                 <img class="h-8 w-8 rounded-full object-cover"
                                     :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name">
                             </button>
 
-                            <span v-else class="inline-flex rounded-md">
+                            <!-- <span v-else class="inline-flex rounded-md">
                                 <button type="button"
                                     class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150">
                                     {{ $page.props.auth.user.name }}
@@ -152,7 +153,7 @@ const logout = () => {
                                             d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                                     </svg>
                                 </button>
-                            </span>
+                            </span> -->
                         </template>
 
                         <template #content>

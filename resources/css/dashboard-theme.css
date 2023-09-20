@@ -15011,9 +15011,9 @@ screen and (-ms-high-contrast:active) {
 }
 
 @media(max-width:575.98px) {
-    .navbar {
+    /* .navbar {
         padding: .75rem
-    }
+    } */
 
     .nav-icon {
         padding: .1rem .75rem

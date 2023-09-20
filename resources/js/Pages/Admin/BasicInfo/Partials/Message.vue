@@ -55,7 +55,7 @@ const updateMessage = () => {
                 </div>
                 <div class="col-span-6 sm:col-span-4">
                     <InputLabel for="message_1_content" value="Message 1 Content" />
-                    <TextInput id="message_1_content" v-model="form.message_1_content" @input="validateName"
+                    <TextArea id="message_1_content" v-model="form.message_1_content" @input="validateName"
                         class="mt-1 block w-full"
                         :class="{ 'border-red-500 focus:border-red-500': form.errors.message_1_content }" type="text" />
                     <InputError :message="form.errors.message_1_content" class="text-red-500" />
@@ -69,7 +69,7 @@ const updateMessage = () => {
                 </div>
                 <div class="col-span-6 sm:col-span-4">
                     <InputLabel for="message_2_content" value="Message 2 Content" />
-                    <TextInput id="message_2_content" v-model="form.message_2_content" @input="validateName"
+                    <TextArea id="message_2_content" v-model="form.message_2_content" @input="validateName"
                         class="mt-1 block w-full"
                         :class="{ 'border-red-500 focus:border-red-500': form.errors.message_2_content }" type="text" />
                     <InputError :message="form.errors.message_2_content" class="text-red-500" />
