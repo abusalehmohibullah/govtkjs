@@ -1,6 +1,5 @@
   
 <script setup>
-
 import { useForm } from '@inertiajs/vue3';
 
 import FormSection from '@/Components/FormSection.vue';
@@ -11,26 +10,29 @@ import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
-const form = useForm({
-    question: '',
-    answer: '',
+const props = defineProps({
+    grade: Object,
 });
 
-const createFaq = () => {
-    form.post(route('admin.faqs.store'), {
-        errorBag: 'createFaq',
+const form = useForm({
+    _method: 'PUT',
+    name: props.grade.name,
+});
+
+const updateGrade = () => {
+    form.post(route('admin.grades.update', props.grade.id), {
+        errorBag: 'updateGrade',
         preserveScroll: true,
     });
 };
-
 </script>
 
 <template>
     <div>
         <!-- Use the Form component to wrap your form -->
-        <FormSection @submitted="createFaq">
+        <FormSection @submitted="updateGrade">
             <template #title>
-                Add FAQ
+                Edit Class
             </template>
 
             <template #description>
@@ -41,30 +43,25 @@ const createFaq = () => {
                 <!-- Use the Text Input component for each form field -->
 
                 <div class="col-span-6 sm:col-span-4">
-                    <InputLabel for="question" value="Question">
+                    <InputLabel for="name" value="Class Name">
                         <template #required>*</template>
                     </InputLabel>
-                    <TextInput id="question" v-model="form.question" required class="mt-1 block w-full"
-                        :class="{ 'border-red-500 focus:border-red-500': form.errors.question }" type="text" name="question" />
-                    <InputError :message="form.errors.question" class="text-red-500" />
+                    <TextInput id="name" v-model="form.name" required class="mt-1 block w-full"
+                        :class="{ 'border-red-500 focus:border-red-500': form.errors.name }" type="number" name="name" />
+                    <InputError :message="form.errors.name" class="text-red-500" />
                 </div>
-                <div class="col-span-6 sm:col-span-4">
-                    <InputLabel for="answer" value="Answer" />
-                    <TextArea id="answer" v-model="form.answer" class="mt-1 block w-full"
-                        :class="{ 'border-red-500 focus:border-red-500': form.errors.answer }" name="answer" />
-                    <InputError :message="form.errors.answer" class="text-red-500" />
-                </div>
+
 
             </template>
 
             <template #actions>
                 <ActionMessage :on="form.processing" class="mr-3"
                     :class="{ 'text-green-600': form.recentlySuccessful, ' text-gray-600': form.processing }">
-                    {{ form.processing ? 'Creating...' : (form.recentlySuccessful ? 'Created!' : 'Failed') }}
+                    {{ form.processing ? 'Saving...' : (form.recentlySuccessful ? 'Saved!' : 'Failed') }}
                 </ActionMessage>
 
                 <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Create</PrimaryButton>
+                    Save</PrimaryButton>
             </template>
         </FormSection>
     </div>

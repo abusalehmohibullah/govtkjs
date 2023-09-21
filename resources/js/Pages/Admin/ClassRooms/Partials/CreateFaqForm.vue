@@ -29,7 +29,7 @@ const createFaq = () => {
     <div>
         <!-- Use the Form component to wrap your form -->
         <FormSection @submitted="createFaq">
-            <template #title>
+            <template #question>
                 Add FAQ
             </template>
 

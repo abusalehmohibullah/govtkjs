@@ -1,6 +1,5 @@
   
 <script setup>
-
 import { useForm } from '@inertiajs/vue3';
 
 import FormSection from '@/Components/FormSection.vue';
@@ -11,26 +10,33 @@ import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
-const form = useForm({
-    question: '',
-    answer: '',
+const props = defineProps({
+    faq: Object,
 });
 
-const createFaq = () => {
-    form.post(route('admin.faqs.store'), {
-        errorBag: 'createFaq',
+const form = useForm({
+    _method: 'PUT',
+    question: props.faq.question,
+    answer: props.faq.answer,
+    published_on: props.faq.published_on,
+    scroll: props.faq.scroll, // Ensure scroll is a string
+    attachment: null, // Initialize attachment as null
+});
+
+const updateFaq = () => {
+    form.post(route('admin.faqs.update', props.faq.id), {
+        errorBag: 'updateFaq',
         preserveScroll: true,
     });
 };
-
 </script>
 
 <template>
     <div>
         <!-- Use the Form component to wrap your form -->
-        <FormSection @submitted="createFaq">
+        <FormSection @submitted="updateFaq">
             <template #title>
-                Add FAQ
+                Edit FAQ
             </template>
 
             <template #description>
@@ -60,11 +66,11 @@ const createFaq = () => {
             <template #actions>
                 <ActionMessage :on="form.processing" class="mr-3"
                     :class="{ 'text-green-600': form.recentlySuccessful, ' text-gray-600': form.processing }">
-                    {{ form.processing ? 'Creating...' : (form.recentlySuccessful ? 'Created!' : 'Failed') }}
+                    {{ form.processing ? 'Saving...' : (form.recentlySuccessful ? 'Saved!' : 'Failed') }}
                 </ActionMessage>
 
                 <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Create</PrimaryButton>
+                    Save</PrimaryButton>
             </template>
         </FormSection>
     </div>

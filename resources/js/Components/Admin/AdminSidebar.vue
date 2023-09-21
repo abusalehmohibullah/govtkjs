@@ -86,6 +86,46 @@ import SideNavLink from '@/Components/Shared/SideNavLink.vue';
                 </svg>
                 <span class="align-middle">Slider</span>
             </SideNavLink>
+
+            <SideNavLink :href="route('admin.sections.index')" :active="route().current('admin.sections.index')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-code align-middle me-2">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                </svg>
+                <span class="align-middle">Section</span>
+            </SideNavLink>
+
+            <SideNavLink :href="route('admin.grades.index')" :active="route().current('admin.grades.index')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-code align-middle me-2">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                </svg>
+                <span class="align-middle">Class</span>
+            </SideNavLink>
+
+            <SideNavLink :href="route('admin.subjects.index')" :active="route().current('admin.subjects.index')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-code align-middle me-2">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                </svg>
+                <span class="align-middle">Subject</span>
+            </SideNavLink>
+
+            <SideNavLink :href="route('admin.groups.index')" :active="route().current('admin.groups.index')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-code align-middle me-2">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                </svg>
+                <span class="align-middle">Group</span>
+            </SideNavLink>
         </ul>
     </div>
     

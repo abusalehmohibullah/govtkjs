@@ -6,19 +6,17 @@ import { useForm } from '@inertiajs/vue3';
 import FormSection from '@/Components/FormSection.vue';
 import ActionMessage from '@/Components/ActionMessage.vue';
 import TextInput from '@/Components/TextInput.vue';
-import TextArea from '@/Components/TextArea.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 const form = useForm({
-    question: '',
-    answer: '',
+    name: '',
 });
 
-const createFaq = () => {
-    form.post(route('admin.faqs.store'), {
-        errorBag: 'createFaq',
+const createSection = () => {
+    form.post(route('admin.sections.store'), {
+        errorBag: 'createSection',
         preserveScroll: true,
     });
 };
@@ -28,9 +26,9 @@ const createFaq = () => {
 <template>
     <div>
         <!-- Use the Form component to wrap your form -->
-        <FormSection @submitted="createFaq">
+        <FormSection @submitted="createSection">
             <template #title>
-                Add FAQ
+                Add Section
             </template>
 
             <template #description>
@@ -41,18 +39,12 @@ const createFaq = () => {
                 <!-- Use the Text Input component for each form field -->
 
                 <div class="col-span-6 sm:col-span-4">
-                    <InputLabel for="question" value="Question">
+                    <InputLabel for="name" value="Name">
                         <template #required>*</template>
                     </InputLabel>
-                    <TextInput id="question" v-model="form.question" required class="mt-1 block w-full"
-                        :class="{ 'border-red-500 focus:border-red-500': form.errors.question }" type="text" name="question" />
-                    <InputError :message="form.errors.question" class="text-red-500" />
-                </div>
-                <div class="col-span-6 sm:col-span-4">
-                    <InputLabel for="answer" value="Answer" />
-                    <TextArea id="answer" v-model="form.answer" class="mt-1 block w-full"
-                        :class="{ 'border-red-500 focus:border-red-500': form.errors.answer }" name="answer" />
-                    <InputError :message="form.errors.answer" class="text-red-500" />
+                    <TextInput id="name" v-model="form.name" required class="mt-1 block w-full"
+                        :class="{ 'border-red-500 focus:border-red-500': form.errors.name }" type="text" name="name" />
+                    <InputError :message="form.errors.name" class="text-red-500" />
                 </div>
 
             </template>

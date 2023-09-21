@@ -39,17 +39,17 @@ defineProps({
             <ul>
                 <li v-for="notice in notices" class="animate-on-scroll animate__animated animate__fadeInDown"
                     data-animation="fadeInDown" style="animation-delay: 0s;">
-                    <a href="#" class="text-nowrap">
+                    <Link :href="route('notice.show', { slug: notice.slug })" class="text-nowrap">
                         <div class="flex gap-2">
-    
-                                <img src="assets/images/pin.png" alt="" class="h-5">
+                            
+                            <img src="assets/images/pin.png" alt="" class="h-5">
              
                             <div class="text-truncate text-base text-gray-600 hover:text-gray-800 hover:underline">
                                 {{ notice.title }}
                             </div>
                         </div>
                         <div class="text-end mb-2 text-muted"><small>{{ notice.published_on }}</small></div>
-                    </a>
+                    </Link>
                 </li>
             </ul>
         </div>

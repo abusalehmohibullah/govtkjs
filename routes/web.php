@@ -8,11 +8,18 @@ use App\Http\Controllers\Admin\BasicInfoController;
 use App\Http\Controllers\Admin\NoticeController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\SectionController;
+use App\Http\Controllers\Admin\GradeController;
+use App\Http\Controllers\Admin\SubjectController;
+use App\Http\Controllers\Admin\GroupController;
 
 use App\Models\Admin\BasicInfo;
 use App\Models\Admin\Notice;
 use App\Models\Admin\Faq;
 use App\Models\Admin\Slider;
+use App\Models\Admin\Grade;
+use App\Models\Admin\Subject;
+use App\Models\Admin\Group;
 
 use Illuminate\Support\Facades\Artisan;
 /*
@@ -83,6 +90,15 @@ Route::get('/login-options', function () {
     return Inertia::render('LoginOptions');
 })->name('loginOptions');
 
+Route::get('/notice/{slug}', function ($slug) {
+    
+    $notice = Notice::where('slug', $slug)->first();
+
+    return Inertia::render('Notice', [
+        'notice' => $notice,
+    ]);
+})->name('notice.show');
+
 
 Route::middleware([
     'auth:sanctum',
@@ -115,6 +131,18 @@ Route::middleware([
     ]);
     Route::resource('sliders', SliderController::class, [
         'names' => 'admin.sliders',
+    ]);
+    Route::resource('sections', SectionController::class, [
+        'names' => 'admin.sections',
+    ]);
+    Route::resource('grades', GradeController::class, [
+        'names' => 'admin.grades',
+    ]);
+    Route::resource('subjects', SubjectController::class, [
+        'names' => 'admin.subjects',
+    ]);
+    Route::resource('groups', GroupController::class, [
+        'names' => 'admin.groups',
     ]);
 });
 
