@@ -27,9 +27,9 @@ defineProps({
 
 
 <template>
-        <div class="notice-box shadow-sm bg-[#FBEEAC] px-3 py-2 h-full">
-        <!-- <div class="notice-box shadow-sm bg-[#DFF6FF] px-3 py-2 h-full"> -->
-    <!-- <div class="notice-box shadow-sm bg-[#ebf4f3] px-3 py-2 h-full rounded"> -->
+    <!-- <div class="notice-box shadow-sm bg-[#FBEEAC] px-3 py-2 h-full"> -->
+    <div class="notice-box shadow-sm bg-[#DFF6FF] px-3 py-2 h-full">
+        <!-- <div class="notice-box shadow-sm bg-[#ebf4f3] px-3 py-2 h-full rounded"> -->
         <div class="d-flex jusify-content-center align-items-center">
             <h3 class="alert-heading deep-color mt-2 large-text">Notice</h3>
             <div class="ms-auto"><a href="https://mdch.edu.bd/education/news">See All</a></div>
@@ -40,15 +40,23 @@ defineProps({
                 <li v-for="notice in notices" class="animate-on-scroll animate__animated animate__fadeInDown"
                     data-animation="fadeInDown" style="animation-delay: 0s;">
                     <Link :href="route('notice.show', { slug: notice.slug })" class="text-nowrap">
-                        <div class="flex gap-2">
-                            
-                            <img src="assets/images/pin.png" alt="" class="h-5">
-             
-                            <div class="text-truncate text-base text-gray-600 hover:text-gray-800 hover:underline">
-                                {{ notice.title }}
+                    <div class="flex gap-2">
+
+                        <img src="assets/images/pin.png" alt="" class="h-5">
+
+                        <div class="text-truncate w-full text-base text-gray-600 hover:text-gray-800 relative group">
+                            {{ notice.title }}
+                            <div
+                                class="after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-gradient-to-r after:from-indigo-500 group-hover:after:w-full after:transition-all after:duration-300">
                             </div>
                         </div>
-                        <div class="text-end mb-2 text-muted"><small>{{ notice.published_on }}</small></div>
+
+
+                        <!-- <div class="text-truncate text-base text-gray-600 hover:text-gray-800 hover:underline">
+                                {{ notice.title }}
+                            </div> -->
+                    </div>
+                    <div class="text-end mb-2 text-muted"><small>{{ notice.published_on }}</small></div>
                     </Link>
                 </li>
             </ul>

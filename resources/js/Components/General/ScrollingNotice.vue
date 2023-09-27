@@ -8,7 +8,12 @@
     <ul class="d-flex align-items-center text-nowrap" ref="noticeList">
       <li v-for="(scroll, index) in scrolls" :key="index"
         class="whitespace-nowrap px-5 py-1 relative after:content-[''] after:w-1 after:h-1 after:rounded-full after:absolute after:top-1/2 after:right-0 after:bg-black after:last:hidden">
-        <a href="#" class="hover-deep text-reset text-decoration-none mini-text">{{ scroll.title }}</a>
+        <a href="#" class="hover-deep text-reset text-decoration-none mini-text relative group">
+          {{ scroll.title }}
+          <div
+            class="after:block after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-gradient-to-r after:from-indigo-500 group-hover:after:w-full after:transition-all after:duration-300">
+          </div>
+        </a>
       </li>
     </ul>
   </div>
@@ -17,7 +22,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 defineProps({
-    scrolls : Object,
+  scrolls: Object,
 });
 const animationDuration = ref(0);
 const containerWidth = ref(0);

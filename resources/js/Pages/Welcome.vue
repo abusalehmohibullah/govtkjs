@@ -14,6 +14,7 @@ import AcademicInfo from '@/Components/General/AcademicInfo.vue';
 import FAQ from '@/Components/General/FAQ.vue';
 import Album from '@/Components/General/Album.vue';
 import Contact from '@/Components/General/Contact.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 defineProps({
     canLogin: Boolean,
@@ -74,14 +75,22 @@ onMounted(() => {
 
             <div class="sm:flex gap-5 mb-5">
                 <div class="sm:w-2/3">
-                    <div ref="about" class="hidden overflow-hidden">
+                    <div ref="about" class="hidden overflow-hidden relative">
                         <About :infos="infos" />
+                        <div
+                            class="absolute bottom-0 right-0 w-full flex justify-end bg-gradient-to-b from-transparent to-white pr-5 pb-4">
+                            <Link :href="route('admin.notices.create')" class="mt-10">
+                            <PrimaryButton>
+                                Read More
+                            </PrimaryButton>
+                            </Link>
+                        </div>
                     </div>
                     <div ref="compliance">
                         <Compliance />
                     </div>
                 </div>
-                <div class="sm:w-1/3">
+                <div class="sm:w-1/3 mt-4 sm:mt-0">
                     <div ref="notice" class="h-full">
                         <Notice :notices="notices" />
                     </div>

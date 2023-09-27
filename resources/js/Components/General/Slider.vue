@@ -47,9 +47,9 @@ defineProps({
           :class="{ active: key === 0 }"
           data-bs-interval="2500"
         >
-          <img :src="slider" class="d-block w-full aspect-video" alt="...">
-          <div class="carousel-caption d-none d-md-block semitrans-bg">
-            <!-- <h5>{{ slider.caption }}</h5> -->
+          <img :src="slider.path" class="d-block w-full aspect-video" alt="...">
+          <div class="carousel-caption">
+            <div class="text-lg sm:text-xl md:text:2xl lg:text-3xl font-semibold bg-gradient-to-r from-transparent via-gray-500/40 to-transparent py-1">{{ slider.caption }}</div>
           </div>
         </div>
       </div>

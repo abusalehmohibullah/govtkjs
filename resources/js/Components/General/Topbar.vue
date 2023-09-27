@@ -99,8 +99,8 @@ const logout = () => {
 
                                 <!-- Navigation Links -->
                                 <div class="space-x-8 sm:-my-px sm:flex">
-                                    <NavLink :href="route('dashboard')" :active="route().current('/')">
-                                        Dashboard
+                                    <NavLink :href="route('home')" :active="route().current('/')">
+                                        Home
                                     </NavLink>
                                 </div>
                                 <div class="space-x-8 sm:-my-px sm:flex">
@@ -113,11 +113,11 @@ const logout = () => {
                                         Admission
                                     </NavLink>
                                 </div>
-                                <div class="space-x-8 sm:-my-px sm:flex">
+                                <!-- <div class="space-x-8 sm:-my-px sm:flex">
                                     <NavLink :href="route('dashboard')" :active="route().current('/')">
                                         Students
                                     </NavLink>
-                                </div>
+                                </div> -->
                                 <div class="space-x-8 sm:-my-px sm:flex">
                                     <NavLink :href="route('dashboard')" :active="route().current('/')">
                                         Teachers
@@ -125,24 +125,19 @@ const logout = () => {
                                 </div>
                                 <div class="space-x-8 sm:-my-px sm:flex">
                                     <NavLink :href="route('dashboard')" :active="route().current('/')">
-                                        Managing Committe
-                                    </NavLink>
-                                </div>
-                                <div class="space-x-8 sm:-my-px sm:flex">
-                                    <NavLink :href="route('dashboard')" :active="route().current('/')">
                                         Album
                                     </NavLink>
                                 </div>
-                                <div class="space-x-8 sm:-my-px sm:flex">
+                                <!-- <div class="space-x-8 sm:-my-px sm:flex">
                                     <NavLink :href="route('dashboard')" :active="route().current('/')">
                                         Scouting
                                     </NavLink>
-                                </div>
-                                <div class="space-x-8 sm:-my-px sm:flex">
+                                </div> -->
+                                <!-- <div class="space-x-8 sm:-my-px sm:flex">
                                     <NavLink :href="route('dashboard')" :active="route().current('/')">
                                         Exams
                                     </NavLink>
-                                </div>
+                                </div> -->
                                 <div class="space-x-8 sm:-my-px sm:flex">
                                     <NavLink :href="route('dashboard')" :active="route().current('/')">
                                         Contact

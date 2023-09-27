@@ -63,11 +63,16 @@ Route::get('/', function () {
         ->get();
 
 
-    $sliders = Slider::where('status', 1) // Filter by status = 1
-        ->orderByDesc('created_at') // Order by created_at in descending order
-        ->get()->map(function ($slider) {
-            return asset('storage/' . $slider->path);
+        $sliders = Slider::where('status', 1)
+        ->orderByDesc('created_at')
+        ->get()
+        ->map(function ($slider) {
+            return [
+                'path' => asset('storage/' . $slider->path),
+                'caption' => $slider->caption,
+            ];
         });
+    
 
 
 
