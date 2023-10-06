@@ -4,6 +4,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+use App\Http\Controllers\UserController;
+
 use App\Http\Controllers\Admin\BasicInfoController;
 use App\Http\Controllers\Admin\NoticeController;
 use App\Http\Controllers\Admin\FaqController;
@@ -43,6 +45,12 @@ use Illuminate\Support\Facades\Artisan;
 // });
 
 
+// Route::middleware(['auth'])->group(function () {
+//     Route::get('/role-permission', [RolePermissionController::class, 'index'])->name('role-permission.index');
+//     // Add more routes for editing, creating roles, permissions, etc.
+// });
+
+
 Route::get('/', function () {
     // Fetch data from multiple tables using Eloquent or database queries
     $infos = BasicInfo::orderByDesc('created_at') // Order by created_at in descending order
@@ -63,7 +71,7 @@ Route::get('/', function () {
         ->get();
 
 
-        $sliders = Slider::where('status', 1)
+    $sliders = Slider::where('status', 1)
         ->orderByDesc('created_at')
         ->get()
         ->map(function ($slider) {
@@ -72,7 +80,7 @@ Route::get('/', function () {
                 'caption' => $slider->caption,
             ];
         });
-    
+
 
 
 
@@ -96,7 +104,7 @@ Route::get('/login-options', function () {
 })->name('loginOptions');
 
 Route::get('/notice/{slug}', function ($slug) {
-    
+
     $notice = Notice::where('slug', $slug)->first();
 
     return Inertia::render('Notice', [
@@ -110,6 +118,32 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+
+
+    // Route::get('/role-permission', [RolePermissionController::class, 'index'])->name('role-permission.index');
+    // Route::post('/role-permission/update', [RolePermissionController::class, 'updatePermissions'])->name('role-permission.update');
+
+
+    // Show a list of all users
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+
+    // edit an individual user's details
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+
+    // edit an individual user's details
+    Route::get('/users/{user}', [UserController::class, 'edit'])->name('users.edit');
+
+    // Give a permission to a user
+    Route::post('/users/{user}/give-permission/{permission}', [UserController::class, 'givePermission'])->name('users.givePermission');
+
+    // Restrict a permission from a user
+    Route::post('/users/{user}/restrict-permission/{permission}', [UserController::class, 'restrictPermission'])->name('users.restrictPermission');
+
+
+
+
+
+
 
     // Dashboard
     Route::get('/dashboard', function () {

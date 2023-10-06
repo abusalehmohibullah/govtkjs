@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
-    
+    <script async type="module" src="https://embed.styledcalendar.com/assets/parent-window.js"></script>
     <!-- <link class="js-stylesheet" rel="stylesheet" href="{{ asset('css/dashboard-theme.css') }}"> -->
     
     <!-- <script type="module" src="{{ asset('js/dashboard-theme.js') }}"></script>
