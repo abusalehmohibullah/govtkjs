@@ -18,13 +18,16 @@ watchEffect(async () => {
 });
 
 defineProps({
-    infos : Object,
+    infos: Object,
 });
 </script>
 <template>
-    <h1>{{ infos.history_title }}</h1>
-    <div class="text-lg">
-        {{ infos.history_content }}
+    <div class="bg-white p-4 rounded">
+        <h1>{{ infos.history_title }}</h1>
+
+        <div class="text-container text-base" style="white-space: pre-line;">
+            {{ infos.history_content }}
+        </div>
     </div>
 </template>
 

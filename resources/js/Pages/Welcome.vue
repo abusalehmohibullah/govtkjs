@@ -8,7 +8,7 @@ import Slider from '@/Components/General/Slider.vue';
 import QuickAccess from '@/Components/General/QuickAccess.vue';
 import About from '@/Components/General/About.vue';
 import Notice from '@/Components/General/Notice.vue';
-import NoticeNew from '@/Components/General/NoticeNew.vue';
+import Calendar from '@/Components/General/Calendar.vue';
 import Compliance from '@/Components/General/Compliance.vue';
 import Message from '@/Components/General/Message.vue';
 import AcademicInfo from '@/Components/General/AcademicInfo.vue';
@@ -94,11 +94,11 @@ onMounted(() => {
                 </div>
                 <div class="sm:w-1/3 mt-4 sm:mt-0">
                     <div ref="notice" class="h-full">
-                        <Notice/>
+                        <Calendar/>
                     </div>
                 </div>
             </div>
-            <NoticeNew :notices="notices" />
+            <Notice :notices="notices" />
             <FAQ :faqs="faqs" />
             <Message :infos="infos" />
 
