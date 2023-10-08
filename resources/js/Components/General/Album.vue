@@ -14,7 +14,7 @@
 
                     <a data-fancybox="album" href="#" class="child stretched-link" data-caption=""></a>
 
-                    <div class="w-full rounded bg-[#C6DCE4]">
+                    <div class="w-full rounded bg-white border shadow-sm">
 
                         <div class="w-full ratio ratio-4x3 overflow-hidden">
                             <img
@@ -41,7 +41,7 @@
 
                     <a href="/education/albums" class="child stretched-link"></a>
 
-                    <div class="w-full rounded bg-[#C6DCE4]">
+                    <div class="w-full rounded bg-white border shadow-sm">
 
                         <div class="w-full ratio ratio-4x3 overflow-hidden position-relative">
                             <img

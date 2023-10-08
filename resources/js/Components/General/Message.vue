@@ -16,7 +16,7 @@ const adjustTextContainerHeight = (imageRef, textRef) => {
     <div>
         <div class="sm:flex mt-6 bg-white">
             <div class="img-container sm:w-1/3">
-                <img ref="image1" src="https://th.bing.com/th/id/OIP.JMLFs6GMSEJQNZ64p1D4BQHaE8?pid=ImgDet&rs=1"
+                <img ref="image1" :src="'storage/' + infos.message_1_image"
                     class="card-img-top" alt="..." @load="adjustTextContainerHeight($refs.image1, $refs.text1)" />
             </div>
             <div class="sm:w-2/3 p-5 overflow-hidden relative" ref="text1">
@@ -36,7 +36,7 @@ const adjustTextContainerHeight = (imageRef, textRef) => {
         </div>
         <div v-if="infos.message_2_content !== null" class="sm:flex mt-6 bg-white">
             <div class="sm:w-1/3">
-                <img ref="image2" src="https://th.bing.com/th/id/OIP.QRIqmXSob48-wxy4VLuDaAHaHG?pid=ImgDet&rs=1"
+                <img ref="image2" :src="'storage/' + infos.message_2_image"
                     class="card-img-top" alt="..." @load="adjustTextContainerHeight($refs.image2, $refs.text2)" />
             </div>
             <div class="sm:w-2/3 p-5 sm:order-first overflow-hidden relative" ref="text2">

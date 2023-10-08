@@ -62,8 +62,9 @@ const formatDate = (dateString) => {
             <div class="columns-2 lg:columns-3 gap-5">
                 <!-- Notice 1 -->
                 <div v-for="(notice, index) in notices" :style="getRotationStyle(index)"
-                    class="rotating-div break-inside-avoid-column bg-white p-4 relative shadow-sm first:mt-0 mt-5">
+                    class="rotating-div break-inside-avoid-column first:mt-0 mt-5">
                     <Link :href="route('notice.show', { slug: notice.slug })">
+                        <div class="bg-white p-4 relative shadow-sm hover:drop-shadow-xl">
                     <h2 class="text-lg font-semibold text-center">{{ notice.heading }}</h2>
                     <div class="text-end text-muted"><small>{{ formatDate(notice.published_on) }}</small></div>
                     <p class="text-sm text-gray-600">{{ notice.title }}</p>
@@ -83,6 +84,7 @@ const formatDate = (dateString) => {
                         <i
                             class="fa-solid fa-share px-2 py-2 outline-1 border border-gray-500 rounded hover:bg-gray-800 hover:text-white"></i>
                         </Link>
+                    </div>
                     </div>
                     </Link>
                 </div>

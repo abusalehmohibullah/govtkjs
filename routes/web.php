@@ -127,10 +127,12 @@ Route::get('/message1', function () {
 
     $message_1_title = BasicInfo::where('key', 'message_1_title')->first();
     $message_1_content = BasicInfo::where('key', 'message_1_content')->first();
+    $message_1_image = BasicInfo::where('key', 'message_1_image')->first();
 
     return Inertia::render('Message1', [
         'message_1_title' => $message_1_title,
         'message_1_content' => $message_1_content,
+        'message_1_image' => $message_1_image,
     ]);
 })->name('message_1.show');
 
@@ -138,10 +140,12 @@ Route::get('/message2', function () {
 
     $message_2_title = BasicInfo::where('key', 'message_2_title')->first();
     $message_2_content = BasicInfo::where('key', 'message_2_content')->first();
+    $message_2_image = BasicInfo::where('key', 'message_2_image')->first();
 
     return Inertia::render('Message2', [
         'message_2_title' => $message_2_title,
         'message_2_content' => $message_2_content,
+        'message_2_image' => $message_2_image,
     ]);
 })->name('message_2.show');
 

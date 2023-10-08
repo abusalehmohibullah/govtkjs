@@ -42,7 +42,7 @@ const updateInfo = () => {
         <!-- Use the Form component to wrap your form -->
         <FormSection @submitted="updateInfo">
             <template #title>
-                Update Password
+                Update Basic Info
             </template>
 
             <template #description>
