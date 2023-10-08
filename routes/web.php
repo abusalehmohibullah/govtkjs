@@ -112,8 +112,41 @@ Route::get('/notice/{slug}', function ($slug) {
     ]);
 })->name('notice.show');
 
+Route::get('/history', function () {
 
-Route::middleware([
+    $history_title = BasicInfo::where('key', 'history_title')->first();
+    $history_content = BasicInfo::where('key', 'history_content')->first();
+
+    return Inertia::render('History', [
+        'history_title' => $history_title,
+        'history_content' => $history_content,
+    ]);
+})->name('history.show');
+
+Route::get('/message1', function () {
+
+    $message_1_title = BasicInfo::where('key', 'message_1_title')->first();
+    $message_1_content = BasicInfo::where('key', 'message_1_content')->first();
+
+    return Inertia::render('Message1', [
+        'message_1_title' => $message_1_title,
+        'message_1_content' => $message_1_content,
+    ]);
+})->name('message_1.show');
+
+Route::get('/message2', function () {
+
+    $message_2_title = BasicInfo::where('key', 'message_2_title')->first();
+    $message_2_content = BasicInfo::where('key', 'message_2_content')->first();
+
+    return Inertia::render('Message2', [
+        'message_2_title' => $message_2_title,
+        'message_2_content' => $message_2_content,
+    ]);
+})->name('message_2.show');
+
+
+Route::prefix('admin')->middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',

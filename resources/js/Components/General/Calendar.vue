@@ -95,7 +95,7 @@ watch([currentMonth, currentYear], () => {
 </script>
 
 <template>
-    <div class="calendar bg-white relative overflow-hidden p-3 rounded">
+    <div class="calendar bg-white relative overflow-hidden p-3 rounded h-full">
         <div class="text-2xl font-semibold text-center">
             Academic Calendar
         </div>

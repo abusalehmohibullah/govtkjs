@@ -50,7 +50,7 @@ const complianceHeight = computed(() => {
 // Function to update the height of about based on notice's height
 const updateDiv2Height = () => {
     if (about.value) {
-        about.value.style.height = `${noticeHeight.value - complianceHeight.value}px`;
+        about.value.style.height = `${noticeHeight.value - complianceHeight.value + 35}px`;
         about.value.style.display = `block`;
     }
 };
@@ -81,7 +81,7 @@ onMounted(() => {
                         <About :infos="infos" />
                         <div
                             class="absolute bottom-0 right-0 w-full flex justify-end bg-gradient-to-b from-transparent to-white pr-5 pb-4">
-                            <Link :href="route('admin.notices.create')" class="mt-10">
+                            <Link :href="route('history.show')" class="mt-10">
                             <PrimaryButton>
                                 Read More
                             </PrimaryButton>

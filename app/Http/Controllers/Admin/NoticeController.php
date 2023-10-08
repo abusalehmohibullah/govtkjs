@@ -35,6 +35,7 @@ class NoticeController extends Controller
         // dd($request);
         // Define validation rules
         $validationRules = [
+            'heading' => 'required',
             'title' => 'required',
             'content' => 'nullable',
             'attachment' => 'nullable|mimes:pdf,doc,docx,jpg,jpeg,png|max:1024', // 1MB (1024 KB) limit
@@ -44,6 +45,7 @@ class NoticeController extends Controller
 
         // Custom error messages for validation
         $customMessages = [
+            'heading.required' => 'Please provide a heading.',
             'title.required' => 'Please provide a title.',
             'attachment.mimes' => 'Invalid file format. Only pdf, doc, docx, jpg, jpeg, png files are allowed.',
             'attachment.max' => 'The attachment must not be larger than 1MB.',
@@ -135,6 +137,7 @@ class NoticeController extends Controller
     
         // Define validation rules
         $validationRules = [
+            'heading' => 'required',
             'title' => 'required',
             'content' => 'nullable',
             'attachment' => 'nullable|mimes:pdf,doc,docx,jpg,jpeg,png|max:1024', // 1MB (1024 KB) limit
@@ -144,6 +147,7 @@ class NoticeController extends Controller
     
         // Custom error messages for validation
         $customMessages = [
+            'heading.required' => 'Please provide a heading.',
             'title.required' => 'Please provide a title.',
             'attachment.mimes' => 'Invalid file format. Only pdf, doc, docx, jpg, jpeg, png files are allowed.',
             'attachment.max' => 'The attachment must not be larger than 1MB.',

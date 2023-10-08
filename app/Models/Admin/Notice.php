@@ -10,6 +10,7 @@ class Notice extends Model
     use HasFactory;
 
     protected $fillable = [
+        'heading',
         'title',
         'content',
         'attachment',

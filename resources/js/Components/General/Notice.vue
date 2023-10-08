@@ -63,23 +63,28 @@ const formatDate = (dateString) => {
                 <!-- Notice 1 -->
                 <div v-for="(notice, index) in notices" :style="getRotationStyle(index)"
                     class="rotating-div break-inside-avoid-column bg-white p-4 relative shadow-sm first:mt-0 mt-5">
-                    <h2 class="text-lg font-semibold text-center">Important Event</h2>
+                    <Link :href="route('notice.show', { slug: notice.slug })">
+                    <h2 class="text-lg font-semibold text-center">{{ notice.heading }}</h2>
                     <div class="text-end text-muted"><small>{{ formatDate(notice.published_on) }}</small></div>
                     <p class="text-sm text-gray-600">{{ notice.title }}</p>
                     <img src="http://127.0.0.1:8000/assets/images/pin.png" alt=""
                         class="h-3 absolute top-1 left-1/2 drop-shadow-xl">
-                        <div class="flex gap-2 justify-center mt-3">
+                    <div class="flex gap-2 justify-center mt-3">
 
-                            <Link :href="route('admin.notices.edit', notice.id)">
-                                <i class="fa-solid fa-paperclip px-2 py-2 outline-1 border border-gray-500 rounded hover:bg-gray-800 hover:text-white"></i>
-                            </Link>
-                            <Link :href="route('admin.notices.edit', notice.id)">
-                                <i class="fa-solid fa-download px-2 py-2 outline-1 border border-gray-500 rounded hover:bg-gray-800 hover:text-white"></i>
-                            </Link>
-                            <Link :href="route('admin.notices.edit', notice.id)">
-                                <i class="fa-solid fa-share px-2 py-2 outline-1 border border-gray-500 rounded hover:bg-gray-800 hover:text-white"></i>
-                            </Link>
-                        </div>
+                        <Link :href="route('admin.notices.edit', notice.id)">
+                        <i
+                            class="fa-solid fa-paperclip px-2 py-2 outline-1 border border-gray-500 rounded hover:bg-gray-800 hover:text-white"></i>
+                        </Link>
+                        <Link :href="route('admin.notices.edit', notice.id)">
+                        <i
+                            class="fa-solid fa-download px-2 py-2 outline-1 border border-gray-500 rounded hover:bg-gray-800 hover:text-white"></i>
+                        </Link>
+                        <Link :href="route('admin.notices.edit', notice.id)">
+                        <i
+                            class="fa-solid fa-share px-2 py-2 outline-1 border border-gray-500 rounded hover:bg-gray-800 hover:text-white"></i>
+                        </Link>
+                    </div>
+                    </Link>
                 </div>
             </div>
         </div>

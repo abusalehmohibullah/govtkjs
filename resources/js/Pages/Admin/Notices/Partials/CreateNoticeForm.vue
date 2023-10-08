@@ -17,6 +17,7 @@ import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 const form = useForm({
+    heading: '',
     title: '',
     content: '',
     published_on: getCurrentDate(),
@@ -57,6 +58,14 @@ const enctype = 'multipart/form-data';
             <template #form>
                 <!-- Use the Text Input component for each form field -->
 
+                <div class="col-span-6 sm:col-span-4">
+                    <InputLabel for="heading" value="Heading">
+                        <template #required>*</template>
+                    </InputLabel>
+                    <TextInput id="heading" v-model="form.heading" required class="mt-1 block w-full"
+                        :class="{ 'border-red-500 focus:border-red-500': form.errors.heading }" type="text" name="heading" />
+                    <InputError :message="form.errors.heading" class="text-red-500" />
+                </div>
                 <div class="col-span-6 sm:col-span-4">
                     <InputLabel for="title" value="Title">
                         <template #required>*</template>

@@ -33,6 +33,7 @@ const toggleModal = (notice) => {
         <template #thead>
             <tr>
                 <th class="py-2 px-4 border-b bg-slate-200">#</th>
+                <th class="py-2 px-4 border-b bg-slate-200">Heading</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Notice</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Scroll?</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Published</th>
@@ -45,6 +46,9 @@ const toggleModal = (notice) => {
             <tr v-if="notices.data.length > 0" v-for="(notice, index) in notices.data" :key="index" class="hover:bg-blue-100"
                 :class="notice.status === 0 ? 'bg-slate-100' : ''">
                 <td class="py-2 px-4 border-b">{{ (notices.current_page - 1) * notices.per_page + index + 1 }}</td>
+                <td class="py-2 px-4 border-b">
+                    <div class="font-2xl text-slate-500">{{ notice.heading }}</div>
+                </td>
                 <td class="py-2 px-4 border-b">
                     <div class="font-medium text-slate-500">{{ notice.title }}</div>
                     <div>{{ notice.content }}</div>

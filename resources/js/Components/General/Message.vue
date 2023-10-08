@@ -25,7 +25,7 @@ const adjustTextContainerHeight = (imageRef, textRef) => {
                 <div class="text-container text-base mt-2" style="white-space: pre-line;">{{ infos.message_1_content }}
                     <div
                         class="absolute bottom-0 right-0 w-full flex justify-end bg-gradient-to-b from-transparent to-white pr-5 pb-4">
-                        <Link :href="route('admin.notices.create')" class="mt-10">
+                        <Link :href="route('message_1.show')" class="mt-10">
                         <PrimaryButton>
                             Read More
                         </PrimaryButton>
@@ -45,7 +45,7 @@ const adjustTextContainerHeight = (imageRef, textRef) => {
                 <div class="text-container text-base mt-2" style="white-space: pre-line;">{{ infos.message_2_content }}
                     <div
                         class="absolute bottom-0 right-0 w-full flex justify-end bg-gradient-to-b from-transparent to-white pr-5 pb-4">
-                        <Link :href="route('admin.notices.create')" class="mt-10">
+                        <Link :href="route('message_2.show')" class="mt-10">
                         <PrimaryButton>
                             Read More
                         </PrimaryButton>
