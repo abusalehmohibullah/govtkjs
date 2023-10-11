@@ -68,7 +68,7 @@ const formatDate = (dateString) => {
                     <h2 class="text-lg font-semibold text-center">{{ notice.heading }}</h2>
                     <div class="text-end text-muted"><small>{{ formatDate(notice.published_on) }}</small></div>
                     <p class="text-sm text-gray-600">{{ notice.title }}</p>
-                    <img src="http://127.0.0.1:8000/assets/images/pin.png" alt=""
+                    <img src="assets/images/pin.png" alt=""
                         class="h-3 absolute top-1 left-1/2 drop-shadow-xl">
                     <div class="flex gap-2 justify-center mt-3">
 
