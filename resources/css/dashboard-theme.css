@@ -3793,7 +3793,6 @@ fieldset:disabled .btn {
     border: 0;
     border-radius: var(--bs-dropdown-item-border-radius, 0);
     clear: both;
-    color: var(--bs-dropdown-link-color);
     display: block;
     font-weight: 400;
     padding: var(--bs-dropdown-item-padding-y) var(--bs-dropdown-item-padding-x);
@@ -3804,15 +3803,15 @@ fieldset:disabled .btn {
 
 .dropdown-item:focus,
 .dropdown-item:hover {
-    background-color: var(--bs-dropdown-link-hover-bg);
-    color: var(--bs-dropdown-link-hover-color);
+    /* background-color: var(--bs-dropdown-link-hover-bg);
+    color: var(--bs-dropdown-link-hover-color); */
     text-decoration: none
 }
 
 .dropdown-item.active,
 .dropdown-item:active {
-    background-color: var(--bs-dropdown-link-active-bg);
-    color: var(--bs-dropdown-link-active-color);
+    /* background-color: var(--bs-dropdown-link-active-bg);
+    color: var(--bs-dropdown-link-active-color); */
     text-decoration: none
 }
 
@@ -3837,7 +3836,7 @@ fieldset:disabled .btn {
 }
 
 .dropdown-item-text {
-    color: var(--bs-dropdown-link-color);
+    /* color: var(--bs-dropdown-link-color); */
     display: block;
     padding: var(--bs-dropdown-item-padding-y) var(--bs-dropdown-item-padding-x)
 }

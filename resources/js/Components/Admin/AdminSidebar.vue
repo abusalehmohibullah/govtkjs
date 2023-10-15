@@ -52,7 +52,17 @@ import SideNavLink from '@/Components/Shared/SideNavLink.vue';
                 <span class="align-middle">Basic Info</span>
             </SideNavLink>
 
-            <SideNavLink :href="route('admin.notices.index')" :active="route().current('admin.notices.index')">
+            <SideNavLink :href="route('admin.sliders.index')" :active="route().current('admin.sliders.*')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-code align-middle me-2">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                </svg>
+                <span class="align-middle">Slider</span>
+            </SideNavLink>
+
+            <SideNavLink :href="route('admin.notices.index')" :active="route().current('admin.notices.*')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="feather feather-list align-middle me-2">
@@ -66,7 +76,7 @@ import SideNavLink from '@/Components/Shared/SideNavLink.vue';
                 <span class="align-middle">Notice</span>
             </SideNavLink>
 
-            <SideNavLink :href="route('admin.faqs.index')" :active="route().current('admin.faqs.index')">
+            <SideNavLink :href="route('admin.faqs.index')" :active="route().current('admin.faqs.*')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="feather feather-help-circle align-middle me-2">
@@ -77,17 +87,18 @@ import SideNavLink from '@/Components/Shared/SideNavLink.vue';
                 <span class="align-middle">FAQ</span>
             </SideNavLink>
 
-            <SideNavLink :href="route('admin.sliders.index')" :active="route().current('admin.sliders.index')">
+            <SideNavLink :href="route('admin.albums.index')" :active="route().current('admin.albums.*')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-code align-middle me-2">
-                    <polyline points="16 18 22 12 16 6"></polyline>
-                    <polyline points="8 6 2 12 8 18"></polyline>
+                    class="feather feather-image align-middle me-2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
                 </svg>
-                <span class="align-middle">Slider</span>
+                <span class="align-middle">Album</span>
             </SideNavLink>
 
-            <SideNavLink :href="route('admin.sections.index')" :active="route().current('admin.sections.index')">
+            <SideNavLink :href="route('admin.sections.index')" :active="route().current('admin.sections.*')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="feather feather-code align-middle me-2">
@@ -97,7 +108,7 @@ import SideNavLink from '@/Components/Shared/SideNavLink.vue';
                 <span class="align-middle">Section</span>
             </SideNavLink>
 
-            <SideNavLink :href="route('admin.grades.index')" :active="route().current('admin.grades.index')">
+            <SideNavLink :href="route('admin.grades.index')" :active="route().current('admin.grades.*')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="feather feather-code align-middle me-2">
@@ -107,7 +118,7 @@ import SideNavLink from '@/Components/Shared/SideNavLink.vue';
                 <span class="align-middle">Class</span>
             </SideNavLink>
 
-            <SideNavLink :href="route('admin.subjects.index')" :active="route().current('admin.subjects.index')">
+            <SideNavLink :href="route('admin.subjects.index')" :active="route().current('admin.subjects.*')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="feather feather-code align-middle me-2">
@@ -117,7 +128,7 @@ import SideNavLink from '@/Components/Shared/SideNavLink.vue';
                 <span class="align-middle">Subject</span>
             </SideNavLink>
 
-            <SideNavLink :href="route('admin.groups.index')" :active="route().current('admin.groups.index')">
+            <SideNavLink :href="route('admin.groups.index')" :active="route().current('admin.groups.*')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="feather feather-code align-middle me-2">
@@ -128,6 +139,5 @@ import SideNavLink from '@/Components/Shared/SideNavLink.vue';
             </SideNavLink>
         </ul>
     </div>
-    
 </template>
 

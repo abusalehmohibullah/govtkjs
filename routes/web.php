@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\BasicInfoController;
 use App\Http\Controllers\Admin\NoticeController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\AlbumController;
+use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\Admin\GradeController;
 use App\Http\Controllers\Admin\SubjectController;
@@ -207,6 +209,12 @@ Route::prefix('admin')->middleware([
     ]);
     Route::resource('sliders', SliderController::class, [
         'names' => 'admin.sliders',
+    ]);
+    Route::resource('albums', AlbumController::class, [
+        'names' => 'admin.albums',
+    ]);
+    Route::resource('albums.media', MediaController::class, [
+        'names' => 'admin.albums.media',
     ]);
     Route::resource('sections', SectionController::class, [
         'names' => 'admin.sections',
