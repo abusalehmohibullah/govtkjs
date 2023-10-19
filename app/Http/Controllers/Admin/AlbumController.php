@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Album;
+use App\Models\Admin\Media;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
@@ -14,14 +15,26 @@ class AlbumController extends Controller
 {
     public function index()
     {
-        // Retrieve paginated records from the albums table
-        $albums = Album::orderby('created_at', 'desc')->paginate(10); // You can adjust the number of records per page (e.g., 10)
-
-        // Pass the paginated data to the Inertia view
+        // Retrieve albums with their first related media records
+        $albums = Album::select('albums.*')
+            ->addSelect(['path' => Media::select('path')
+                ->whereColumn('album_id', 'albums.id')
+                ->orderBy('created_at', 'asc')
+                ->limit(1)
+            ])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+    
+        // Pass the data to the Inertia view
         return Inertia::render('Admin/Albums/Index', [
             'albums' => $albums,
         ]);
     }
+    
+    
+    
+    
+
 
 
     public function create()

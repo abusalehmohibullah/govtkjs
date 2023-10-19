@@ -14,14 +14,27 @@ class NoticeController extends Controller
 {
     public function index()
     {
-        // Retrieve paginated records from the notices table
-        $notices = Notice::orderby('published_on', 'desc')->paginate(10); // You can adjust the number of records per page (e.g., 10)
-
+        // Retrieve paginated records from the notices table with the 'user' relationship
+        $notices = Notice::with('user')->orderBy('published_on', 'desc')->paginate(10);
+    
+        // Map the user's name for each notice
+        $notices->transform(function ($notice) {
+            // Check if a user is associated with the notice
+            if ($notice->user) {
+                $notice->updated_by = $notice->user->name;
+            }
+            return $notice;
+        });
+    
         // Pass the paginated data to the Inertia view
         return Inertia::render('Admin/Notices/Index', [
             'notices' => $notices,
         ]);
     }
+    
+
+    
+    
 
 
     public function create()
@@ -117,11 +130,8 @@ class NoticeController extends Controller
         // Display a specific one
     }
 
-    public function edit($id)
+    public function edit(Notice $notice)
     {
-        // Show the form for editing
-
-        $notice = Notice::findOrFail($id); // You can adjust the number of records per page (e.g., 10)
 
         // Pass the paginated data to the Inertia view
         return Inertia::render('Admin/Notices/Show', [
@@ -129,12 +139,10 @@ class NoticeController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Notice $notice)
     {
         // dd($request);
-        // Find the notice by ID
-        $notice = Notice::findOrFail($id);
-    
+
         // Define validation rules
         $validationRules = [
             'heading' => 'required',
@@ -144,7 +152,7 @@ class NoticeController extends Controller
             'published_on' => 'required|date',
             'scroll' => ['required', Rule::in(['0', '1'])],
         ];
-    
+
         // Custom error messages for validation
         $customMessages = [
             'heading.required' => 'Please provide a heading.',
@@ -154,10 +162,10 @@ class NoticeController extends Controller
             'published_on.required' => 'Please select the publish date.',
             'scroll.required' => 'Please select an option.',
         ];
-    
+
         // Validate the incoming request data
         $validatedData = $request->validate($validationRules, $customMessages);
-        
+
         $oldAttachment = $notice->attachment;
         // Update the notice with the validated data
         $notice->update($validatedData);
@@ -180,7 +188,7 @@ class NoticeController extends Controller
         }
 
         try {
-            if ($request->hasFile('attachment') ) {
+            if ($request->hasFile('attachment')) {
                 // dd('gotcha');
                 // Get the uploaded file from the request
                 $attachment = $request->file('attachment');
@@ -211,15 +219,11 @@ class NoticeController extends Controller
             // Handle the error
             return redirect()->back()->withInput()->with('flash.banner', $e->getMessage());
         }
-        
     }
-    
 
-    public function destroy($id)
+
+    public function destroy(Notice $notice)
     {
-        // Find the notice by ID
-        $notice = Notice::findOrFail($id);
-
         // Delete the attachment file if it exists
         if ($notice->attachment) {
             Storage::disk('public')->delete($notice->attachment);
@@ -230,5 +234,57 @@ class NoticeController extends Controller
 
         // Redirect to the notice index page with a success message
         return redirect()->route('admin.notices.index')->with('flash.banner', 'Notice deleted successfully!');
+    }
+
+    public function status(Request $request, Notice $notice)
+    {
+        dd($request);
+        $published = $request->has('status');
+
+        if ($published) {
+            $notice->status = 1;
+        } else {
+            $notice->status = 0;
+        }
+        $notice->updated_by = $notice->session()->get('ADMIN_ID');
+
+        if ($published) {
+            $message = 'News is visible to all!';
+        } else {
+            $message = 'News is hidden now!';
+        }
+
+        if ($notice->save()) {
+            return redirect('admin/news')->with('success', $message);
+        } else {
+            return redirect('admin/news')->with('error', 'Failed to update!');
+        }
+    }
+
+    public function download(Notice $notice)
+    {
+        // Check if the attachment exists
+        if ($notice->attachment) {
+            // Get the attachment path
+            $attachmentPath = storage_path('app/public/' . $notice->attachment);
+
+            // Check if the file exists
+            if (file_exists($attachmentPath)) {
+                // Extract the filename from the path
+                $filename = pathinfo($attachmentPath, PATHINFO_BASENAME);
+                // dd($attachmentPath);
+                // $response = response()->download($attachmentPath, $filename);
+
+                // dd($response);
+                // Return the file for download
+                return response()->download($attachmentPath, $filename);
+            } else {
+                // File not found, redirect back with an error message
+                return redirect()->back()->with('error', 'Attachment not found.');
+            }
+        } else {
+            // No attachment, redirect back with an error message
+            return redirect()->back()->with('error', 'No attachment available.');
+        }
     }
 }

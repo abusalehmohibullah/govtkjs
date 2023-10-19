@@ -10,6 +10,7 @@ import DangerIconButton from '@/Components/DangerIconButton.vue';
 
 const props = defineProps({
     album: Array,
+    media: Array,
     show: {
         type: Boolean,
         default: false,
@@ -22,18 +23,18 @@ const close = () => {
 };
 
 
-const confirmingAlbumDeletion = ref(false);
+const confirmingMediaDeletion = ref(false);
 const form = useForm({});
 
 watch(() => {
-    confirmingAlbumDeletion.value = props.show;
+    confirmingMediaDeletion.value = props.show;
 });
 
-const deleteAlbum = async () => {
+const deleteMedia = async () => {
     try {
-        // Send a DELETE request to delete the album
-        form.delete(route('admin.albums.destroy', props.album.id), {
-            errorBag: 'deleteAlbum',
+        // Send a DELETE request to delete the media
+        form.delete(route('admin.albums.media.destroy', [props.album.id, props.media.id,]), {
+            errorBag: 'deleteMedia',
         });
 
         setTimeout(() => {
@@ -42,7 +43,7 @@ const deleteAlbum = async () => {
 
     } catch (error) {
         // Handle any errors that occur during the deletion
-        console.error('Error deleting album:', error);
+        console.error('Error deleting media:', error);
     }
 };
 
@@ -51,19 +52,19 @@ const deleteAlbum = async () => {
 
 
 <template>
-    <!-- Delete Album Confirmation Modal -->
-    <ConfirmationModal :show="confirmingAlbumDeletion" :max-width="maxWidth" :closeable="closeable" @close="close">
+    <!-- Delete Media Confirmation Modal -->
+    <ConfirmationModal :show="confirmingMediaDeletion" :max-width="maxWidth" :closeable="closeable" @close="close">
 
         <template #title>
-            Delete Album
+            Delete Media
         </template>
 
         <template #content>
-            Are you sure you want to delete this album?
+            Are you sure you want to delete this media?
 
             <div class="bg-red-100 w-full mt-2 rounded line-clamp-3 box-content">
                 <span class="m-2 line-clamp-3 box-content">
-                    {{ props.album.title }}
+                    {{ props.media.caption }}
                 </span>
             </div>
         </template>
@@ -80,7 +81,7 @@ const deleteAlbum = async () => {
                 </SecondaryButton>
 
                 <DangerButton class="ml-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing"
-                    @click="deleteAlbum">
+                    @click="deleteMedia">
                     Delete
                 </DangerButton>
             </div>

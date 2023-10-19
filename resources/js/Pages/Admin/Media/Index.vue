@@ -20,7 +20,7 @@ const { mediaFiles, album } = defineProps(['mediaFiles', 'album']);
 
             <Header>
                 <template #header>
-                    Media
+                    {{ album.title }}
                 </template>
                 <template #description>
                     Lorem ipsumuasi eniumquam error aspernatsuscipit.

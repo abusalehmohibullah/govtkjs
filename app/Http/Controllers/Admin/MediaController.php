@@ -209,20 +209,18 @@ class MediaController extends Controller
     }
 
 
-    public function destroy($id)
+    public function destroy(Album $album, Media $medium)
     {
-        // Find the media by ID
-        $media = Media::findOrFail($id);
 
         // Delete the path file if it exists
-        if ($media->path) {
-            Storage::disk('public')->delete($media->path);
+        if ($medium->path) {
+            Storage::disk('public')->delete($medium->path);
         }
 
         // Delete the media
-        $media->delete();
+        $medium->delete();
 
         // Redirect to the media index page with a success message
-        return redirect()->route('admin.medias.index')->with('flash.banner', 'Media deleted successfully!');
+        return redirect()->route('admin.albums.media.index', $album->id)->with('flash.banner', 'Media deleted successfully!');
     }
 }

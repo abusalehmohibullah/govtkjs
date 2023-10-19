@@ -21,6 +21,8 @@ use App\Models\Admin\BasicInfo;
 use App\Models\Admin\Notice;
 use App\Models\Admin\Faq;
 use App\Models\Admin\Slider;
+use App\Models\Admin\Album;
+use App\Models\Admin\Media;
 use App\Models\Admin\Grade;
 use App\Models\Admin\Subject;
 use App\Models\Admin\Group;
@@ -55,21 +57,25 @@ use Illuminate\Support\Facades\Artisan;
 
 Route::get('/', function () {
     // Fetch data from multiple tables using Eloquent or database queries
-    $infos = BasicInfo::orderByDesc('created_at') // Order by created_at in descending order
-        ->get();
+    $infos = BasicInfo::get();
 
     $notices = Notice::where('status', 1) // Filter by status = 1
-        ->orderByDesc('created_at') // Order by created_at in descending order
+        ->latest('created_at') // Order by created_at in descending order
         ->get();
 
     $scrolls = Notice::where('status', 1) // Filter by status = 1
         ->where('scroll', '1') // Add your additional condition here
-        ->orderByDesc('created_at') // Order by created_at in descending order
+        ->latest('created_at') // Order by created_at in descending order
         ->get();
 
 
     $faqs = Faq::where('status', 1) // Filter by status = 1
-        ->orderByDesc('created_at') // Order by created_at in descending order
+        ->latest('created_at') // Order by created_at in descending order
+        ->get();
+
+    $albums = Album::with('media')
+        ->latest('created_at') // Order by created_at in descending order
+        ->take(10)             // Limit the result to the first 10 albums
         ->get();
 
 
@@ -97,6 +103,7 @@ Route::get('/', function () {
         'scrolls' => $scrolls,
         'notices' => $notices,
         'sliders' => $sliders,
+        'albums' => $albums,
     ]);
 })->name('home');
 
@@ -204,6 +211,9 @@ Route::prefix('admin')->middleware([
     Route::resource('notices', NoticeController::class, [
         'names' => 'admin.notices',
     ]);
+    Route::put('notices/{notice}/status', [NoticeController::class, 'status'])->name('admin.notices.status');
+    Route::get('notices/{notice}/download', [NoticeController::class, 'download'])->name('admin.notices.download');
+
     Route::resource('faqs', FaqController::class, [
         'names' => 'admin.faqs',
     ]);

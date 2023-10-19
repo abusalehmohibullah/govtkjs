@@ -27,6 +27,7 @@ defineProps({
     sliders: Object,
     faqs: Object,
     scrolls: Object,
+    albums: Object,
 });
 
 const notice = ref(null);
@@ -103,7 +104,7 @@ onMounted(() => {
             <Message :infos="infos" />
 
             <AcademicInfo />
-            <Album />
+            <Album :albums="albums" />
 
 
             <Contact :infos="infos" />
