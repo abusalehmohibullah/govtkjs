@@ -14,27 +14,16 @@ class NoticeController extends Controller
 {
     public function index()
     {
-        // Retrieve paginated records from the notices table with the 'user' relationship
-        $notices = Notice::with('user')->orderBy('published_on', 'desc')->paginate(10);
-    
-        // Map the user's name for each notice
-        $notices->transform(function ($notice) {
-            // Check if a user is associated with the notice
-            if ($notice->user) {
-                $notice->updated_by = $notice->user->name;
-            }
-            return $notice;
-        });
-    
+        // Retrieve paginated records from the notices table with the user who updated each notice
+        $notices = Notice::orderBy('published_on', 'desc')
+            ->with('user') // Assuming 'user' is the relationship method in your Notice model
+            ->paginate(10);
+
         // Pass the paginated data to the Inertia view
         return Inertia::render('Admin/Notices/Index', [
             'notices' => $notices,
         ]);
     }
-    
-
-    
-    
 
 
     public function create()
@@ -238,26 +227,22 @@ class NoticeController extends Controller
 
     public function status(Request $request, Notice $notice)
     {
-        dd($request);
-        $published = $request->has('status');
+        // dd($request);
+        // $published = $request->has('status');
 
-        if ($published) {
-            $notice->status = 1;
-        } else {
+        if ($request->input('status') === 1 ) {
             $notice->status = 0;
-        }
-        $notice->updated_by = $notice->session()->get('ADMIN_ID');
-
-        if ($published) {
-            $message = 'News is visible to all!';
+            $message = 'Notice is hidden now!';
         } else {
-            $message = 'News is hidden now!';
+            $notice->status = 1;
+            $message = 'Notice is visible to all!';
         }
+        $notice->updated_by = auth()->id();
 
         if ($notice->save()) {
-            return redirect('admin/news')->with('success', $message);
+            return redirect()->route('admin.notices.index')->with('flash.banner', $message);
         } else {
-            return redirect('admin/news')->with('error', 'Failed to update!');
+            return redirect()->back()->with('flash.banner', 'Failed to update Visibility.');
         }
     }
 

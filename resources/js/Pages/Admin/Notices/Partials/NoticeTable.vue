@@ -1,12 +1,15 @@
   
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useForm, Link, usePage } from '@inertiajs/vue3';
+import axios from 'axios';
+import { router } from '@inertiajs/vue3'
 
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 import Table from '@/Components/Table.vue';
-import FormSection from '@/Components/FormSection.vue';
+import Switch from '@/Components/Switch.vue';
+import Radio from '@/Components/Radio.vue';
 import PrimaryPaginatorButton from '@/Components/PrimaryPaginatorButton.vue';
 import SecondaryPaginatorButton from '@/Components/SecondaryPaginatorButton.vue';
 import PrimaryIconButton from '@/Components/PrimaryIconButton.vue';
@@ -15,10 +18,7 @@ import DangerIconButton from '@/Components/DangerIconButton.vue';
 import DeleteNoticeForm from '@/Pages/Admin/Notices/Partials/DeleteNoticeForm.vue';
 
 
-const props = defineProps({
-    notices: Object,
-});
-
+const { notices } = defineProps(['notices']);
 const showModal = ref(false);
 const selectedNotice = ref(null);
 
@@ -27,23 +27,71 @@ const toggleModal = (notice) => {
     showModal.value = !showModal.value;
 };
 
-const form = useForm({
-    _method: 'PUT',
-    status: '',
-});
+// const updateStatus = (notice) => {
+//     // Send an Axios request to update the status on the server.
+//     axios.post(`/admin/notices/${notice.id}/status`, { status: notice.status })
+//         .then(response => {
+//             // Handle success
+//             console.log('Status updated successfully');
+//         })
+//         .catch(error => {
+//             // Handle error
+//             console.error('Error updating status: ' + error);
+//         });
+// };
 
-const updateStatus = (notice) => {
-    // console.log('ttt');
-    form.post(route('admin.notices.status', notice), {
-        errorBag: 'updateNotice',
+
+const updateStatus = async (notice) => {
+    router.put(`/admin/notices/${notice.id}/status`, {
+        status: notice.status,
+    }, {
         preserveScroll: true,
     });
 };
 
-const formatDateTime = (isoDateTime) => {
-    const date = new Date(isoDateTime);
-    return date.toLocaleString(); // Adjust the format as needed
+const formatName = (name) => {
+    // Split the name into parts by spaces
+    const nameParts = name.split(' ');
+
+    // Capitalize the first letter of each part except the last one
+    const formattedName = nameParts
+        .map((part, index) => (index === nameParts.length - 1 ? part.charAt(0).toUpperCase() + part.slice(1).toLowerCase() : part.charAt(0).toUpperCase() + '.'))
+        .join(' ');
+
+    return formattedName;
 };
+
+// Create a function to format the date as "1 January, 2023"
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.toLocaleString('default', { month: 'long' });
+    const year = date.getFullYear();
+    return `${day} ${month}, ${year}`;
+};
+
+// Create a function to format the date as "1 January, 2023"
+const formatDateTime = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.toLocaleString('default', { month: 'long' });
+    const year = date.getFullYear();
+
+    const dateFormatted = `${day} ${month}, ${year}`;
+
+    // Format the time
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12; // Convert to 12-hour format
+
+    const timeFormatted = `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
+
+    return `${dateFormatted} at \n${timeFormatted}`;
+};
+
+
+
 
 </script>
 
@@ -64,7 +112,7 @@ const formatDateTime = (isoDateTime) => {
         <template #tbody>
 
             <tr v-if="notices.data.length > 0" v-for="(notice, index) in notices.data" :key="index"
-                class="hover:bg-blue-100" :class="notice.status === 0 ? 'bg-slate-100' : ''">
+                class="hover:bg-blue-100" :class="notice.status === 0 ? 'bg-gray-200 opacity-70' : ''">
                 <td class="py-2 px-4 border-b">{{ (notices.current_page - 1) * notices.per_page + index + 1 }}</td>
                 <td class="py-2 px-4 border-b">
                     <div class="font-2xl text-slate-500">{{ notice.heading }}</div>
@@ -74,13 +122,18 @@ const formatDateTime = (isoDateTime) => {
                     <div>{{ notice.content }}</div>
                 </td>
                 <td class="py-2 px-4 border-b text-center">{{ notice.scroll === 1 ? 'Yes' : 'No' }}</td>
-                <td class="py-2 px-4 border-b text-center">{{ notice.published_on }}</td>
+                <td class="py-2 px-4 border-b text-center whitespace-nowrap">{{ formatDate(notice.published_on) }}</td>
                 <td class="py-2 px-4 border-b text-center">
-                    <div class="text-xs whitespace-nowrap">
-                        At {{ formatDateTime(notice.updated_at) }}
+                    <div v-if="notice.updated_by">
+                        <div class="text-xs whitespace-nowrap">
+                            {{ formatDateTime(notice.updated_at) }}
+                        </div>
+                        <div class="text-xs">
+                            By <span class="text-blue-700">{{ formatName(notice.user.name) }}</span>
+                        </div>
                     </div>
-                    <div class="text-xs">
-                        By {{ notice.updated_by }}
+                    <div v-else class="text-gray-500">
+                        Not updated yet
                     </div>
                 </td>
                 <td class="py-2 px-4 border-b text-center">
@@ -110,18 +163,25 @@ const formatDateTime = (isoDateTime) => {
                     <div class="flex justify-center">
                         <div class="form-check form-switch relative">
 
-                                <input class="form-check-input checked:bg-auto checked:bg-right" name="status" type="checkbox"
-                                    role="switch" :id="'switch-' + (index + 1)" v-model="notice.status"
-                                    @change="updateStatus(notice.id)" />
+                            <!-- <form ref="statusForm"> -->
+                                <!-- Add a hidden input for the CSRF token here -->
+                                <!-- <input type="hidden" name="_token" :value="csrfToken" /> -->
 
-                            <div class="absolute top-[14px] left-0">
-                                <label class="form-check-label text-[8px] select-none" :for="'switch-' + (index + 1)">
-                                    <small :class="notice.status ? 'text-blue-700 font-bold' : ''">
-                                        {{ notice.status ? 'SHOWED' : 'HIDDEN' }}
-                                    </small>
-                                </label>
-                            </div>
+                                <Radio v-model:checked="notice.status" :id="'switch-' + (index + 1)"
+                                    class="form-check-input checked:bg-auto checked:bg-right cursor-pointer" type="checkbox" name="status"
+                                    :value="notice.status == 1 ? 1 : ''" @change="updateStatus(notice)" />
+
+
+              
+                                    <label :for="'switch-' + (index + 1)" class="py-1 absolute top-[14px] left-0 form-check-label text-[8px] select-none cursor-pointer">
+                                        <small :class="notice.status ? 'text-blue-700 font-bold' : ''">
+                                            {{ notice.status ? 'SHOWED' : 'HIDDEN' }}
+                                        </small>
+                                    </label>
+                      
+                            <!-- </form> -->
                         </div>
+                        <!-- <Switch v-model:checked="notice.status" name="status" :id="'switch-' + (index + 1)" @update:checked="updateStatus(notice)"/> -->
                         <!-- <button type="submit" style="display: none;"></button> -->
                         <Link :href="route('admin.notices.edit', notice.id)">
                         <PrimaryIconButton>
