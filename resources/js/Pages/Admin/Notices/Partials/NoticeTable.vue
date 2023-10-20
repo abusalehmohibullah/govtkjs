@@ -27,19 +27,6 @@ const toggleModal = (notice) => {
     showModal.value = !showModal.value;
 };
 
-// const updateStatus = (notice) => {
-//     // Send an Axios request to update the status on the server.
-//     axios.post(`/admin/notices/${notice.id}/status`, { status: notice.status })
-//         .then(response => {
-//             // Handle success
-//             console.log('Status updated successfully');
-//         })
-//         .catch(error => {
-//             // Handle error
-//             console.error('Error updating status: ' + error);
-//         });
-// };
-
 
 const updateStatus = async (notice) => {
     router.put(`/admin/notices/${notice.id}/status`, {
@@ -61,20 +48,18 @@ const formatName = (name) => {
     return formattedName;
 };
 
-// Create a function to format the date as "1 January, 2023"
 const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = date.getDate();
-    const month = date.toLocaleString('default', { month: 'long' });
+    const month = date.toLocaleString('default', { month: 'short' });
     const year = date.getFullYear();
     return `${day} ${month}, ${year}`;
 };
 
-// Create a function to format the date as "1 January, 2023"
 const formatDateTime = (dateString) => {
     const date = new Date(dateString);
     const day = date.getDate();
-    const month = date.toLocaleString('default', { month: 'long' });
+    const month = date.toLocaleString('default', { month: 'short' });
     const year = date.getFullYear();
 
     const dateFormatted = `${day} ${month}, ${year}`;
@@ -104,7 +89,7 @@ const formatDateTime = (dateString) => {
                 <th class="py-2 px-4 border-b bg-slate-200">Notice</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Scroll?</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Published</th>
-                <th class="py-2 px-4 border-b bg-slate-200">Edited</th>
+                <th class="py-2 px-4 border-b bg-slate-200">Created/Edited</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Attachment</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Action</th>
             </tr>
@@ -121,19 +106,28 @@ const formatDateTime = (dateString) => {
                     <div class="font-medium text-slate-500">{{ notice.title }}</div>
                     <div>{{ notice.content }}</div>
                 </td>
-                <td class="py-2 px-4 border-b text-center">{{ notice.scroll === 1 ? 'Yes' : 'No' }}</td>
+                <td class="py-2 px-4 border-b text-center">
+                    <div class="rounded-2xl px-4 text-white" :class="notice.scroll === 1 ? 'bg-blue-700' : 'bg-gray-500'">
+                    {{ notice.scroll === 1 ? 'Yes' : 'No' }}
+                    </div>
+                </td>
                 <td class="py-2 px-4 border-b text-center whitespace-nowrap">{{ formatDate(notice.published_on) }}</td>
                 <td class="py-2 px-4 border-b text-center">
                     <div v-if="notice.updated_by">
+                        <div class="text-xs">
+                            <div>Updated by </div><div class="text-blue-700">{{ formatName(notice.updated_by.name) }}</div>
+                        </div>
                         <div class="text-xs whitespace-nowrap">
                             {{ formatDateTime(notice.updated_at) }}
                         </div>
-                        <div class="text-xs">
-                            By <span class="text-blue-700">{{ formatName(notice.user.name) }}</span>
-                        </div>
                     </div>
-                    <div v-else class="text-gray-500">
-                        Not updated yet
+                    <div v-else>
+                        <div class="text-xs">
+                            <div>Created by </div><div class="text-blue-700">{{ formatName(notice.created_by.name) }}</div>
+                        </div>
+                        <div class="text-xs whitespace-nowrap">
+                            {{ formatDateTime(notice.created_at) }}
+                        </div>
                     </div>
                 </td>
                 <td class="py-2 px-4 border-b text-center">
