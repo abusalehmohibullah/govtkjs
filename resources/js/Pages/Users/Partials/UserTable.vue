@@ -51,26 +51,31 @@ const toggleModal = (user) => {
 
                 </td>
                 <td class="py-2 px-4 border-b text-center">
-                    <div v-if="user.roles.length > 0">
-                            <span v-for="role in user.roles" :key="role.id" class="bg-gray-800 text-white rounded-full px-2 py-1 capitalize">{{ role.name }}</span>
+                    <div v-if="user.roles.length > 0" class="flex flex-wrap gap-1 justify-center">
+                        <div v-for="role in user.roles" :key="role.id"
+                            class="bg-gray-800 text-white rounded-full px-2 py-1 capitalize">{{ role.name }}</div>
+                        <!-- <div v-for="role in user.roles" :key="role.id" class="flex flex-wrap gap-1">
+                            <span v-for="permission in role.permissions" :key="permission.id">
+                                {{ permission.name }}
+                            </span>
+                        </div> -->
                     </div>
                     <div v-else>No roles assigned</div>
                 </td>
                 <td class="py-2 px-4 border-b text-center">
-                    <div v-if="user.permissions.length > 0">
-                        <ul>
-                            <li v-for="permission in user.permissions" :key="permission.id">{{ permission.name }}</li>
-                        </ul>
+                    <div v-if="user.extras.length > 0" class="flex flex-wrap gap-1 justify-center">
+                        <div v-for="extra in user.extras" :key="extra"
+                            class="bg-green-700 text-white rounded-full px-2 py-1 capitalize">{{ extra.replace(/_/g, ' ')
+                            }}</div>
                     </div>
-                    <div v-else>No permissions assigned</div>
+                    <div v-else>No extras permission</div>
                 </td>
                 <td class="py-2 px-4 border-b text-center">
-                    <div v-if="user.permissions.length > 0">
-                        <ul>
-                            <li v-for="permission in user.permissions" :key="permission.id">{{ permission.name }}</li>
-                        </ul>
+                    <div v-if="user.restrictions.length > 0" class="flex flex-wrap gap-1 justify-center">
+                        <div v-for="restriction in user.restrictions" :key="restriction"
+                            class="bg-red-700 text-white rounded-full px-2 py-1 capitalize">{{ restriction.replace(/_/g, ' ') }}</div>
                     </div>
-                    <div v-else>No permissions assigned</div>
+                    <div v-else>No restrictions</div>
                 </td>
 
                 <td class="py-2 px-4 border-b">

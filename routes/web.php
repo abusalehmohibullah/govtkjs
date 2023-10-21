@@ -217,27 +217,43 @@ Route::prefix('admin')->middleware([
     Route::resource('faqs', FaqController::class, [
         'names' => 'admin.faqs',
     ]);
+    Route::put('faqs/{faq}/status', [FaqController::class, 'status'])->name('admin.faqs.status');
+
     Route::resource('sliders', SliderController::class, [
         'names' => 'admin.sliders',
     ]);
+    Route::put('sliders/{slider}/status', [SliderController::class, 'status'])->name('admin.sliders.status');
+
     Route::resource('albums', AlbumController::class, [
         'names' => 'admin.albums',
     ]);
+    Route::put('albums/{album}/status', [AlbumController::class, 'status'])->name('admin.albums.status');
+
     Route::resource('albums.media', MediaController::class, [
         'names' => 'admin.albums.media',
     ]);
+    Route::put('notices/{notice}/status', [NoticeController::class, 'status'])->name('admin.notices.status');
+
     Route::resource('sections', SectionController::class, [
         'names' => 'admin.sections',
     ]);
+    Route::put('sections/{section}/status', [SectionController::class, 'status'])->name('admin.sections.status');
+
     Route::resource('grades', GradeController::class, [
         'names' => 'admin.grades',
     ]);
+    Route::put('grades/{grade}/status', [GradeController::class, 'status'])->name('admin.grades.status');
+
     Route::resource('subjects', SubjectController::class, [
         'names' => 'admin.subjects',
     ]);
+    Route::put('subjects/{subject}/status', [SubjectController::class, 'status'])->name('admin.subjects.status');
+
     Route::resource('groups', GroupController::class, [
         'names' => 'admin.groups',
     ]);
+    Route::put('groups/{group}/status', [GroupController::class, 'status'])->name('admin.groups.status');
+
 });
 
 

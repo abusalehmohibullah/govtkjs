@@ -6,6 +6,8 @@ import { useForm, Link } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 import Table from '@/Components/Table.vue';
+import CreatedUpdatedBy from '@/Components/Admin/CreatedUpdatedBy.vue';
+import ToggleStatus from '@/Components/Admin/ToggleStatus.vue';
 import PrimaryPaginatorButton from '@/Components/PrimaryPaginatorButton.vue';
 import SecondaryPaginatorButton from '@/Components/SecondaryPaginatorButton.vue';
 import PrimaryIconButton from '@/Components/PrimaryIconButton.vue';
@@ -33,33 +35,29 @@ const toggleModal = (slider) => {
         <template #thead>
             <tr>
                 <th class="py-2 px-4 border-b bg-slate-200">#</th>
-                <th class="py-2 px-4 border-b bg-slate-200">Slider</th>
+                <th class="py-2 px-4 border-b bg-slate-200">Caption</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Path</th>
+                <th class="py-2 px-4 border-b bg-slate-200">Created/Edited</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Action</th>
             </tr>
         </template>
         <template #tbody>
 
-            <tr v-if="sliders.data.length > 0" v-for="(slider, index) in sliders.data" :key="index" class="hover:bg-blue-100"
-                :class="slider.status === 0 ? 'bg-slate-100' : ''">
+
+            <tr v-if="sliders.data.length > 0" v-for="(slider, index) in sliders.data" :key="index"
+                class="hover:bg-blue-100" :class="slider.status === 0 ? 'bg-gray-200 opacity-70' : ''">
                 <td class="py-2 px-4 border-b">{{ (sliders.current_page - 1) * sliders.per_page + index + 1 }}</td>
                 <td class="py-2 px-4 border-b">
                     <div class="font-medium text-slate-500">{{ slider.caption }}</div>
-                    <div>{{ slider.description }}</div>
                 </td>
                 <td class="py-2 px-4 border-b text-center">{{ slider.path }}</td>
+                <td class="py-2 px-4 border-b text-center">
+                    <CreatedUpdatedBy :createdUpdatedBy="slider" />
+                </td>
                 <td class="py-2 px-4 border-b">
                     <div class="flex justify-center">
-                        <div class="form-check form-switch relative">
-                            <input class="form-check-input checked:bg-auto checked:bg-right" type="checkbox" role="switch"
-                                :id="'switch-' + (index + 1)">
+                        <ToggleStatus :toggle="slider" :toggleType="`sliders`" />
 
-                            <!-- <label class="form-check-label" for="flexSwitchCheckDefault">SHOW</label> -->
-                            <div class="absolute top-[14px] left-0">
-                                <label class="form-check-label text-[8px] select-none"
-                                    :for="'switch-' + (index + 1)"><small>SHOWED</small></label>
-                            </div>
-                        </div>
                         <Link :href="route('admin.sliders.edit', slider.id)">
                         <PrimaryIconButton>
                             <i class="fas fa-pen"></i>
@@ -74,7 +72,7 @@ const toggleModal = (slider) => {
                     </div>
                 </td>
             </tr>
-            
+
             <tr v-else>
                 <td colspan="4" class="text-center p-3">
                     Not Data Found

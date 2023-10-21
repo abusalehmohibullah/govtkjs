@@ -21,8 +21,39 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::with('roles', 'permissions')->paginate(10); // Adjust the number of users per page as needed
-    
+        $users = User::with('roles', 'roles.permissions', 'permissions')->paginate(10);
+
+        // Initialize empty arrays for extras and restrictions
+        $extras = [];
+        $restrictions = [];
+
+        foreach ($users as $user) {
+            foreach ($user->permissions as $permission) {
+                $foundInRoles = false;
+
+                foreach ($user->roles as $role) {
+                    if ($role->permissions->contains('id', $permission->id)) {
+                        $foundInRoles = true;
+                        break;
+                    }
+                }
+
+                if ($foundInRoles) {
+                    $restrictions[] = $permission->name;
+                } else {
+                    $extras[] = $permission->name;
+                }
+            }
+
+            // Add extras and restrictions to the user
+            $user->extras = $extras;
+            $user->restrictions = $restrictions;
+
+            // Reset the extras and restrictions arrays for the next user
+            $extras = [];
+            $restrictions = [];
+        }
+
         return Inertia::render('Users/Index', [
             'users' => $users,
         ]);
@@ -30,23 +61,49 @@ class UserController extends Controller
     
     
 
-
-
-
     public function edit(User $user)
     {
         // Get the user's roles and permissions
         $userRoles = $user->roles()->with('permissions')->get();
     
-        // Get all roles and permissions for reference
+        // Extract user's permissions into a flat array
+        $userPermissions = $userRoles->flatMap(function ($userRole) {
+            return $userRole->permissions;
+        })->pluck('id')->toArray();
+    
+        // Get permissions associated with the user in model_has_permissions
+        $modelHasPermissions = $user->permissions->pluck('id')->toArray();
+    
+        // Exclude direct permissions that exist in user's roles
+        $userPermissions = array_diff($userPermissions, $modelHasPermissions);
+    
+        // Get all permissions from the roles
+        $allPermissions = $userRoles->flatMap(function ($userRole) {
+            return $userRole->permissions;
+        })->pluck('id')->toArray();
+    
+        // Include direct permissions if they don't exist in user's roles
+        $userPermissions = array_merge($userPermissions, array_diff($modelHasPermissions, $allPermissions));
+    
+        // Get user's roles for reference
         $roles = Role::with('permissions')->get();
     
         return Inertia::render('Users/Show', [
             'user' => $user,
             'userRoles' => $userRoles,
             'roles' => $roles,
+            'userPermissions' => $userPermissions,
         ]);
     }
+    
+    
+    
+    
+    
+    
+    
+
+    
     
     
 

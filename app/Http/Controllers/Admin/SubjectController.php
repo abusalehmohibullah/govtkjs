@@ -13,7 +13,9 @@ class SubjectController extends Controller
     public function index()
     {
         // Retrieve paginated records from the subjects table
-        $subjects = Subject::orderby('name')->paginate(10); // You can adjust the number of records per page (e.g., 10)
+        $subjects = Subject::orderby('name')
+        ->with(['createdBy', 'updatedBy'])
+        ->paginate(10);
 
         // Pass the paginated data to the Inertia view
         return Inertia::render('Admin/Subjects/Index', [
@@ -144,5 +146,23 @@ class SubjectController extends Controller
 
         // Redirect to the subject index page with a success message
         return redirect()->route('admin.subjects.index')->with('flash.banner', 'Subject deleted successfully!');
+    }
+
+    public function status(Request $request, Subject $subject)
+    {
+        if ($request->input('status') === 1) {
+            $subject->status = 0;
+            $message = 'Subject is hidden now!';
+        } else {
+            $subject->status = 1;
+            $message = 'Subject is visible to all!';
+        }
+        $subject->updated_by = auth()->id();
+
+        if ($subject->save()) {
+            return redirect()->route('admin.subjects.index')->with('flash.banner', $message);
+        } else {
+            return redirect()->back()->with('flash.banner', 'Failed to update Visibility.');
+        }
     }
 }

@@ -13,7 +13,9 @@ class GroupController extends Controller
     public function index()
     {
         // Retrieve paginated records from the groups table
-        $groups = Group::orderby('name')->paginate(10); // You can adjust the number of records per page (e.g., 10)
+        $groups = Group::orderby('name')
+        ->with(['createdBy', 'updatedBy'])
+        ->paginate(10);
 
         // Pass the paginated data to the Inertia view
         return Inertia::render('Admin/Groups/Index', [
@@ -140,5 +142,23 @@ class GroupController extends Controller
 
         // Redirect to the group index page with a success message
         return redirect()->route('admin.groups.index')->with('flash.banner', 'Group deleted successfully!');
+    }
+
+    public function status(Request $request, Group $group)
+    {
+        if ($request->input('status') === 1) {
+            $group->status = 0;
+            $message = 'Group is hidden now!';
+        } else {
+            $group->status = 1;
+            $message = 'Group is visible to all!';
+        }
+        $group->updated_by = auth()->id();
+
+        if ($group->save()) {
+            return redirect()->route('admin.groups.index')->with('flash.banner', $message);
+        } else {
+            return redirect()->back()->with('flash.banner', 'Failed to update Visibility.');
+        }
     }
 }

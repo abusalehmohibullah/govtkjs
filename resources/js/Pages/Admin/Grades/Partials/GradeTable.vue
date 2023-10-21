@@ -6,6 +6,8 @@ import { useForm, Link } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 import Table from '@/Components/Table.vue';
+import CreatedUpdatedBy from '@/Components/Admin/CreatedUpdatedBy.vue';
+import ToggleStatus from '@/Components/Admin/ToggleStatus.vue';
 import PrimaryPaginatorButton from '@/Components/PrimaryPaginatorButton.vue';
 import SecondaryPaginatorButton from '@/Components/SecondaryPaginatorButton.vue';
 import PrimaryIconButton from '@/Components/PrimaryIconButton.vue';
@@ -34,27 +36,24 @@ const toggleModal = (grade) => {
             <tr>
                 <th class="py-2 px-4 border-b bg-slate-200">#</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Classes</th>
+                <th class="py-2 px-4 border-b bg-slate-200">Created/Edited</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Action</th>
             </tr>
         </template>
         <template #tbody>
 
-            <tr v-if="grades.data.length > 0" v-for="(grade, index) in grades.data" :key="index" class="hover:bg-blue-100"
-                :class="grade.status === 0 ? 'bg-slate-100' : ''">
+
+            <tr v-if="grades.data.length > 0" v-for="(grade, index) in grades.data" :key="index"
+                class="hover:bg-blue-100" :class="grade.status === 0 ? 'bg-gray-200 opacity-70' : ''">
                 <td class="py-2 px-4 border-b text-center">{{ (grades.current_page - 1) * grades.per_page + index + 1 }}</td>
-                <td class="py-2 px-4 border-b text-center">{{ grade.name }}</td>
+                <td class="py-2 px-4 border-b text-center w-full">{{ grade.name }}</td>
+                <td class="py-2 px-4 border-b text-center">
+                    <CreatedUpdatedBy :createdUpdatedBy="grade" />
+                </td>
                 <td class="py-2 px-4 border-b">
                     <div class="flex justify-center">
-                        <div class="form-check form-switch relative">
-                            <input class="form-check-input checked:bg-auto checked:bg-right" type="checkbox" role="switch"
-                                :id="'switch-' + (index + 1)">
 
-                            <!-- <label class="form-check-label" for="flexSwitchCheckDefault">SHOW</label> -->
-                            <div class="absolute top-[14px] left-0">
-                                <label class="form-check-label text-[8px] select-none"
-                                    :for="'switch-' + (index + 1)"><small>SHOWED</small></label>
-                            </div>
-                        </div>
+<ToggleStatus :toggle="grade" :toggleType="`grades`"/>
                         <Link :href="route('admin.grades.edit', grade.id)">
                         <PrimaryIconButton>
                             <i class="fas fa-pen"></i>

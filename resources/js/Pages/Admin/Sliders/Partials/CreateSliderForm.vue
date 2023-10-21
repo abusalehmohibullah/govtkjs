@@ -14,7 +14,6 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 const form = useForm({
     caption: '',
-    description: '',
     path: null,
 });
 
@@ -49,12 +48,6 @@ const createSlider = () => {
                     <TextInput id="caption" v-model="form.caption" required class="mt-1 block w-full"
                         :class="{ 'border-red-500 focus:border-red-500': form.errors.caption }" type="text" name="caption" />
                     <InputError :message="form.errors.caption" class="text-red-500" />
-                </div>
-                <div class="col-span-6 sm:col-span-4">
-                    <InputLabel for="description" value="Description" />
-                    <TextArea id="description" v-model="form.description" class="mt-1 block w-full"
-                        :class="{ 'border-red-500 focus:border-red-500': form.errors.description }" name="description" />
-                    <InputError :message="form.errors.description" class="text-red-500" />
                 </div>
                 <div class="grid grid-cols-12 col-span-6 sm:col-span-4 gap-3 xl:gap-0">
                     <div class="col-span-12">

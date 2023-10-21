@@ -13,7 +13,9 @@ class GradeController extends Controller
     public function index()
     {
         // Retrieve paginated records from the grades table
-        $grades = Grade::orderby('name')->paginate(10); // You can adjust the number of records per page (e.g., 10)
+        $grades = Grade::orderby('name')
+        ->with(['createdBy', 'updatedBy'])
+        ->paginate(10);
 
         // Pass the paginated data to the Inertia view
         return Inertia::render('Admin/Grades/Index', [
@@ -140,5 +142,23 @@ class GradeController extends Controller
 
         // Redirect to the grade index page with a success message
         return redirect()->route('admin.grades.index')->with('flash.banner', 'Grade deleted successfully!');
+    }
+
+    public function status(Request $request, Grade $grade)
+    {
+        if ($request->input('status') === 1) {
+            $grade->status = 0;
+            $message = 'Grade is hidden now!';
+        } else {
+            $grade->status = 1;
+            $message = 'Grade is visible to all!';
+        }
+        $grade->updated_by = auth()->id();
+
+        if ($grade->save()) {
+            return redirect()->route('admin.grades.index')->with('flash.banner', $message);
+        } else {
+            return redirect()->back()->with('flash.banner', 'Failed to update Visibility.');
+        }
     }
 }

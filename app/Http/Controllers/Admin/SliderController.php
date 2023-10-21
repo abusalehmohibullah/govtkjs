@@ -14,7 +14,9 @@ class SliderController extends Controller
     public function index()
     {
         // Retrieve paginated records from the sliders table
-        $sliders = Slider::orderby('created_at', 'desc')->paginate(10); // You can adjust the number of records per page (e.g., 10)
+        $sliders = Slider::orderby('created_at', 'desc')
+        ->with(['createdBy', 'updatedBy'])
+        ->paginate(10);
 
         // Pass the paginated data to the Inertia view
         return Inertia::render('Admin/Sliders/Index', [
@@ -35,7 +37,6 @@ class SliderController extends Controller
         // Define validation rules
         $validationRules = [
             'caption' => 'required',
-            'description' => 'nullable',
             'path' => 'required|mimes:pdf,doc,docx,jpg,jpeg,png|max:1024', // 1MB (1024 KB) limit
         ];
 
@@ -132,7 +133,6 @@ class SliderController extends Controller
         // Define validation rules
         $validationRules = [
             'caption' => 'required',
-            'description' => 'nullable',
             'path' => 'nullable|mimes:pdf,doc,docx,jpg,jpeg,png|max:1024', // 1MB (1024 KB) limit
         ];
     
@@ -220,5 +220,23 @@ class SliderController extends Controller
 
         // Redirect to the slider index page with a success message
         return redirect()->route('admin.sliders.index')->with('flash.banner', 'Slider deleted successfully!');
+    }
+
+    public function status(Request $request, Slider $slider)
+    {
+        if ($request->input('status') === 1) {
+            $slider->status = 0;
+            $message = 'Slider is hidden now!';
+        } else {
+            $slider->status = 1;
+            $message = 'Slider is visible to all!';
+        }
+        $slider->updated_by = auth()->id();
+
+        if ($slider->save()) {
+            return redirect()->route('admin.sliders.index')->with('flash.banner', $message);
+        } else {
+            return redirect()->back()->with('flash.banner', 'Failed to update Visibility.');
+        }
     }
 }

@@ -13,13 +13,14 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 const props = defineProps({
     user: Object,
-    userRoles: Object,
     roles: Array,
+    // userRoles: Object,
+    userPermissions: Array,
 });
 
 const form = useForm({
     _method: 'PUT',
-    name: props.userRoles.name,
+    // name: props.userRoles.name,
 });
 
 const updateUser = () => {
@@ -63,7 +64,7 @@ const updateUser = () => {
                     </div>
                 </div>
 
-                <RolePermission :user="user" :roles="roles" />
+                <RolePermission :user="user" :roles="roles" :userPermissions="userPermissions"/>
 
             </template>
 

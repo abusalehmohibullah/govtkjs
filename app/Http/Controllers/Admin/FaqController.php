@@ -15,7 +15,9 @@ class FaqController extends Controller
     public function index()
     {
         // Retrieve paginated records from the faqs table
-        $faqs = Faq::orderby('created_at', 'desc')->paginate(10); // You can adjust the number of records per page (e.g., 10)
+        $faqs = Faq::orderby('created_at', 'desc')
+        ->with(['createdBy', 'updatedBy'])
+        ->paginate(10);
 
         // Pass the paginated data to the Inertia view
         return Inertia::render('Admin/Faqs/Index', [
@@ -169,5 +171,23 @@ class FaqController extends Controller
 
         // Redirect to the faq index page with a success message
         return redirect()->route('admin.faqs.index')->with('flash.banner', 'FAQ deleted successfully!');
+    }
+
+    public function status(Request $request, Faq $faq)
+    {
+        if ($request->input('status') === 1) {
+            $faq->status = 0;
+            $message = 'FAQ is hidden now!';
+        } else {
+            $faq->status = 1;
+            $message = 'FAQ is visible to all!';
+        }
+        $faq->updated_by = auth()->id();
+
+        if ($faq->save()) {
+            return redirect()->route('admin.faqs.index')->with('flash.banner', $message);
+        } else {
+            return redirect()->back()->with('flash.banner', 'Failed to update Visibility.');
+        }
     }
 }

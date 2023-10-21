@@ -16,7 +16,7 @@ class NoticeController extends Controller
     {
         // Retrieve paginated records from the notices table with the user who updated each notice
         $notices = Notice::orderBy('published_on', 'desc')
-            ->with(['createdBy', 'updatedBy']) // Assuming 'user' is the relationship method in your Notice model
+            ->with(['createdBy', 'updatedBy'])
             ->paginate(10);
 
         // Pass the paginated data to the Inertia view
@@ -210,7 +210,6 @@ class NoticeController extends Controller
         }
     }
 
-
     public function destroy(Notice $notice)
     {
         // Delete the attachment file if it exists
@@ -227,9 +226,6 @@ class NoticeController extends Controller
 
     public function status(Request $request, Notice $notice)
     {
-        // dd($request);
-        // $published = $request->has('status');
-
         if ($request->input('status') === 1) {
             $notice->status = 0;
             $message = 'Notice is hidden now!';

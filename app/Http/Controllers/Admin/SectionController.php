@@ -13,7 +13,9 @@ class SectionController extends Controller
     public function index()
     {
         // Retrieve paginated records from the sections table
-        $sections = Section::orderby('name')->paginate(10); // You can adjust the number of records per page (e.g., 10)
+        $sections = Section::orderby('name')
+        ->with(['createdBy', 'updatedBy'])
+        ->paginate(10);
 
         // Pass the paginated data to the Inertia view
         return Inertia::render('Admin/Sections/Index', [
@@ -140,5 +142,23 @@ class SectionController extends Controller
 
         // Redirect to the section index page with a success message
         return redirect()->route('admin.sections.index')->with('flash.banner', 'Section deleted successfully!');
+    }
+
+    public function status(Request $request, Section $section)
+    {
+        if ($request->input('status') === 1) {
+            $section->status = 0;
+            $message = 'Section is hidden now!';
+        } else {
+            $section->status = 1;
+            $message = 'Section is visible to all!';
+        }
+        $section->updated_by = auth()->id();
+
+        if ($section->save()) {
+            return redirect()->route('admin.sections.index')->with('flash.banner', $message);
+        } else {
+            return redirect()->back()->with('flash.banner', 'Failed to update Visibility.');
+        }
     }
 }

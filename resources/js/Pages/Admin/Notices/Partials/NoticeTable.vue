@@ -2,14 +2,13 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useForm, Link, usePage } from '@inertiajs/vue3';
-import axios from 'axios';
-import { router } from '@inertiajs/vue3'
+
 
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 import Table from '@/Components/Table.vue';
-import Switch from '@/Components/Switch.vue';
-import Radio from '@/Components/Radio.vue';
+import CreatedUpdatedBy from '@/Components/Admin/CreatedUpdatedBy.vue';
+import ToggleStatus from '@/Components/Admin/ToggleStatus.vue';
 import PrimaryPaginatorButton from '@/Components/PrimaryPaginatorButton.vue';
 import SecondaryPaginatorButton from '@/Components/SecondaryPaginatorButton.vue';
 import PrimaryIconButton from '@/Components/PrimaryIconButton.vue';
@@ -27,52 +26,12 @@ const toggleModal = (notice) => {
     showModal.value = !showModal.value;
 };
 
-
-const updateStatus = async (notice) => {
-    router.put(`/admin/notices/${notice.id}/status`, {
-        status: notice.status,
-    }, {
-        preserveScroll: true,
-    });
-};
-
-const formatName = (name) => {
-    // Split the name into parts by spaces
-    const nameParts = name.split(' ');
-
-    // Capitalize the first letter of each part except the last one
-    const formattedName = nameParts
-        .map((part, index) => (index === nameParts.length - 1 ? part.charAt(0).toUpperCase() + part.slice(1).toLowerCase() : part.charAt(0).toUpperCase() + '.'))
-        .join(' ');
-
-    return formattedName;
-};
-
 const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = date.getDate();
     const month = date.toLocaleString('default', { month: 'short' });
     const year = date.getFullYear();
     return `${day} ${month}, ${year}`;
-};
-
-const formatDateTime = (dateString) => {
-    const date = new Date(dateString);
-    const day = date.getDate();
-    const month = date.toLocaleString('default', { month: 'short' });
-    const year = date.getFullYear();
-
-    const dateFormatted = `${day} ${month}, ${year}`;
-
-    // Format the time
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    const formattedHours = hours % 12 || 12; // Convert to 12-hour format
-
-    const timeFormatted = `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
-
-    return `${dateFormatted} at \n${timeFormatted}`;
 };
 
 
@@ -108,27 +67,12 @@ const formatDateTime = (dateString) => {
                 </td>
                 <td class="py-2 px-4 border-b text-center">
                     <div class="rounded-2xl px-4 text-white" :class="notice.scroll === 1 ? 'bg-blue-700' : 'bg-gray-500'">
-                    {{ notice.scroll === 1 ? 'Yes' : 'No' }}
+                        {{ notice.scroll === 1 ? 'Yes' : 'No' }}
                     </div>
                 </td>
                 <td class="py-2 px-4 border-b text-center whitespace-nowrap">{{ formatDate(notice.published_on) }}</td>
                 <td class="py-2 px-4 border-b text-center">
-                    <div v-if="notice.updated_by">
-                        <div class="text-xs">
-                            <div>Updated by </div><div class="text-blue-700">{{ formatName(notice.updated_by.name) }}</div>
-                        </div>
-                        <div class="text-xs whitespace-nowrap">
-                            {{ formatDateTime(notice.updated_at) }}
-                        </div>
-                    </div>
-                    <div v-else>
-                        <div class="text-xs">
-                            <div>Created by </div><div class="text-blue-700">{{ formatName(notice.created_by.name) }}</div>
-                        </div>
-                        <div class="text-xs whitespace-nowrap">
-                            {{ formatDateTime(notice.created_at) }}
-                        </div>
-                    </div>
+                    <CreatedUpdatedBy :createdUpdatedBy="notice" />
                 </td>
                 <td class="py-2 px-4 border-b text-center">
                     <div v-if="notice.attachment" class="flex gap-1">
@@ -155,28 +99,8 @@ const formatDateTime = (dateString) => {
                 </td>
                 <td class="py-2 px-4 border-b">
                     <div class="flex justify-center">
-                        <div class="form-check form-switch relative">
+                        <ToggleStatus :toggle="notice" :toggleType="`notices`"/>
 
-                            <!-- <form ref="statusForm"> -->
-                                <!-- Add a hidden input for the CSRF token here -->
-                                <!-- <input type="hidden" name="_token" :value="csrfToken" /> -->
-
-                                <Radio v-model:checked="notice.status" :id="'switch-' + (index + 1)"
-                                    class="form-check-input checked:bg-auto checked:bg-right cursor-pointer" type="checkbox" name="status"
-                                    :value="notice.status == 1 ? 1 : ''" @change="updateStatus(notice)" />
-
-
-              
-                                    <label :for="'switch-' + (index + 1)" class="py-1 absolute top-[14px] left-0 form-check-label text-[8px] select-none cursor-pointer">
-                                        <small :class="notice.status ? 'text-blue-700 font-bold' : ''">
-                                            {{ notice.status ? 'SHOWED' : 'HIDDEN' }}
-                                        </small>
-                                    </label>
-                      
-                            <!-- </form> -->
-                        </div>
-                        <!-- <Switch v-model:checked="notice.status" name="status" :id="'switch-' + (index + 1)" @update:checked="updateStatus(notice)"/> -->
-                        <!-- <button type="submit" style="display: none;"></button> -->
                         <Link :href="route('admin.notices.edit', notice.id)">
                         <PrimaryIconButton>
                             <i class="fas fa-pen"></i>
