@@ -171,13 +171,15 @@ Route::prefix('admin')->middleware([
 
 
     // Show a list of all users
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
 
     // edit an individual user's details
-    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::get('/users/create', [UserController::class, 'create'])->name('admin.users.create');
 
     // edit an individual user's details
-    Route::get('/users/{user}', [UserController::class, 'edit'])->name('users.edit');
+    Route::get('/users/{user}', [UserController::class, 'edit'])->name('admin.users.edit');
+
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
 
     // Give a permission to a user
     Route::post('/users/{user}/give-permission/{permission}', [UserController::class, 'givePermission'])->name('users.givePermission');

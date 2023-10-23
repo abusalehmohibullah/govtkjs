@@ -25,7 +25,7 @@ const { users } = defineProps(['users']);
                     Lorem ipsumuasi eniumquam error aspernatsuscipit.
                 </template>
                 <template #aside>
-                    <Link :href="route('users.create')">
+                    <Link :href="route('admin.users.create')">
                     <PrimaryButton>
                         Invite
                     </PrimaryButton>

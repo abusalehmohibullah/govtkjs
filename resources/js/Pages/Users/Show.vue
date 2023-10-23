@@ -8,6 +8,7 @@ import UpdateUserForm from '@/Pages/Users/Partials/UpdateUserForm.vue';
 const props = defineProps({
     user: Object,
     roles: Array,
+    userRoles: Object,
     userPermissions: Array,
 });
 
@@ -25,7 +26,7 @@ const props = defineProps({
 
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <!-- Use the Form component to wrap your form -->
-                <UpdateUserForm :user="user" :userPermissions="userPermissions" :roles="roles"/>
+                <UpdateUserForm :user="user" :userPermissions="userPermissions" :roles="roles" :userRoles="userRoles" />
             </div>
 
 

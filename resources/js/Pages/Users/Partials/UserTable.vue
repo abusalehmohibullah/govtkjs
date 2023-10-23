@@ -65,7 +65,7 @@ const toggleModal = (user) => {
                 <td class="py-2 px-4 border-b text-center">
                     <div v-if="user.extras.length > 0" class="flex flex-wrap gap-1 justify-center">
                         <div v-for="extra in user.extras" :key="extra"
-                            class="bg-green-700 text-white rounded-full px-2 py-1 capitalize">{{ extra.replace(/_/g, ' ')
+                            class="bg-green-700 text-white rounded-full px-2 py-1 capitalize text-xs">{{ extra.replace(/_/g, ' ')
                             }}</div>
                     </div>
                     <div v-else>No extras permission</div>
@@ -73,7 +73,7 @@ const toggleModal = (user) => {
                 <td class="py-2 px-4 border-b text-center">
                     <div v-if="user.restrictions.length > 0" class="flex flex-wrap gap-1 justify-center">
                         <div v-for="restriction in user.restrictions" :key="restriction"
-                            class="bg-red-700 text-white rounded-full px-2 py-1 capitalize">{{ restriction.replace(/_/g, ' ') }}</div>
+                            class="bg-red-700 text-white rounded-full px-2 py-1 capitalize text-xs">{{ restriction.replace(/_/g, ' ') }}</div>
                     </div>
                     <div v-else>No restrictions</div>
                 </td>
@@ -90,7 +90,7 @@ const toggleModal = (user) => {
                                     :for="'switch-' + (index + 1)"><small>SHOWED</small></label>
                             </div>
                         </div>
-                        <Link :href="route('users.edit', user.id)">
+                        <Link :href="route('admin.users.edit', user.id)">
                         <PrimaryIconButton>
                             <i class="fas fa-pen"></i>
                         </PrimaryIconButton>
