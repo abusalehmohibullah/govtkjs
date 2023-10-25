@@ -83,14 +83,18 @@ const getRestrictionName = (permissionId) => {
 // };
 
 onMounted(() => {
-    props.userRoles.forEach((userRole) => {
-        selectedRoles.value.push(userRole.id);
-    });
+    if (props.userRoles) {
+        props.userRoles.forEach((userRole) => {
+            selectedRoles.value.push(userRole.id);
+        });
+    }
 
     // Pre-select the checkboxes based on userPermissions
-    props.userPermissions.forEach((permissionId) => {
-        selectedPermissions.value.push(permissionId);
-    });
+    if (props.userPermissions) {
+        props.userPermissions.forEach((permissionId) => {
+            selectedPermissions.value.push(permissionId);
+        });
+    }
 
     emit('selected-roles-updated', selectedRoles.value);
     emit('selected-permissions-updated', selectedPermissions.value);
@@ -248,7 +252,7 @@ onMounted(() => {
                 No extra permission available
             </div>
         </div>
-    <!-- <button type="submit">sub</button> -->
+        <!-- <button type="submit">sub</button> -->
     </div>
 </template>
 

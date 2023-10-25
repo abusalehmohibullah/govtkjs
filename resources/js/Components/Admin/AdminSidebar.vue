@@ -8,6 +8,12 @@
 // import DropdownLink from '@/Components/DropdownLink.vue';
 import SideNavLink from '@/Components/Shared/SideNavLink.vue';
 // import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import { computed } from 'vue'
+import { usePage } from '@inertiajs/vue3'
+
+const page = usePage()
+
+const hasRolesAndPermissions = computed(() => page.props)
 
 </script>
 
@@ -24,7 +30,13 @@ import SideNavLink from '@/Components/Shared/SideNavLink.vue';
                 Pages
             </li>
 
-            <SideNavLink :href="route('dashboard')" :active="route().current('dashboard')">
+            <!-- dashboard -->
+            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+                || hasRolesAndPermissions.hasPermissions.includes('manage_subjects'))
+                &&
+                !(hasRolesAndPermissions.hasRoles.includes('operator')
+                    && hasRolesAndPermissions.hasPermissions.includes('manage_subjects'))" :href="route('dashboard')"
+                :active="route().current('dashboard')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="feather feather-sliders align-middle">
@@ -41,7 +53,13 @@ import SideNavLink from '@/Components/Shared/SideNavLink.vue';
                 <span class="align-middle">Dashboard</span>
             </SideNavLink>
 
-            <SideNavLink :href="route('admin.basic-info.show')" :active="route().current('admin.basic-info.show')">
+            <!-- basic-info -->
+            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+                || hasRolesAndPermissions.hasPermissions.includes('manage_basic_infos'))
+                &&
+                !(hasRolesAndPermissions.hasRoles.includes('operator')
+                    && hasRolesAndPermissions.hasPermissions.includes('manage_basic_infos'))"
+                :href="route('admin.basic-info.show')" :active="route().current('admin.basic-info.show')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="feather feather-layout align-middle">
@@ -52,7 +70,13 @@ import SideNavLink from '@/Components/Shared/SideNavLink.vue';
                 <span class="align-middle">Basic Info</span>
             </SideNavLink>
 
-            <SideNavLink :href="route('admin.sliders.index')" :active="route().current('admin.sliders.*')">
+            <!-- sliders  -->
+            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+                || hasRolesAndPermissions.hasPermissions.includes('manage_sliders'))
+                &&
+                !(hasRolesAndPermissions.hasRoles.includes('operator')
+                    && hasRolesAndPermissions.hasPermissions.includes('manage_sliders'))"
+                :href="route('admin.sliders.index')" :active="route().current('admin.sliders.*')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="feather feather-code align-middle me-2">
@@ -62,7 +86,13 @@ import SideNavLink from '@/Components/Shared/SideNavLink.vue';
                 <span class="align-middle">Slider</span>
             </SideNavLink>
 
-            <SideNavLink :href="route('admin.notices.index')" :active="route().current('admin.notices.*')">
+            <!-- notices  -->
+            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('clerk')
+                || hasRolesAndPermissions.hasPermissions.includes('manage_notices'))
+                &&
+                !(hasRolesAndPermissions.hasRoles.includes('clerk')
+                    && hasRolesAndPermissions.hasPermissions.includes('manage_notices'))"
+                :href="route('admin.notices.index')" :active="route().current('admin.notices.*')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="feather feather-list align-middle me-2">
@@ -76,7 +106,13 @@ import SideNavLink from '@/Components/Shared/SideNavLink.vue';
                 <span class="align-middle">Notice</span>
             </SideNavLink>
 
-            <SideNavLink :href="route('admin.faqs.index')" :active="route().current('admin.faqs.*')">
+            <!-- faqs -->
+            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+                || hasRolesAndPermissions.hasPermissions.includes('manage_faqs'))
+                &&
+                !(hasRolesAndPermissions.hasRoles.includes('operator')
+                    && hasRolesAndPermissions.hasPermissions.includes('manage_faqs'))"
+                :href="route('admin.faqs.index')" :active="route().current('admin.faqs.*')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="feather feather-help-circle align-middle me-2">
@@ -87,7 +123,13 @@ import SideNavLink from '@/Components/Shared/SideNavLink.vue';
                 <span class="align-middle">FAQ</span>
             </SideNavLink>
 
-            <SideNavLink :href="route('admin.albums.index')" :active="route().current('admin.albums.*')">
+            <!-- albums -->
+            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+                || hasRolesAndPermissions.hasPermissions.includes('manage_albums'))
+                &&
+                !(hasRolesAndPermissions.hasRoles.includes('operator')
+                    && hasRolesAndPermissions.hasPermissions.includes('manage_albums'))"
+                :href="route('admin.albums.index')" :active="route().current('admin.albums.*')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="feather feather-image align-middle me-2">
@@ -98,7 +140,13 @@ import SideNavLink from '@/Components/Shared/SideNavLink.vue';
                 <span class="align-middle">Album</span>
             </SideNavLink>
 
-            <SideNavLink :href="route('admin.sections.index')" :active="route().current('admin.sections.*')">
+            <!-- sections -->
+            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+                || hasRolesAndPermissions.hasPermissions.includes('manage_sections'))
+                &&
+                !(hasRolesAndPermissions.hasRoles.includes('operator')
+                    && hasRolesAndPermissions.hasPermissions.includes('manage_sections'))"
+                :href="route('admin.sections.index')" :active="route().current('admin.sections.*')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="feather feather-code align-middle me-2">
@@ -108,7 +156,13 @@ import SideNavLink from '@/Components/Shared/SideNavLink.vue';
                 <span class="align-middle">Section</span>
             </SideNavLink>
 
-            <SideNavLink :href="route('admin.grades.index')" :active="route().current('admin.grades.*')">
+            <!-- grades -->
+            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+                || hasRolesAndPermissions.hasPermissions.includes('manage_grades'))
+                &&
+                !(hasRolesAndPermissions.hasRoles.includes('operator')
+                    && hasRolesAndPermissions.hasPermissions.includes('manage_grades'))"
+                :href="route('admin.grades.index')" :active="route().current('admin.grades.*')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="feather feather-code align-middle me-2">
@@ -118,7 +172,12 @@ import SideNavLink from '@/Components/Shared/SideNavLink.vue';
                 <span class="align-middle">Class</span>
             </SideNavLink>
 
-            <SideNavLink :href="route('admin.subjects.index')" :active="route().current('admin.subjects.*')">
+            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+                || hasRolesAndPermissions.hasPermissions.includes('manage_subjects'))
+                &&
+                !(hasRolesAndPermissions.hasRoles.includes('operator')
+                    && hasRolesAndPermissions.hasPermissions.includes('manage_subjects'))"
+                :href="route('admin.subjects.index')" :active="route().current('admin.subjects.*')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="feather feather-code align-middle me-2">
@@ -128,7 +187,12 @@ import SideNavLink from '@/Components/Shared/SideNavLink.vue';
                 <span class="align-middle">Subject</span>
             </SideNavLink>
 
-            <SideNavLink :href="route('admin.groups.index')" :active="route().current('admin.groups.*')">
+            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+                || hasRolesAndPermissions.hasPermissions.includes('manage_groups'))
+                &&
+                !(hasRolesAndPermissions.hasRoles.includes('operator')
+                    && hasRolesAndPermissions.hasPermissions.includes('manage_groups'))"
+                :href="route('admin.groups.index')" :active="route().current('admin.groups.*')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="feather feather-code align-middle me-2">
@@ -148,7 +212,8 @@ import SideNavLink from '@/Components/Shared/SideNavLink.vue';
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 </svg>
                 <span class="align-middle">Users</span>
-        </SideNavLink>
-    </ul>
-</div></template>
+            </SideNavLink>
+        </ul>
+    </div>
+</template>
 

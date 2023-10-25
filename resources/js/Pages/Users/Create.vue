@@ -3,8 +3,10 @@
 
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
-import CreateGradeForm from '@/Pages/Admin/Grades/Partials/CreateGradeForm.vue';
-
+import CreateUserForm from '@/Pages/Users/Partials/CreateUserForm.vue';
+const props = defineProps({
+    roles: Array,
+});
 
 </script>
 
@@ -12,7 +14,7 @@ import CreateGradeForm from '@/Pages/Admin/Grades/Partials/CreateGradeForm.vue';
     <AdminLayout title="Basic Info">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Create Grades
+                Invite Users
             </h2>
         </template>
 
@@ -20,7 +22,7 @@ import CreateGradeForm from '@/Pages/Admin/Grades/Partials/CreateGradeForm.vue';
 
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <!-- Use the Form component to wrap your form -->
-                <CreateGradeForm />
+                <CreateUserForm :roles="roles"/>
             </div>
 
 

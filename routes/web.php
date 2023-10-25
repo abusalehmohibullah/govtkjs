@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use App\Http\Controllers\UserController;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 use App\Http\Controllers\Admin\BasicInfoController;
 use App\Http\Controllers\Admin\NoticeController;
@@ -175,6 +177,7 @@ Route::prefix('admin')->middleware([
 
     // edit an individual user's details
     Route::get('/users/create', [UserController::class, 'create'])->name('admin.users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('admin.users.store');
 
     // edit an individual user's details
     Route::get('/users/{user}', [UserController::class, 'edit'])->name('admin.users.edit');
@@ -199,65 +202,83 @@ Route::prefix('admin')->middleware([
     })->name('dashboard');
 
     // Basic Information
-    Route::prefix('basic-info')->group(function () {
+    Route::middleware(['restriction:operator,manage_basic_infos'])->group(function () {
+        Route::prefix('basic-info')->group(function () {
 
-        // Store Basic Information (form submission)
-        Route::get('/', [BasicInfoController::class, 'show'])->name('admin.basic-info.show');
+            // Store Basic Information (form submission)
+            Route::get('/', [BasicInfoController::class, 'show'])->name('admin.basic-info.show');
 
-        // Route::post('/', [BasicInfoController::class, 'store'])->name('basic-info.store');
+            // Route::post('/', [BasicInfoController::class, 'store'])->name('basic-info.store');
 
-        // Update Basic Information (form submission)
-        Route::put('/', [BasicInfoController::class, 'update'])->name('admin.basic-info.update');
+            // Update Basic Information (form submission)
+            Route::put('/', [BasicInfoController::class, 'update'])->name('admin.basic-info.update');
+        });
+    });
+    Route::middleware(['restriction:clerk,manage_notices'])->group(function () {
+        Route::resource('notices', NoticeController::class, [
+            'names' => 'admin.notices',
+        ]);
+        Route::put('notices/{notice}/status', [NoticeController::class, 'status'])->name('admin.notices.status');
+        Route::get('notices/{notice}/download', [NoticeController::class, 'download'])->name('admin.notices.download');
     });
 
-    Route::resource('notices', NoticeController::class, [
-        'names' => 'admin.notices',
-    ]);
-    Route::put('notices/{notice}/status', [NoticeController::class, 'status'])->name('admin.notices.status');
-    Route::get('notices/{notice}/download', [NoticeController::class, 'download'])->name('admin.notices.download');
+    Route::middleware(['restriction:operator,manage_faqs'])->group(function () {
+        Route::resource('faqs', FaqController::class, [
+            'names' => 'admin.faqs',
+        ]);
+        Route::put('faqs/{faq}/status', [FaqController::class, 'status'])->name('admin.faqs.status');
+    });
 
-    Route::resource('faqs', FaqController::class, [
-        'names' => 'admin.faqs',
-    ]);
-    Route::put('faqs/{faq}/status', [FaqController::class, 'status'])->name('admin.faqs.status');
+    Route::middleware(['restriction:operator,manage_sliders'])->group(function () {
+        Route::resource('sliders', SliderController::class, [
+            'names' => 'admin.sliders',
+        ]);
+        Route::put('sliders/{slider}/status', [SliderController::class, 'status'])->name('admin.sliders.status');
+    });
 
-    Route::resource('sliders', SliderController::class, [
-        'names' => 'admin.sliders',
-    ]);
-    Route::put('sliders/{slider}/status', [SliderController::class, 'status'])->name('admin.sliders.status');
+    Route::middleware(['restriction:operator,manage_albums'])->group(function () {
+        Route::resource('albums', AlbumController::class, [
+            'names' => 'admin.albums',
+        ]);
+        Route::put('albums/{album}/status', [AlbumController::class, 'status'])->name('admin.albums.status');
 
-    Route::resource('albums', AlbumController::class, [
-        'names' => 'admin.albums',
-    ]);
-    Route::put('albums/{album}/status', [AlbumController::class, 'status'])->name('admin.albums.status');
+        Route::resource('albums.media', MediaController::class, [
+            'names' => 'admin.albums.media',
+        ]);
+        Route::put('notices/{notice}/status', [NoticeController::class, 'status'])->name('admin.notices.status');
+    });
 
-    Route::resource('albums.media', MediaController::class, [
-        'names' => 'admin.albums.media',
-    ]);
-    Route::put('notices/{notice}/status', [NoticeController::class, 'status'])->name('admin.notices.status');
+    Route::middleware(['restriction:operator,manage_sections'])->group(function () {
+        Route::resource('sections', SectionController::class, [
+            'names' => 'admin.sections',
+        ]);
+        Route::put('sections/{section}/status', [SectionController::class, 'status'])->name('admin.sections.status');
+    });
 
-    Route::resource('sections', SectionController::class, [
-        'names' => 'admin.sections',
-    ]);
-    Route::put('sections/{section}/status', [SectionController::class, 'status'])->name('admin.sections.status');
+    Route::middleware(['restriction:operator,manage_grades'])->group(function () {
+        Route::resource('grades', GradeController::class, [
+            'names' => 'admin.grades',
+        ]);
+        Route::put('grades/{grade}/status', [GradeController::class, 'status'])->name('admin.grades.status');
+    });
 
-    Route::resource('grades', GradeController::class, [
-        'names' => 'admin.grades',
-    ]);
-    Route::put('grades/{grade}/status', [GradeController::class, 'status'])->name('admin.grades.status');
+    Route::middleware(['restriction:operator,manage_subjects'])->group(function () {
+        Route::resource('subjects', SubjectController::class, [
+            'names' => 'admin.subjects',
+        ]);
+        Route::put('subjects/{subject}/status', [SubjectController::class, 'status'])->name('admin.subjects.status');
+    });
 
-    Route::resource('subjects', SubjectController::class, [
-        'names' => 'admin.subjects',
-    ]);
-    Route::put('subjects/{subject}/status', [SubjectController::class, 'status'])->name('admin.subjects.status');
-
-    Route::resource('groups', GroupController::class, [
-        'names' => 'admin.groups',
-    ]);
-    Route::put('groups/{group}/status', [GroupController::class, 'status'])->name('admin.groups.status');
-
+    Route::middleware(['restriction:operator,manage_groups'])->group(function () {
+        Route::resource('groups', GroupController::class, [
+            'names' => 'admin.groups',
+        ]);
+        Route::put('groups/{group}/status', [GroupController::class, 'status'])->name('admin.groups.status');
+    });
 });
 
+
+    
 
 
 

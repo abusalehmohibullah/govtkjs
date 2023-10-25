@@ -59,8 +59,20 @@ class UserController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        // Get user's roles for reference
+        $roles = Role::with('permissions')->get();
 
+        return Inertia::render('Users/Create', [
+            'roles' => $roles,
+        ]);
+    }
 
+    public function store(Request $request)
+    {
+        dd($request);
+    }
     public function edit(User $user)
     {
         // Get the user's roles and permissions
