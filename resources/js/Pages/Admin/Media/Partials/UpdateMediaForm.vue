@@ -23,7 +23,7 @@ const form = useForm({
 
 const handleOptionSelected = (selectedLabel) => {
     form.album_id = selectedLabel; // Update albumName ref
-    console.log('gg');
+    // console.log('gg');
 };
 
 const updateMedia = () => {
@@ -52,7 +52,7 @@ const updateMedia = () => {
 
                 <div class="col-span-6 sm:col-span-4">
                     <InputLabel for="album_id" value="Album" />
-                    <SelectInput :options="albums" :selectedOption="album" inputName="album_id" :inputValue="album" @option-selected="handleOptionSelected" />
+                    <SelectInput :options="albums" :selectedOption="album" inputName="album_id" :inputValue="album" :fieldName="'title'" :valueField="'id'" @option-selected="handleOptionSelected" />
 
                     <InputError :message="form.errors.album_id" class="text-red-500" />
                 </div>

@@ -1,23 +1,30 @@
   
 <script setup>
-
 import { useForm } from '@inertiajs/vue3';
-import RolePermission from '@/Components/Admin/RolePermission.vue';
+import { ref } from 'vue';
+
 import FormSection from '@/Components/FormSection.vue';
+import RolePermission from '@/Components/Admin/RolePermission.vue';
 import ActionMessage from '@/Components/ActionMessage.vue';
 import TextInput from '@/Components/TextInput.vue';
+import TextArea from '@/Components/TextArea.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SelectInput from '@/Components/SelectInput.vue';
 
 const props = defineProps({
+    user: Object,
     roles: Array,
+    userRoles: Object,
+    userPermissions: Array,
+    designation: Array,
 });
 
 const form = useForm({
-    email: '',
-    designation: '',
+    _method: 'PUT',
+    email: props.user.email,
+    designation: props.user.designation,
     selectedRoles: [], // Add your selected roles array here
     selectedPermissions: [], // Add your selected permissions array here
     // Other form fields
@@ -38,21 +45,25 @@ const handleOptionSelected = (selectedLabel) => {
     // console.log('gg');
 };
 
-const inviteUser = () => {
-    form.post(route('admin.user-invitations.store'), {
-        errorBag: 'inviteUser',
+// console.log(form);
+const updateUser = () => {
+    form.post(route('admin.user-invitations.update', props.user.id), {
+        errorBag: 'updateUser',
         preserveScroll: true,
     });
 };
+
+
+
 
 </script>
 
 <template>
     <div>
         <!-- Use the Form component to wrap your form -->
-        <FormSection @submitted="inviteUser">
+        <FormSection @submitted="updateUser">
             <template #title>
-                Invite Users
+                Edit User Permissions
             </template>
 
             <template #description>
@@ -73,26 +84,29 @@ const inviteUser = () => {
 
                 <div class="col-span-6 sm:col-span-4">
                     <InputLabel for="designation" value="Designation" />
-                    <SelectInput :options="roles" inputName="designation" :fieldName="'name'" :valueField="'name'" @option-selected="handleOptionSelected" class="capitalize" />
+                    <SelectInput :options="roles" :selectedOption="designation" inputName="designation" :fieldName="'name'" :valueField="'name'" @option-selected="handleOptionSelected" class="capitalize" />
 
                     <InputError :message="form.errors.designation" class="text-red-500" />
                 </div>
 
-                <RolePermission :roles="roles"
+                <RolePermission :user="user" :roles="roles" :userRoles="userRoles" :userPermissions="userPermissions"
                     @selected-roles-updated="handleSelectedRolesUpdated"
                     @selected-permissions-updated="handleSelectedPermissionsUpdated" />
+
 
             </template>
 
             <template #actions>
                 <ActionMessage :on="form.processing" class="mr-3"
                     :class="{ 'text-green-600': form.recentlySuccessful, ' text-gray-600': form.processing }">
-                    {{ form.processing ? 'Inviting...' : (form.recentlySuccessful ? 'Invited!' : 'Failed') }}
+                    {{ form.processing ? 'Saving...' : (form.recentlySuccessful ? 'Saved!' : 'Failed') }}
                 </ActionMessage>
 
                 <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Invite</PrimaryButton>
+                    Save</PrimaryButton>
             </template>
+
+
         </FormSection>
     </div>
 </template>

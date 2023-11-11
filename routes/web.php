@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
+use App\Http\Controllers\Admin\UserInvitationController;
 use App\Http\Controllers\Admin\BasicInfoController;
 use App\Http\Controllers\Admin\NoticeController;
 use App\Http\Controllers\Admin\FaqController;
@@ -173,38 +174,36 @@ Route::prefix('admin')->middleware([
 
 
     // Show a list of all users
-    Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+    // Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
 
     // edit an individual user's details
-    Route::get('/users/create', [UserController::class, 'create'])->name('admin.users.create');
-    Route::post('/users', [UserController::class, 'store'])->name('admin.users.store');
+    // Route::get('/users/create', [UserController::class, 'create'])->name('admin.users.create');
+    // Route::post('/users', [UserController::class, 'store'])->name('admin.users.store');
 
     // edit an individual user's details
-    Route::get('/users/{user}', [UserController::class, 'edit'])->name('admin.users.edit');
+    // Route::get('/users/{user}', [UserController::class, 'edit'])->name('admin.users.edit');
 
-    Route::put('/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
+    // Route::put('/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
 
-    // Give a permission to a user
-    Route::post('/users/{user}/give-permission/{permission}', [UserController::class, 'givePermission'])->name('users.givePermission');
-
-    // Restrict a permission from a user
-    Route::post('/users/{user}/restrict-permission/{permission}', [UserController::class, 'restrictPermission'])->name('users.restrictPermission');
-
-
-
-
-
-
-
+   
+    
     // Dashboard
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
+    Route::resource('users', UserController::class, [
+        'names' => 'admin.users',
+    ]);
+
+    Route::resource('user-invitations', UserInvitationController::class, [
+        'names' => 'admin.user-invitations',
+    ]);
+
     // Basic Information
     Route::middleware(['restriction:operator,manage_basic_infos'])->group(function () {
         Route::prefix('basic-info')->group(function () {
-
+            
             // Store Basic Information (form submission)
             Route::get('/', [BasicInfoController::class, 'show'])->name('admin.basic-info.show');
 

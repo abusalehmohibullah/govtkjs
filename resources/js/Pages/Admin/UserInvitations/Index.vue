@@ -4,7 +4,7 @@
 import { Link } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
-import UserTable from '@/Pages/Users/Partials/UserTable.vue';
+import UserInvitationTable from '@/Pages/Admin/UserInvitations/Partials/UserInvitationTable.vue';
 import Header from '@/Components/Header.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
@@ -19,21 +19,21 @@ const { users } = defineProps(['users']);
 
             <Header>
                 <template #header>
-                    Users
+                   Invited Users
                 </template>
                 <template #description>
                     Lorem ipsumuasi eniumquam error aspernatsuscipit.
                 </template>
-                <!-- <template #aside>
+                <template #aside>
                     <Link :href="route('admin.user-invitations.create')">
                     <PrimaryButton>
                         Invite
                     </PrimaryButton>
                     </Link>
-                </template> -->
+                </template>
             </Header>
 
-            <UserTable :users="users" />
+            <UserInvitationTable :users="users" />
 
         </div>
 

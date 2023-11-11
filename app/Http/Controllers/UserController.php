@@ -62,16 +62,16 @@ class UserController extends Controller
     public function create()
     {
         // Get user's roles for reference
-        $roles = Role::with('permissions')->get();
+        // $roles = Role::with('permissions')->get();
 
-        return Inertia::render('Users/Create', [
-            'roles' => $roles,
-        ]);
+        // return Inertia::render('Users/Create', [
+        //     'roles' => $roles,
+        // ]);
     }
 
     public function store(Request $request)
     {
-        dd($request);
+        // dd($request);
     }
     public function edit(User $user)
     {
@@ -134,30 +134,14 @@ class UserController extends Controller
             ->flatten()
             ->toArray();
 
-        // dd($permissionsForSelectedRoles, $selectedPermissions);
-        // Step 5: Get common permissions
-        // $commonPermissions = array_intersect($permissionsForSelectedRoles, $selectedPermissions);
-
-        // Step 6: Get permissions in selected roles but not in selected permissions
+        // Step 5: Get permissions in selected roles but not in selected permissions
         $restrictions = array_diff($permissionsForSelectedRoles, $selectedPermissions);
 
-        // Step 7: Get permissions in not selected roles but in selected permissions
+        // Step 6: Get permissions in not selected roles but in selected permissions
         $extras = array_intersect($permissionsForNotSelectedRoles, $selectedPermissions);
 
         $permissionsToAdd = array_merge($restrictions, $extras);
 
-        // dd($permissionsToRemove);
-        // Step 8: Remove common permissions from the user
-        // $user->permissions()->detach($commonPermissions);
-
-        // Step 9: Add permissions from permissionsToAdd
-        // $user->permissions()->attach($permissionsToAdd);
-
-        // Step 10: Remove permissions from permissionsToRemove
-        // $user->permissions()->detach($permissionsToRemove);
-
-        // Optionally, you can also update the user's roles.
-        // Example:
         $user->roles()->sync($selectedRoles);
         $user->permissions()->sync($permissionsToAdd);
 
