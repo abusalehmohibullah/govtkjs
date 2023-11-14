@@ -24,11 +24,11 @@ class User extends Authenticatable
 
     // ...
 
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-        $this->guard_name = 'web'; // or specify your guard name
-    }
+    // public function __construct(array $attributes = [])
+    // {
+    //     parent::__construct($attributes);
+    //     $this->guard_name = 'web'; // or specify your guard name
+    // }
 
     /**
      * The attributes that are mass assignable.

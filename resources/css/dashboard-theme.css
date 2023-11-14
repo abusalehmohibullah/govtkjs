@@ -15309,7 +15309,7 @@ a.sidebar-link {
     border-left: 3px solid transparent;
     color: rgba(233, 236, 239, .5);
     cursor: pointer;
-    display: block;
+    /* display: block; */
     font-weight: 400;
     padding: .625rem 1.625rem;
     position: relative;

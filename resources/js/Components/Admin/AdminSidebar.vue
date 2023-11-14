@@ -4,7 +4,7 @@
 // import ApplicationLogo from '@/Components/ApplicationMark.vue';
 // import { ref, watchEffect } from 'vue';
 // import { usePage } from '@inertiajs/vue3';
-// import Dropdown from '@/Components/Dropdown.vue';
+import Dropdown from '@/Components/Dropdown.vue';
 // import DropdownLink from '@/Components/DropdownLink.vue';
 import SideNavLink from '@/Components/Shared/SideNavLink.vue';
 // import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
@@ -31,12 +31,7 @@ const hasRolesAndPermissions = computed(() => page.props)
             </li>
 
             <!-- dashboard -->
-            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
-                || hasRolesAndPermissions.hasPermissions.includes('manage_subjects'))
-                &&
-                !(hasRolesAndPermissions.hasRoles.includes('operator')
-                    && hasRolesAndPermissions.hasPermissions.includes('manage_subjects'))" :href="route('dashboard')"
-                :active="route().current('dashboard')">
+            <SideNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="feather feather-sliders align-middle">
@@ -140,91 +135,234 @@ const hasRolesAndPermissions = computed(() => page.props)
                 <span class="align-middle">Album</span>
             </SideNavLink>
 
-            <!-- sections -->
-            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
-                || hasRolesAndPermissions.hasPermissions.includes('manage_sections'))
+
+
+            <Dropdown v-if="((hasRolesAndPermissions.hasRoles.includes('operator')
+                || hasRolesAndPermissions.hasPermissions.includes('manage_buildings'))
                 &&
                 !(hasRolesAndPermissions.hasRoles.includes('operator')
-                    && hasRolesAndPermissions.hasPermissions.includes('manage_sections'))"
-                :href="route('admin.sections.index')" :active="route().current('admin.sections.*')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-code align-middle me-2">
-                    <polyline points="16 18 22 12 16 6"></polyline>
-                    <polyline points="8 6 2 12 8 18"></polyline>
-                </svg>
-                <span class="align-middle">Section</span>
-            </SideNavLink>
+                    && hasRolesAndPermissions.hasPermissions.includes('manage_buildings')))
+                || ((hasRolesAndPermissions.hasRoles.includes('operator')
+                    || hasRolesAndPermissions.hasPermissions.includes('manage_rooms'))
+                    &&
+                    !(hasRolesAndPermissions.hasRoles.includes('operator')
+                        && hasRolesAndPermissions.hasPermissions.includes('manage_rooms')))
+                || ((hasRolesAndPermissions.hasRoles.includes('operator')
+                    || hasRolesAndPermissions.hasPermissions.includes('manage_sections'))
+                    &&
+                    !(hasRolesAndPermissions.hasRoles.includes('operator')
+                        && hasRolesAndPermissions.hasPermissions.includes('manage_sections')))
+                || ((hasRolesAndPermissions.hasRoles.includes('operator')
+                    || hasRolesAndPermissions.hasPermissions.includes('manage_grades'))
+                    &&
+                    !(hasRolesAndPermissions.hasRoles.includes('operator')
+                        && hasRolesAndPermissions.hasPermissions.includes('manage_grades')))
+                || ((hasRolesAndPermissions.hasRoles.includes('operator')
+                    || hasRolesAndPermissions.hasPermissions.includes('manage_subjects'))
+                    &&
+                    !(hasRolesAndPermissions.hasRoles.includes('operator')
+                        && hasRolesAndPermissions.hasPermissions.includes('manage_subjects')))
+                || ((hasRolesAndPermissions.hasRoles.includes('operator')
+                    || hasRolesAndPermissions.hasPermissions.includes('manage_groups'))
+                    &&
+                    !(hasRolesAndPermissions.hasRoles.includes('operator')
+                        && hasRolesAndPermissions.hasPermissions.includes('manage_groups')))" align="right"
+                width="100%" content-classes="relative z-50 bg-white">
+                <template #trigger>
+                    <span class="flex sidebar-item"
+                        :class="(route().current('admin.buildings.*')) || (route().current('admin.rooms.*')) || (route().current('admin.sections.*')) || (route().current('admin.grades.*')) || (route().current('admin.subjects.*')) || (route().current('admin.groups.*')) ? 'active' : ''">
+                        <button
+                            class="inline-flex justify-between items-center sidebar-link w-full px-1 py-2 border border-transparent text-sm leading-4 font-medium hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150">
+                            <div class="inline-flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-grid align-middle me-2">
+                                    <rect x="3" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="14" width="7" height="7"></rect>
+                                    <rect x="3" y="14" width="7" height="7"></rect>
+                                </svg>
+                                Infrastructures
+                            </div>
+                            <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+                            </svg>
+                        </button>
+                    </span>
+                </template>
 
-            <!-- grades -->
-            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
-                || hasRolesAndPermissions.hasPermissions.includes('manage_grades'))
-                &&
-                !(hasRolesAndPermissions.hasRoles.includes('operator')
-                    && hasRolesAndPermissions.hasPermissions.includes('manage_grades'))"
-                :href="route('admin.grades.index')" :active="route().current('admin.grades.*')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-code align-middle me-2">
-                    <polyline points="16 18 22 12 16 6"></polyline>
-                    <polyline points="8 6 2 12 8 18"></polyline>
-                </svg>
-                <span class="align-middle">Class</span>
-            </SideNavLink>
+                <template #content>
+                    <div class="w-60">
+                        <div class="block ps-8 pt-1 pb-0 text-xs text-gray-400">
+                            Step 1
+                            <hr class="p-0 m-0">
+                        </div>
+                        <!-- buildings -->
+                        <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+                            || hasRolesAndPermissions.hasPermissions.includes('manage_buildings'))
+                            &&
+                            !(hasRolesAndPermissions.hasRoles.includes('operator')
+                                && hasRolesAndPermissions.hasPermissions.includes('manage_buildings'))"
+                            :href="route('admin.buildings.index')" :active="route().current('admin.buildings.*')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="feather feather-chevron-right align-middle me-2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <span class="align-middle">Building</span>
+                        </SideNavLink>
 
-            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
-                || hasRolesAndPermissions.hasPermissions.includes('manage_subjects'))
-                &&
-                !(hasRolesAndPermissions.hasRoles.includes('operator')
-                    && hasRolesAndPermissions.hasPermissions.includes('manage_subjects'))"
-                :href="route('admin.subjects.index')" :active="route().current('admin.subjects.*')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-code align-middle me-2">
-                    <polyline points="16 18 22 12 16 6"></polyline>
-                    <polyline points="8 6 2 12 8 18"></polyline>
-                </svg>
-                <span class="align-middle">Subject</span>
-            </SideNavLink>
+                        <!-- rooms -->
+                        <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+                            || hasRolesAndPermissions.hasPermissions.includes('manage_rooms'))
+                            &&
+                            !(hasRolesAndPermissions.hasRoles.includes('operator')
+                                && hasRolesAndPermissions.hasPermissions.includes('manage_rooms'))"
+                            :href="route('admin.rooms.index')" :active="route().current('admin.rooms.*')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="feather feather-chevron-right align-middle me-2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <span class="align-middle">Room</span>
+                        </SideNavLink>
 
-            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
-                || hasRolesAndPermissions.hasPermissions.includes('manage_groups'))
-                &&
-                !(hasRolesAndPermissions.hasRoles.includes('operator')
-                    && hasRolesAndPermissions.hasPermissions.includes('manage_groups'))"
-                :href="route('admin.groups.index')" :active="route().current('admin.groups.*')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-code align-middle me-2">
-                    <polyline points="16 18 22 12 16 6"></polyline>
-                    <polyline points="8 6 2 12 8 18"></polyline>
-                </svg>
-                <span class="align-middle">Group</span>
-            </SideNavLink>
+                        <!-- sections -->
+                        <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+                            || hasRolesAndPermissions.hasPermissions.includes('manage_sections'))
+                            &&
+                            !(hasRolesAndPermissions.hasRoles.includes('operator')
+                                && hasRolesAndPermissions.hasPermissions.includes('manage_sections'))"
+                            :href="route('admin.sections.index')" :active="route().current('admin.sections.*')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="feather feather-chevron-right align-middle me-2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <span class="align-middle">Section</span>
+                        </SideNavLink>
 
-            <SideNavLink :href="route('admin.users.index')" :active="route().current('admin.users.*')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-users align-middle me-2">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                </svg>
-                <span class="align-middle">Users</span>
-            </SideNavLink>
+                        <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+                            || hasRolesAndPermissions.hasPermissions.includes('manage_subjects'))
+                            &&
+                            !(hasRolesAndPermissions.hasRoles.includes('operator')
+                                && hasRolesAndPermissions.hasPermissions.includes('manage_subjects'))"
+                            :href="route('admin.subjects.index')" :active="route().current('admin.subjects.*')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="feather feather-chevron-right align-middle me-2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <span class="align-middle">Subject</span>
+                        </SideNavLink>
 
-            <SideNavLink :href="route('admin.user-invitations.index')" :active="route().current('admin.user-invitations.*')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-users align-middle me-2">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                </svg>
-                <span class="align-middle">Invite Users</span>
-            </SideNavLink>
+                        <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+                            || hasRolesAndPermissions.hasPermissions.includes('manage_groups'))
+                            &&
+                            !(hasRolesAndPermissions.hasRoles.includes('operator')
+                                && hasRolesAndPermissions.hasPermissions.includes('manage_groups'))"
+                            :href="route('admin.groups.index')" :active="route().current('admin.groups.*')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="feather feather-chevron-right align-middle me-2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <span class="align-middle">Group</span>
+                        </SideNavLink>
+
+                        <div class="block ps-8 pt-1 pb-0 text-xs text-gray-400">
+                            Step 2
+                            <hr class="p-0 m-0">
+                        </div>
+
+                        <!-- grades -->
+                        <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+                            || hasRolesAndPermissions.hasPermissions.includes('manage_grades'))
+                            &&
+                            !(hasRolesAndPermissions.hasRoles.includes('operator')
+                                && hasRolesAndPermissions.hasPermissions.includes('manage_grades'))"
+                            :href="route('admin.grades.index')" :active="route().current('admin.grades.*')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="feather feather-chevron-right align-middle me-2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <span class="align-middle">Class</span>
+                        </SideNavLink>
+
+                        <!-- grades -->
+                        <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+                            || hasRolesAndPermissions.hasPermissions.includes('manage_grades'))
+                            &&
+                            !(hasRolesAndPermissions.hasRoles.includes('operator')
+                                && hasRolesAndPermissions.hasPermissions.includes('manage_grades'))"
+                            :href="route('admin.grades.index')" :active="route().current('admin.grades.*')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="feather feather-chevron-right align-middle me-2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <span class="align-middle">Classroom</span>
+                        </SideNavLink>
+                    </div>
+                </template>
+            </Dropdown>
+
+
+            <Dropdown align="right" width="100%" content-classes="relative z-50 bg-white">
+                <template #trigger>
+                    <span class="flex sidebar-item"
+                        :class="(route().current('admin.users.*')) || (route().current('admin.user-invitations.*')) ? 'active' : ''">
+                        <button
+                            class="inline-flex justify-between items-center sidebar-link w-full px-1 py-2 border border-transparent text-sm leading-4 font-medium hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150">
+                            <div class="inline-flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-users align-middle me-2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                                Manage Users
+                            </div>
+                            <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+                            </svg>
+                        </button>
+                    </span>
+                </template>
+
+                <template #content>
+                    <div class="w-60">
+
+                        <SideNavLink :href="route('admin.users.index')" :active="route().current('admin.users.*')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="feather feather-chevron-right align-middle me-2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <span class="align-middle">Users</span>
+                        </SideNavLink>
+
+                        <SideNavLink :href="route('admin.user-invitations.index')"
+                            :active="route().current('admin.user-invitations.*')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="feather feather-chevron-right align-middle me-2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <span class="align-middle">Invite Users</span>
+                        </SideNavLink>
+                    </div>
+                </template>
+            </Dropdown>
+
+
         </ul>
     </div>
 </template>

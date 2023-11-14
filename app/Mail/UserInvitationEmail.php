@@ -7,7 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\URL;
 
 class UserInvitationEmail extends Mailable implements ShouldQueue
 {
@@ -25,14 +25,13 @@ class UserInvitationEmail extends Mailable implements ShouldQueue
         // Check if the invitation is expired
         if ($this->invitation->expires_at && now()->gt($this->invitation->expires_at)) {
             // Optionally handle the case when the invitation is expired
-            return $this->view('emails.invitation-expired');
+            return $this->markdown('emails.invitation-expired');
         }
 
-        return $this->view('emails.user-invitation')
-            ->subject('Invitation Email')
+        return $this->markdown('emails.user-invitation')
+            ->subject(__('Invitation Email'))
             ->with([
-                'token' => $this->invitation->token,
-                // Add other data as needed
+                'acceptUrl' => URL::signedRoute('register', ['token' => $this->invitation->token]),
             ]);
     }
 }

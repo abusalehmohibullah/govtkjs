@@ -183,7 +183,7 @@ class UserInvitationController extends Controller
             // Rollback the transaction on other exceptions
             DB::rollBack();
             // Handle other exceptions
-            return redirect()->back()->with('flash.banner', 'An unexpected error occurred.')->with('flash.bannerStyle', 'danger');
+            return redirect()->back()->with('flash.banner', $e->getMessage())->with('flash.bannerStyle', 'danger');
         }
     }
 

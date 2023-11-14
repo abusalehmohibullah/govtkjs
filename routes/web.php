@@ -15,6 +15,8 @@ use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\AlbumController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\BuildingController;
+use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\Admin\GradeController;
 use App\Http\Controllers\Admin\SubjectController;
@@ -57,6 +59,7 @@ use Illuminate\Support\Facades\Artisan;
 //     // Add more routes for editing, creating roles, permissions, etc.
 // });
 
+// require_once __DIR__ . '/fortify.php';
 
 Route::get('/', function () {
     // Fetch data from multiple tables using Eloquent or database queries
@@ -109,6 +112,7 @@ Route::get('/', function () {
         'albums' => $albums,
     ]);
 })->name('home');
+
 
 
 Route::get('/login-options', function () {
@@ -245,6 +249,20 @@ Route::prefix('admin')->middleware([
             'names' => 'admin.albums.media',
         ]);
         Route::put('notices/{notice}/status', [NoticeController::class, 'status'])->name('admin.notices.status');
+    });
+
+    Route::middleware(['restriction:operator,manage_buildings'])->group(function () {
+        Route::resource('buildings', BuildingController::class, [
+            'names' => 'admin.buildings',
+        ]);
+        Route::put('buildings/{building}/status', [BuildingController::class, 'status'])->name('admin.buildings.status');
+    });
+
+    Route::middleware(['restriction:operator,manage_rooms'])->group(function () {
+        Route::resource('rooms', RoomController::class, [
+            'names' => 'admin.rooms',
+        ]);
+        Route::put('rooms/{room}/status', [RoomController::class, 'status'])->name('admin.rooms.status');
     });
 
     Route::middleware(['restriction:operator,manage_sections'])->group(function () {

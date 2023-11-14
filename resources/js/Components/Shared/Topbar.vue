@@ -68,7 +68,7 @@ const logout = () => {
             <div class="flex justify-end sm:items-center sm:ml-auto ml-auto w-full">
                 <div class="ml-3 relative">
                     <!-- Teams Dropdown -->
-                    <Dropdown v-if="$page.props.jetstream.hasTeamFeatures" align="right" width="60">
+                    <Dropdown v-if="$page.props.jetstream.hasTeamFeatures" align="right" width="60" position="absolute z-50 mt-2 rounded-md">
                         <template #trigger>
                             <span class="inline-flex rounded-md">
                                 <button type="button"
@@ -133,7 +133,7 @@ const logout = () => {
 
                 <!-- Settings Dropdown -->
                 <div class="mx-3 relative">
-                    <Dropdown align="right" width="48">
+                    <Dropdown align="right" width="48" position="absolute z-50 mt-2 rounded-md">
                         <template #trigger>
                             <!-- <button v-if="$page.props.jetstream.managesProfilePhotos" -->
                             <button
