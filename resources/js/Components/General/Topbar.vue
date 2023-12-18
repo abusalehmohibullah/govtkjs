@@ -119,13 +119,13 @@ const logout = () => {
                                     </NavLink>
                                 </div> -->
                                 <div class="space-x-8 sm:-my-px sm:flex">
-                                    <NavLink :href="route('dashboard')" :active="route().current('/')">
+                                    <NavLink :href="route('teachers')" :active="route().current('/')">
                                         Teachers
                                     </NavLink>
                                 </div>
                                 <div class="space-x-8 sm:-my-px sm:flex">
-                                    <NavLink :href="route('dashboard')" :active="route().current('/')">
-                                        Album
+                                    <NavLink :href="route('albums')" :active="route().current('/')">
+                                        Albums
                                     </NavLink>
                                 </div>
                                 <!-- <div class="space-x-8 sm:-my-px sm:flex">

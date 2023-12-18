@@ -194,11 +194,26 @@ const hasRolesAndPermissions = computed(() => page.props)
                 </template>
 
                 <template #content>
-                    <div class="w-60">
-                        <div class="block ps-8 pt-1 pb-0 text-xs text-gray-400">
+                    <div class="w-100 bg-gray-100">
+                        <div class="block ps-8 pt-1 pb-0 text-xs text-gray-400 bg-white">
                             Step 1
                             <hr class="p-0 m-0">
                         </div>
+                        <!-- branches -->
+                        <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+                            || hasRolesAndPermissions.hasPermissions.includes('manage_branches'))
+                            &&
+                            !(hasRolesAndPermissions.hasRoles.includes('operator')
+                                && hasRolesAndPermissions.hasPermissions.includes('manage_branches'))"
+                            :href="route('admin.branches.index')" :active="route().current('admin.branches.*')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="feather feather-chevron-right align-middle me-2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <span class="align-middle">Branches</span>
+                        </SideNavLink>
+                        
                         <!-- buildings -->
                         <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
                             || hasRolesAndPermissions.hasPermissions.includes('manage_buildings'))
@@ -272,7 +287,7 @@ const hasRolesAndPermissions = computed(() => page.props)
                             <span class="align-middle">Group</span>
                         </SideNavLink>
 
-                        <div class="block ps-8 pt-1 pb-0 text-xs text-gray-400">
+                        <div class="block ps-8 pt-1 pb-0 text-xs text-gray-400 bg-white">
                             Step 2
                             <hr class="p-0 m-0">
                         </div>
@@ -292,13 +307,13 @@ const hasRolesAndPermissions = computed(() => page.props)
                             <span class="align-middle">Class</span>
                         </SideNavLink>
 
-                        <!-- grades -->
+                        <!-- classrooms -->
                         <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
-                            || hasRolesAndPermissions.hasPermissions.includes('manage_grades'))
+                            || hasRolesAndPermissions.hasPermissions.includes('manage_classrooms'))
                             &&
                             !(hasRolesAndPermissions.hasRoles.includes('operator')
-                                && hasRolesAndPermissions.hasPermissions.includes('manage_grades'))"
-                            :href="route('admin.grades.index')" :active="route().current('admin.grades.*')">
+                                && hasRolesAndPermissions.hasPermissions.includes('manage_classrooms'))"
+                            :href="route('admin.classrooms.index')" :active="route().current('admin.classrooms.*')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                 class="feather feather-chevron-right align-middle me-2">
@@ -338,8 +353,7 @@ const hasRolesAndPermissions = computed(() => page.props)
                 </template>
 
                 <template #content>
-                    <div class="w-60">
-
+                    <div class="w-100 bg-gray-100">
                         <SideNavLink :href="route('admin.users.index')" :active="route().current('admin.users.*')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"

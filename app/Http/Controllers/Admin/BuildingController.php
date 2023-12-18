@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Admin\Branch;
 use App\Models\Admin\Building;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
@@ -14,8 +15,8 @@ class BuildingController extends Controller
     {
         // Retrieve paginated records from the buildings table
         $buildings = Building::with('rooms')->orderby('name')
-        ->with(['createdBy', 'updatedBy'])
-        ->paginate(10);
+            ->with(['createdBy', 'updatedBy'])
+            ->paginate(10);
 
         // Pass the paginated data to the Inertia view
         return Inertia::render('Admin/Buildings/Index', [
@@ -26,20 +27,30 @@ class BuildingController extends Controller
 
     public function create()
     {
+        $branches = Branch::orderBy('name')->get();
+        $singleBranch = $branches->count() === 1 ? $branches->first() : null;
+    
         // Show the form for create
-        return Inertia::render('Admin/Buildings/Create');
+        return Inertia::render('Admin/Buildings/Create', [
+            'branches' => $branches,
+            'singleBranch' => $singleBranch,
+        ]);
     }
+    
+    
 
     public function store(Request $request)
     {
         // dd($request);
         // Define validation rules
         $validationRules = [
+            'branch_id' => 'required',
             'name' => 'required|unique:buildings',
         ];
 
         // Custom error messages for validation
         $customMessages = [
+            'branch_id.required' => 'Please select a Branch.',
             'name.required' => 'Please provide a name.',
             'name.unique' => 'This Building already exists.',
         ];
@@ -77,10 +88,12 @@ class BuildingController extends Controller
 
     public function edit(Building $building)
     {
+        $branches = Branch::orderBy('name')->get();
+       
         // Show the form for editing
-
-        // Pass the paginated data to the Inertia view
         return Inertia::render('Admin/Buildings/Show', [
+            'branches' => $branches,
+            'selectedBranch' => $building->branch,
             'building' => $building,
         ]);
     }
@@ -91,11 +104,13 @@ class BuildingController extends Controller
 
         // Define validation rules
         $validationRules = [
+            'branch_id' => 'required',
             'name' => 'required|unique:buildings,name,' . $building->id,
         ];
 
         // Custom error messages for validation
         $customMessages = [
+            'branch_id.required' => 'Please select a Branch.',
             'name.required' => 'Please provide a name.',
             'name.unique' => 'This Building already exists.',
         ];

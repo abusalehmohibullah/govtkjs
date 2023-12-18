@@ -54,7 +54,7 @@ const toggleModal = (building) => {
                         <div v-for="room in building.rooms" :key="room"
                             class="text-white rounded-full px-2 py-1 text-xs" :class="room.status != 1 ? 'bg-gray-400' : 'bg-gray-700'">{{ room.room_no}}</div>
                     </div>
-                    <div v-else>No extras permission</div>
+                    <div v-else>No Room found</div>
                 </td>
                 <td class="py-2 px-4 border-b text-center">
                     <CreatedUpdatedBy :createdUpdatedBy="building" />

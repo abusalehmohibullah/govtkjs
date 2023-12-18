@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Grade;
+use App\Models\Admin\Section;
+use App\Models\Admin\Group;
+use App\Models\Admin\Subject;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
@@ -14,8 +17,8 @@ class GradeController extends Controller
     {
         // Retrieve paginated records from the grades table
         $grades = Grade::orderby('name')
-        ->with(['createdBy', 'updatedBy'])
-        ->paginate(10);
+            ->with(['sections', 'groups', 'subjects', 'createdBy', 'updatedBy'])
+            ->paginate(10);
 
         // Pass the paginated data to the Inertia view
         return Inertia::render('Admin/Grades/Index', [
@@ -26,8 +29,16 @@ class GradeController extends Controller
 
     public function create()
     {
+        $sections = Section::get();
+        $groups = Group::get();
+        $subjects = Subject::get();
+
         // Show the form for create
-        return Inertia::render('Admin/Grades/Create');
+        return Inertia::render('Admin/Grades/Create', [
+            'sections' => $sections,
+            'groups' => $groups,
+            'subjects' => $subjects,
+        ]);
     }
 
     public function store(Request $request)
@@ -60,6 +71,9 @@ class GradeController extends Controller
         try {
             // Save the model
             if ($grade->save()) {
+                $grade->groups()->attach($request->input('selectedGroups', []));
+                $grade->sections()->attach($request->input('selectedSections', []));
+                $grade->subjects()->attach($request->input('selectedSubjects', []));
                 return redirect()->route('admin.grades.index')->with('flash.banner', 'Grade created successfully!');
             } else {
                 return redirect()->back()->withInput()->with('flash.banner', 'Failed to create Grade.')->with('flash.bannerStyle', 'danger');
@@ -70,32 +84,39 @@ class GradeController extends Controller
         }
     }
 
-    public function show($id)
+    public function show(Grade $grade)
     {
         // Display a specific one
     }
 
-    public function edit($id)
+    public function edit(Grade $grade)
     {
+        $sections = Section::get();
+        $selectedSection = $grade->sections;
+        $groups = Group::get();
+        $selectedGroup = $grade->groups;
+        $subjects = Subject::get();
+        $selectedSubject = $grade->subjects;
         // Show the form for editing
-
-        $grade = Grade::findOrFail($id); // You can adjust the number of records per page (e.g., 10)
-
         // Pass the paginated data to the Inertia view
         return Inertia::render('Admin/Grades/Show', [
             'grade' => $grade,
+            'sections' => $sections,
+            'selectedSection' => $selectedSection,
+            'groups' => $groups,
+            'selectedGroup' => $selectedGroup,
+            'subjects' => $subjects,
+            'selectedSubject' => $selectedSubject,
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Grade $grade)
     {
         // dd($request);
-        // Find the grade by ID
-        $grade = Grade::findOrFail($id);
 
         // Define validation rules
         $validationRules = [
-            'name' => 'required|unique:grades,name,' . $id,
+            'name' => 'required|unique:grades,name,' . $grade->id,
         ];
 
         // Custom error messages for validation
@@ -107,7 +128,6 @@ class GradeController extends Controller
         // Validate the incoming request data
         $validatedData = $request->validate($validationRules, $customMessages);
 
-        $oldAttachment = $grade->attachment;
         // Update the grade with the validated data
         $grade->update($validatedData);
         $grade->updated_by = auth()->id();
@@ -116,9 +136,11 @@ class GradeController extends Controller
         $grade->slug = Str::slug($validatedData['name']);
 
         try {
-
             // Save the model
             if ($grade->save()) {
+                $grade->groups()->sync($request->input('selectedGroups', []));
+                $grade->sections()->sync($request->input('selectedSections', []));
+                $grade->subjects()->sync($request->input('selectedSubjects', []));
                 return redirect()->route('admin.grades.index')->with('flash.banner', 'Grade updated successfully!');
             } else {
                 return redirect()->back()->withInput()->with('flash.banner', 'Failed to update Grade.');
@@ -130,13 +152,8 @@ class GradeController extends Controller
     }
 
 
-    public function destroy($id)
+    public function destroy(Grade $grade)
     {
-        // Find the grade by ID
-        $grade = Grade::findOrFail($id);
-
-        // Delete the attachment file if it exists
-
         // Delete the grade
         $grade->delete();
 

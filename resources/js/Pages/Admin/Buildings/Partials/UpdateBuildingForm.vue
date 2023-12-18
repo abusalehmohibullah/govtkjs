@@ -9,15 +9,24 @@ import TextArea from '@/Components/TextArea.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import SelectInput from '@/Components/SelectInput.vue';
 
 const props = defineProps({
+    branches: Object,
+    selectedBranch: Array,
     building: Object,
 });
 
 const form = useForm({
     _method: 'PUT',
+    branch_id: props.building.branch.id,
     name: props.building.name,
 });
+
+const handleOptionSelected = (selectedLabel) => {
+    form.branch_id = selectedLabel; // Update albumName ref
+    // console.log('gg');
+};
 
 const updateBuilding = () => {
     form.post(route('admin.buildings.update', props.building.id), {
@@ -41,6 +50,16 @@ const updateBuilding = () => {
 
             <template #form>
                 <!-- Use the Text Input component for each form field -->
+
+                <div class="col-span-6 sm:col-span-4">
+                    <InputLabel for="branch" value="Branch Name">
+                        <template #required>*</template>
+                    </InputLabel>
+                    <SelectInput :options="branches" :selectedOption="selectedBranch" inputName="branch_id" :fieldName="'name'" :valueField="'id'"
+                        @option-selected="handleOptionSelected"/>
+
+                    <InputError :message="form.errors.branch_id" class="text-red-500" />
+                </div>
 
                 <div class="col-span-6 sm:col-span-4">
                     <InputLabel for="name" value="Building Name">

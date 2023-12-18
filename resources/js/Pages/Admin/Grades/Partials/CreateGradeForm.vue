@@ -9,10 +9,37 @@ import TextInput from '@/Components/TextInput.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import Section from '@/Components/Admin/Section.vue';
+import Group from '@/Components/Admin/Group.vue';
+import Subject from '@/Components/Admin/Subject.vue';
+
+const props = defineProps({
+    sections: Object,
+    groups: Object,
+    subjects: Object,
+});
 
 const form = useForm({
     name: '',
+    selectedSections: [],
+    selectedGroups: [],
+    selectedSubjects: [],
 });
+
+const handleSelectedSectionsUpdated = (newSelectedSections) => {
+    // console.log('Selected sections Updated:', newSelectedSections);
+    form.selectedSections = newSelectedSections;
+};
+
+const handleSelectedGroupsUpdated = (newSelectedGroups) => {
+    // console.log('Selected groups Updated:', newSelectedGroups);
+    form.selectedGroups = newSelectedGroups;
+};
+
+const handleSelectedSubjectsUpdated = (newSelectedSubjects) => {
+    // console.log('Selected subjects Updated:', newSelectedSubjects);
+    form.selectedSubjects = newSelectedSubjects;
+};
 
 const createGrade = () => {
     form.post(route('admin.grades.store'), {
@@ -45,6 +72,18 @@ const createGrade = () => {
                     <TextInput id="name" v-model="form.name" required class="mt-1 block w-full"
                         :class="{ 'border-red-500 focus:border-red-500': form.errors.name }" type="number" name="name" />
                     <InputError :message="form.errors.name" class="text-red-500" />
+                </div>
+
+                <div class="col-span-6 sm:col-span-4">
+                    <Section :data="sections" @selected-items-updated="handleSelectedSectionsUpdated" />
+                </div>
+
+                <div class="col-span-6 sm:col-span-4">
+                    <Group :data="groups" @selected-items-updated="handleSelectedGroupsUpdated" />
+                </div>
+
+                <div class="col-span-6 sm:col-span-4">
+                    <Subject :data="subjects" @selected-items-updated="handleSelectedSubjectsUpdated" />
                 </div>
 
             </template>

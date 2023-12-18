@@ -3,16 +3,21 @@
 
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
-import CreateFaqForm from '@/Pages/Admin/Faqs/Partials/CreateFaqForm.vue';
+import CreateClassroomForm from '@/Pages/Admin/Classrooms/Partials/CreateClassroomForm.vue';
 
+const props = defineProps({
+    buildings: Object,
+    sections: Object,
+    grades: Object,
+});
 
 </script>
 
 <template>
-    <AdminLayout title="Basic Info">
+    <AdminLayout title="Classrooms">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Basic Info
+                Create Classrooms
             </h2>
         </template>
 
@@ -20,7 +25,7 @@ import CreateFaqForm from '@/Pages/Admin/Faqs/Partials/CreateFaqForm.vue';
 
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <!-- Use the Form component to wrap your form -->
-                <CreateFaqForm />
+                <CreateClassroomForm :buildings="buildings" :sections="sections" :grades="grades" />
             </div>
 
 

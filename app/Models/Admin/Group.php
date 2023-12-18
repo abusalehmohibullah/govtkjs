@@ -13,7 +13,12 @@ class Group extends Model
     protected $fillable = [
         'name',
     ]; 
-       
+    
+    public function grades()
+    {
+        return $this->belongsToMany(Grade::class);
+    }
+
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');

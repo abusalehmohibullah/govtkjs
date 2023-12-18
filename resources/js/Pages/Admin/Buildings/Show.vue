@@ -5,7 +5,7 @@ import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 import UpdateBuildingForm from '@/Pages/Admin/Buildings/Partials/UpdateBuildingForm.vue';
 
-const { building } = defineProps(['building']);
+const { branches,  selectedBranch, building } = defineProps(['branches', 'selectedBranch', 'building']);
 
 </script>
 
@@ -21,7 +21,7 @@ const { building } = defineProps(['building']);
 
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <!-- Use the Form component to wrap your form -->
-                <UpdateBuildingForm :building="building"/>
+                <UpdateBuildingForm :branches="branches" :selectedBranch="selectedBranch" :building="building"/>
             </div>
 
 

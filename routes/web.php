@@ -15,8 +15,10 @@ use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\AlbumController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\BuildingController;
 use App\Http\Controllers\Admin\RoomController;
+use App\Http\Controllers\Admin\ClassroomController;
 use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\Admin\GradeController;
 use App\Http\Controllers\Admin\SubjectController;
@@ -114,6 +116,22 @@ Route::get('/', function () {
 })->name('home');
 
 
+Route::get('/albums', function () {
+
+    $albums = Album::with('media')
+        ->latest('created_at') // Order by created_at in descending order
+        ->take(10)             // Limit the result to the first 10 albums
+        ->get();
+
+    // Pass the fetched data to the Inertia view
+    return Inertia::render('Albums', [
+        'albums' => $albums,
+    ]);
+})->name('albums');
+
+Route::get('/teachers', function () {
+    return Inertia::render('Teachers');
+})->name('teachers');
 
 Route::get('/login-options', function () {
     return Inertia::render('LoginOptions');
@@ -251,6 +269,13 @@ Route::prefix('admin')->middleware([
         Route::put('notices/{notice}/status', [NoticeController::class, 'status'])->name('admin.notices.status');
     });
 
+    Route::middleware(['restriction:operator,manage_branches'])->group(function () {
+        Route::resource('branches', BranchController::class, [
+            'names' => 'admin.branches',
+        ]);
+        Route::put('branches/{branch}/status', [BranchController::class, 'status'])->name('admin.branches.status');
+    });
+
     Route::middleware(['restriction:operator,manage_buildings'])->group(function () {
         Route::resource('buildings', BuildingController::class, [
             'names' => 'admin.buildings',
@@ -263,6 +288,13 @@ Route::prefix('admin')->middleware([
             'names' => 'admin.rooms',
         ]);
         Route::put('rooms/{room}/status', [RoomController::class, 'status'])->name('admin.rooms.status');
+    });
+
+    Route::middleware(['restriction:operator,manage_classrooms'])->group(function () {
+        Route::resource('classrooms', ClassroomController::class, [
+            'names' => 'admin.classrooms',
+        ]);
+        Route::put('classrooms/{classroom}/status', [ClassroomController::class, 'status'])->name('admin.classrooms.status');
     });
 
     Route::middleware(['restriction:operator,manage_sections'])->group(function () {

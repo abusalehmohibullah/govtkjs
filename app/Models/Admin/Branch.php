@@ -6,18 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 
-class Section extends Model
+class Branch extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'name',
-    ]; 
-       
-    public function grades()
-    {
-        return $this->belongsToMany(Grade::class);
-    }
+        'address',
+        'in_charge',
+    ];
     
     public function createdBy()
     {

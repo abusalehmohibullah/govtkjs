@@ -5,6 +5,7 @@ import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 import CreateBuildingForm from '@/Pages/Admin/Buildings/Partials/CreateBuildingForm.vue';
 
+const { branches,  singleBranch} = defineProps(['branches', 'singleBranch']);
 
 </script>
 
@@ -20,7 +21,7 @@ import CreateBuildingForm from '@/Pages/Admin/Buildings/Partials/CreateBuildingF
 
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <!-- Use the Form component to wrap your form -->
-                <CreateBuildingForm />
+                <CreateBuildingForm :branches="branches" :singleBranch="singleBranch"/>
             </div>
 
 

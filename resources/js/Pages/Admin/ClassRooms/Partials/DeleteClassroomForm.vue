@@ -1,7 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { useForm } from '@inertiajs/vue3';
-import ActionSection from '@/Components/ActionSection.vue';
 import ActionMessage from '@/Components/ActionMessage.vue';
 import ConfirmationModal from '@/Components/ConfirmationModal.vue';
 import DangerButton from '@/Components/DangerButton.vue';
@@ -9,7 +8,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import DangerIconButton from '@/Components/DangerIconButton.vue';
 
 const props = defineProps({
-    faq: Array,
+    classroom: Array,
     show: {
         type: Boolean,
         default: false,
@@ -22,18 +21,18 @@ const close = () => {
 };
 
 
-const confirmingFaqDeletion = ref(false);
+const confirmingClassroomDeletion = ref(false);
 const form = useForm({});
 
 watch(() => {
-    confirmingFaqDeletion.value = props.show;
+    confirmingClassroomDeletion.value = props.show;
 });
 
-const deleteFaq = async () => {
+const deleteClassroom = async () => {
     try {
-        // Send a DELETE request to delete the faq
-        form.delete(route('admin.faqs.destroy', props.faq.id), {
-            errorBag: 'deleteFaq',
+        // Send a DELETE request to delete the classroom
+        form.delete(route('admin.classrooms.destroy', props.classroom.id), {
+            errorBag: 'deleteClassroom',
         });
 
         setTimeout(() => {
@@ -42,7 +41,7 @@ const deleteFaq = async () => {
 
     } catch (error) {
         // Handle any errors that occur during the deletion
-        console.error('Error deleting faq:', error);
+        console.error('Error deleting classroom:', error);
     }
 };
 
@@ -51,19 +50,19 @@ const deleteFaq = async () => {
 
 
 <template>
-    <!-- Delete Faq Confirmation Modal -->
-    <ConfirmationModal :show="confirmingFaqDeletion" :max-width="maxWidth" :closeable="closeable" @close="close">
+    <!-- Delete Classroom Confirmation Modal -->
+    <ConfirmationModal :show="confirmingClassroomDeletion" :max-width="maxWidth" :closeable="closeable" @close="close">
 
         <template #title>
-            Delete Faq
+            Delete Class
         </template>
 
         <template #content>
-            Are you sure you want to delete this faq?
+            Are you sure you want to delete this class?
 
             <div class="bg-red-100 w-full mt-2 rounded line-clamp-3 box-content">
                 <span class="m-2 line-clamp-3 box-content">
-                    {{ props.faq.question }}
+                    {{ props.classroom.name }}
                 </span>
             </div>
         </template>
@@ -80,7 +79,7 @@ const deleteFaq = async () => {
                 </SecondaryButton>
 
                 <DangerButton class="ml-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing"
-                    @click="deleteFaq">
+                    @click="deleteClassroom">
                     Delete
                 </DangerButton>
             </div>

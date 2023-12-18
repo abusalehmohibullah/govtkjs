@@ -3,9 +3,9 @@
 
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
-import UpdateClassroomForm from '@/Pages/Admin/Classrooms/Partials/UpdateClassroomForm.vue';
+import UpdateBranchForm from '@/Pages/Admin/Branches/Partials/UpdateBranchForm.vue';
 
-const { classroom, buildings, selectedBuilding } = defineProps(['classroom', 'buildings', 'selectedBuilding']);
+const { branch } = defineProps(['branch']);
 
 </script>
 
@@ -13,7 +13,7 @@ const { classroom, buildings, selectedBuilding } = defineProps(['classroom', 'bu
     <AdminLayout title="Basic Info">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Edit Classroom
+                Edit Branch
             </h2>
         </template>
 
@@ -21,7 +21,7 @@ const { classroom, buildings, selectedBuilding } = defineProps(['classroom', 'bu
 
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <!-- Use the Form component to wrap your form -->
-                <UpdateClassroomForm :classroom="classroom" :buildings="buildings" :selectedBuilding="selectedBuilding"/>
+                <UpdateBranchForm :branch="branch"/>
             </div>
 
 

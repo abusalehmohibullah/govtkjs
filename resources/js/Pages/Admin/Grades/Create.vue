@@ -5,6 +5,7 @@ import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 import CreateGradeForm from '@/Pages/Admin/Grades/Partials/CreateGradeForm.vue';
 
+const {sections, groups, subjects } = defineProps(['sections', 'groups', 'subjects' ]);
 
 </script>
 
@@ -20,7 +21,7 @@ import CreateGradeForm from '@/Pages/Admin/Grades/Partials/CreateGradeForm.vue';
 
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <!-- Use the Form component to wrap your form -->
-                <CreateGradeForm />
+                <CreateGradeForm :sections="sections" :groups="groups" :subjects="subjects" />
             </div>
 
 
