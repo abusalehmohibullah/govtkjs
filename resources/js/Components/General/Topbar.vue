@@ -103,13 +103,13 @@ const logout = () => {
                                         Home
                                     </NavLink>
                                 </div>
-                                <div class="space-x-8 sm:-my-px sm:flex">
+                                <!-- <div class="space-x-8 sm:-my-px sm:flex">
                                     <NavLink :href="route('dashboard')" :active="route().current('/')">
                                         About Us
                                     </NavLink>
-                                </div>
+                                </div> -->
                                 <div class="space-x-8 sm:-my-px sm:flex">
-                                    <NavLink :href="route('dashboard')" :active="route().current('/')">
+                                    <NavLink :href="route('admission')" :active="route().current('/admission')">
                                         Admission
                                     </NavLink>
                                 </div>
@@ -119,12 +119,12 @@ const logout = () => {
                                     </NavLink>
                                 </div> -->
                                 <div class="space-x-8 sm:-my-px sm:flex">
-                                    <NavLink :href="route('teachers')" :active="route().current('/')">
+                                    <NavLink :href="route('teachers')" :active="route().current('/teachers')">
                                         Teachers
                                     </NavLink>
                                 </div>
                                 <div class="space-x-8 sm:-my-px sm:flex">
-                                    <NavLink :href="route('albums')" :active="route().current('/')">
+                                    <NavLink :href="route('albums')" :active="route().current('/albums')">
                                         Albums
                                     </NavLink>
                                 </div>
@@ -139,7 +139,12 @@ const logout = () => {
                                     </NavLink>
                                 </div> -->
                                 <div class="space-x-8 sm:-my-px sm:flex">
-                                    <NavLink :href="route('dashboard')" :active="route().current('/')">
+                                    <NavLink :href="route('career')" :active="route().current('/career')">
+                                        Career
+                                    </NavLink>
+                                </div>
+                                <div class="space-x-8 sm:-my-px sm:flex">
+                                    <NavLink :href="route('contact')" :active="route().current('/contact')">
                                         Contact
                                     </NavLink>
                                 </div>

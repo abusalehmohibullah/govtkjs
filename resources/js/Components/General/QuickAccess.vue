@@ -1,3 +1,8 @@
+<script setup>
+import { Link } from '@inertiajs/vue3';
+
+</script>
+
 <template>
     <!-- <div class="grid gap-1 grid-cols-2 grid-rows-2 sm:gap-10 sm:grid-cols-4 sm:grid-rows-1 my-5">
         <div class="card m-0">
@@ -27,6 +32,7 @@
     </div> -->
 
     <div class="grid gap-1 grid-cols-2 grid-rows-2 sm:gap-10 sm:grid-cols-4 sm:grid-rows-1 my-5">
+        <Link :href="route('students-portal')">
         <div class="card m-0 group">
             <div class="card-body bg-white rounded flex flex-row sm:flex-col justify-center items-center gap-4 shadow-sm">
                 <i
@@ -42,6 +48,8 @@
                     Student's Portal</h5>
             </div>
         </div>
+        </Link>
+        <Link :href="route('admission')">
         <div class="card m-0 group">
             <div class="card-body bg-white rounded flex flex-row sm:flex-col justify-center items-center gap-4 shadow-sm">
                 <i
@@ -57,6 +65,8 @@
                     Admission Infos</h5>
             </div>
         </div>
+        </Link>
+        <Link :href="route('result')">
         <div class="card m-0 group">
             <div class="card-body bg-white rounded flex flex-row sm:flex-col justify-center items-center gap-4 shadow-sm">
                 <i
@@ -72,6 +82,8 @@
                     Check Result</h5>
             </div>
         </div>
+        </Link>
+        <Link :href="route('contact')">
         <div class="card m-0 group">
             <div class="card-body bg-white rounded flex flex-row sm:flex-col justify-center items-center gap-4 shadow-sm">
                 <i
@@ -87,6 +99,7 @@
                     Contact Us</h5>
             </div>
         </div>
+        </Link>
     </div>
 
     <!-- <div class="grid gap-1 grid-cols-2 grid-rows-2 sm:gap-10 sm:grid-cols-4 sm:grid-rows-1 my-5">
@@ -154,6 +167,4 @@
             </div>
         </div>
     </div> -->
-
-
 </template>

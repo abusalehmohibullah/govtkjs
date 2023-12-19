@@ -129,13 +129,34 @@ Route::get('/albums', function () {
     ]);
 })->name('albums');
 
+Route::get('/admission', function () {
+    return Inertia::render('Admission');
+})->name('admission');
+
 Route::get('/teachers', function () {
     return Inertia::render('Teachers');
 })->name('teachers');
 
+Route::get('/career', function () {
+    return Inertia::render('Career');
+})->name('career');
+
+Route::get('/contact', function () {
+    return Inertia::render('Contact');
+})->name('contact');
+
 Route::get('/login-options', function () {
     return Inertia::render('LoginOptions');
 })->name('loginOptions');
+
+Route::get('/students-portal', function () {
+    return Inertia::render('StudentsPortal');
+})->name('students-portal');
+
+Route::get('/result', function () {
+    return Inertia::render('Result');
+})->name('result');
+
 
 Route::get('/notice/{slug}', function ($slug) {
 
