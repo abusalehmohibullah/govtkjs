@@ -24,7 +24,7 @@ class Building extends Model
 
     public function rooms()
     {
-        return $this->hasMany(Room::class, 'building_id');
+        return $this->hasMany(Room::class);
     }
     
     public function createdBy()

@@ -5,7 +5,8 @@ import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 import UpdateClassroomForm from '@/Pages/Admin/Classrooms/Partials/UpdateClassroomForm.vue';
 
-const { classroom, buildings, selectedBuilding } = defineProps(['classroom', 'buildings', 'selectedBuilding']);
+const { classroom, buildings, grades, selectedBuilding, selectedRoom, selectedGrade, selectedSection, selectedGroup } =
+    defineProps(['classroom', 'buildings', 'grades', 'selectedBuilding', 'selectedRoom', 'selectedGrade', 'selectedSection', 'selectedGroup']);
 
 </script>
 
@@ -21,7 +22,9 @@ const { classroom, buildings, selectedBuilding } = defineProps(['classroom', 'bu
 
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <!-- Use the Form component to wrap your form -->
-                <UpdateClassroomForm :classroom="classroom" :buildings="buildings" :selectedBuilding="selectedBuilding"/>
+                <UpdateClassroomForm :classroom="classroom" :buildings="buildings" :grades="grades"
+                    :selectedBuilding="selectedBuilding" :selectedRoom="selectedRoom" :selectedGrade="selectedGrade"
+                    :selectedSection="selectedSection" :selectedGroup="selectedGroup" />
             </div>
 
 

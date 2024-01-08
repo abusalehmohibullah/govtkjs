@@ -12,18 +12,18 @@ import PrimaryPaginatorButton from '@/Components/PrimaryPaginatorButton.vue';
 import SecondaryPaginatorButton from '@/Components/SecondaryPaginatorButton.vue';
 import PrimaryIconButton from '@/Components/PrimaryIconButton.vue';
 import DangerIconButton from '@/Components/DangerIconButton.vue';
-import DeleteClassroomForm from '@/Pages/Admin/Classrooms/Partials/DeleteClassroomForm.vue';
+import DeleteStudentForm from '@/Pages/Admin/Students/Partials/DeleteStudentForm.vue';
 
 
 const props = defineProps({
-    classrooms: Object,
+    students: Object,
 });
 
 const showModal = ref(false);
-const selectedClassroom = ref(null);
+const selectedStudent = ref(null);
 
-const toggleModal = (classroom) => {
-    selectedClassroom.value = classroom;
+const toggleModal = (student) => {
+    selectedStudent.value = student;
     showModal.value = !showModal.value;
 };
 
@@ -35,9 +35,8 @@ const toggleModal = (classroom) => {
         <template #thead>
             <tr>
                 <th class="py-2 px-4 border-b bg-slate-200">#</th>
-                <th class="py-2 px-4 border-b bg-slate-200">Building</th>
-                <th class="py-2 px-4 border-b bg-slate-200">Room</th>
-                <th class="py-2 px-4 border-b bg-slate-200">Classroom Name</th>
+                <th class="py-2 px-4 border-b bg-slate-200">Caption</th>
+                <th class="py-2 px-4 border-b bg-slate-200">Path</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Created/Edited</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Action</th>
             </tr>
@@ -45,27 +44,28 @@ const toggleModal = (classroom) => {
         <template #tbody>
 
 
-            <tr v-if="classrooms.data.length > 0" v-for="(classroom, index) in classrooms.data" :key="index" class="hover:bg-blue-100"
-                :class="classroom.status === 0 ? 'bg-gray-200 opacity-70' : ''">
-                <td class="py-2 px-4 border-b text-center">{{ (classrooms.current_page - 1) * classrooms.per_page + index + 1 }}</td>
-                <td class="py-2 px-4 border-b text-center">{{ classroom.building.name }}</td>
-                <td class="py-2 px-4 border-b text-center">{{ classroom.room.room_no + '(' + classroom.room.name + ')' }}</td>
-                <td class="py-2 px-4 border-b text-center">{{ classroom.name }}</td>
+            <tr v-if="students.data.length > 0" v-for="(student, index) in students.data" :key="index"
+                class="hover:bg-blue-100" :class="student.status === 0 ? 'bg-gray-200 opacity-70' : ''">
+                <td class="py-2 px-4 border-b">{{ (students.current_page - 1) * students.per_page + index + 1 }}</td>
+                <td class="py-2 px-4 border-b">
+                    <div class="font-medium text-slate-500">{{ student.caption }}</div>
+                </td>
+                <td class="py-2 px-4 border-b text-center">{{ student.path }}</td>
                 <td class="py-2 px-4 border-b text-center">
-                    <CreatedUpdatedBy :createdUpdatedBy="classroom" />
+                    <CreatedUpdatedBy :createdUpdatedBy="student" />
                 </td>
                 <td class="py-2 px-4 border-b">
                     <div class="flex justify-center">
+                        <ToggleStatus :toggle="student" :toggleType="`students`" />
 
-                        <ToggleStatus :toggle="classroom" :toggleType="`classrooms`" />
-                        <Link :href="route('admin.classrooms.edit', classroom.id)">
+                        <Link :href="route('admin.students.edit', student.id)">
                         <PrimaryIconButton>
                             <i class="fas fa-pen"></i>
                         </PrimaryIconButton>
                         </Link>
 
                         <!-- Delete button -->
-                        <DangerIconButton class="ml-1" @click="() => toggleModal(classroom)">
+                        <DangerIconButton class="ml-1" @click="() => toggleModal(student)">
                             <i class="fas fa-trash"></i>
                         </DangerIconButton>
 
@@ -74,16 +74,18 @@ const toggleModal = (classroom) => {
             </tr>
 
             <tr v-else>
-                <td colspan="3" class="text-center p-3">
+                <td colspan="4" class="text-center p-3">
                     Not Data Found
                 </td>
             </tr>
         </template>
     </Table>
     <!-- Modal form outside the table -->
-    <DeleteClassroomForm :show="showModal" :classroom="selectedClassroom" @close="toggleModal" />
+    <DeleteStudentForm :show="showModal" :student="selectedStudent" @close="toggleModal" />
+
+
     <div class="mt-5">
-        <template v-for="(link, index) in classrooms.links">
+        <template v-for="(link, index) in students.links">
             <template v-if="link.url">
                 <Link :href="link.url">
                 <template v-if="link.active">
@@ -93,7 +95,7 @@ const toggleModal = (classroom) => {
                     <template v-if="index === 0">
                         <SecondaryPaginatorButton v-html="link.label.split(' ')[0].trim()" />
                     </template>
-                    <template v-else-if="index === classrooms.links.length - 1">
+                    <template v-else-if="index === students.links.length - 1">
                         <SecondaryPaginatorButton v-html="link.label.split(' ')[1].trim()" />
                     </template>
                     <template v-else>
@@ -106,7 +108,7 @@ const toggleModal = (classroom) => {
                 <template v-if="index === 0">
                     <SecondaryPaginatorButton v-html="link.label.split(' ')[0].trim()" class='opacity-40' />
                 </template>
-                <template v-else-if="index === classrooms.links.length - 1">
+                <template v-else-if="index === students.links.length - 1">
                     <SecondaryPaginatorButton v-html="link.label.split(' ')[1].trim()" class='opacity-40' />
                 </template>
                 <template v-else>
@@ -114,7 +116,6 @@ const toggleModal = (classroom) => {
                 </template>
             </template>
         </template>
-
     </div>
 </template>
 

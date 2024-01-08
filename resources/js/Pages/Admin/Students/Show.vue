@@ -3,20 +3,17 @@
 
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
-import CreateClassroomForm from '@/Pages/Admin/Classrooms/Partials/CreateClassroomForm.vue';
+import UpdateSliderForm from '@/Pages/Admin/Sliders/Partials/UpdateSliderForm.vue';
 
-const props = defineProps({
-    buildings: Object,
-    grades: Object,
-});
+const { slider } = defineProps(['slider']);
 
 </script>
 
 <template>
-    <AdminLayout title="Classrooms">
+    <AdminLayout title="Edit Slider">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Create Classrooms
+                Edit Slider
             </h2>
         </template>
 
@@ -24,7 +21,7 @@ const props = defineProps({
 
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <!-- Use the Form component to wrap your form -->
-                <CreateClassroomForm :buildings="buildings" :grades="grades" />
+                <UpdateSliderForm :slider="slider"/>
             </div>
 
 

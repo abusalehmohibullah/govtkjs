@@ -2,6 +2,7 @@
 <script setup>
 
 import { useForm } from '@inertiajs/vue3';
+import { computed, ref, watch } from 'vue';
 
 import FormSection from '@/Components/FormSection.vue';
 import ActionMessage from '@/Components/ActionMessage.vue';
@@ -13,22 +14,70 @@ import SelectInput from '@/Components/SelectInput.vue';
 
 const props = defineProps({
     buildings: Object,
-    sections: Object,
     grades: Object,
 });
 
 const form = useForm({
-    classroom_no: '',
     building_id: '',
-    name: '',
-    student_capacity: '',
-    examinee_capacity: '',
+    room_id: '',
+    grade_id: '',
+    section_id: '',
+    group_id: '',
+});
+// Define computed property for room options
+const rooms = ref([]);
+const roomsList = ref([]);
+
+const handleBuildingChange = (selectedLabel) => {
+    form.building_id = selectedLabel;
+};
+
+watch(() => form.building_id, (newValue, oldValue) => {
+    // Update the rooms based on the new building selection
+    const selectedBuilding = props.buildings.find(building => building.id == newValue);
+    rooms.value = selectedBuilding ? selectedBuilding.rooms : [];
+
+    roomsList.value = rooms.value.map(({ id, name, room_no }) => ({
+        id,
+        name: `${room_no} (${name})`
+    }));
+    form.room_id = '';
 });
 
-const handleOptionSelected = (selectedLabel) => {
-    form.building_id = selectedLabel; // Update albumName ref
-    // console.log('gg');
+const handleRoomChange = (selectedLabel) => {
+    console.log('Room changed:', selectedLabel);
+    form.room_id = selectedLabel;
 };
+
+
+
+const sections = ref([]);
+const groups = ref([]);
+
+const handleGradeChange = (selectedLabel) => {
+    form.grade_id = selectedLabel;
+};
+
+watch(() => form.grade_id, (newValue, oldValue) => {
+    // Update the rooms based on the new building selection
+    const selectedGrade = props.grades.find(grade => grade.id == newValue);
+    sections.value = selectedGrade ? selectedGrade.sections : [];
+    groups.value = selectedGrade ? selectedGrade.groups : [];
+    form.section_id = '';
+    form.group_id = '';
+});
+
+const handleSectionChange = (selectedLabel) => {
+    console.log('Section changed:', selectedLabel);
+    form.section_id = selectedLabel;
+};
+
+const handleGroupChange = (selectedLabel) => {
+    console.log('Group changed:', selectedLabel);
+    form.group_id = selectedLabel;
+};
+
+
 
 const createClassroom = () => {
     form.post(route('admin.classrooms.store'), {
@@ -54,74 +103,60 @@ const createClassroom = () => {
             <template #form>
                 <!-- Use the Text Input component for each form field -->
 
+
                 <div class="col-span-6 sm:col-span-4">
                     <InputLabel for="building" value="Building Name">
                         <template #required>*</template>
                     </InputLabel>
                     <SelectInput :options="buildings" inputName="building" :fieldName="'name'" :valueField="'id'"
-                        @option-selected="handleOptionSelected" class="capitalize" />
+                        v-model="form.building_id" @option-selected="handleBuildingChange" class="capitalize" />
+                    <InputError :message="form.errors.building_id" class="text-red-500" />
+                </div>
 
+                <!-- Room Select Input -->
+                <div class="col-span-6 sm:col-span-4">
+                    <InputLabel for="room" value="Room Name">
+                        <template #required>*</template>
+                    </InputLabel>
+                    <!-- <dd>{{ reactiveOptions }}</dd> -->
+                    <SelectInput :options="roomsList" inputName="room" :fieldName="'name'" :valueField="'id'"
+                        v-model="form.room_id" @option-selected="handleRoomChange" class="capitalize" />
                     <InputError :message="form.errors.room_id" class="text-red-500" />
                 </div>
 
+
+
+                <div class="col-span-6 sm:col-span-4">
+                    <InputLabel for="grade" value="Grade Name">
+                        <template #required>*</template>
+                    </InputLabel>
+                    <SelectInput :options="grades" inputName="grade" :fieldName="'name'" :valueField="'id'"
+                        v-model="form.grade_id" @option-selected="handleGradeChange" class="capitalize" />
+                    <InputError :message="form.errors.grade_id" class="text-red-500" />
+                </div>
+
+                <!-- Section Select Input -->
                 <div class="col-span-6 sm:col-span-4">
                     <InputLabel for="section" value="Section Name">
                         <template #required>*</template>
                     </InputLabel>
+                    <!-- <dd>{{ reactiveOptions }}</dd> -->
                     <SelectInput :options="sections" inputName="section" :fieldName="'name'" :valueField="'id'"
-                        @option-selected="handleOptionSelected" class="capitalize" />
-
+                        v-model="form.section_id" @option-selected="handleSectionChange" class="capitalize" />
                     <InputError :message="form.errors.section_id" class="text-red-500" />
                 </div>
 
+                <!-- Group Select Input -->
                 <div class="col-span-6 sm:col-span-4">
-                    <InputLabel for="grade" value="Class Name">
+                    <InputLabel for="group" value="Group Name">
                         <template #required>*</template>
                     </InputLabel>
-                    <SelectInput :options="grades" inputName="grade" :fieldName="'name'" :valueField="'id'"
-                        @option-selected="handleOptionSelected" class="capitalize" />
-
-                    <InputError :message="form.errors.grade_id" class="text-red-500" />
+                    <!-- <dd>{{ reactiveOptions }}</dd> -->
+                    <SelectInput :options="groups" inputName="group" :fieldName="'name'" :valueField="'id'"
+                        v-model="form.group_id" @option-selected="handleGroupChange" class="capitalize" />
+                    <InputError :message="form.errors.group_id" class="text-red-500" />
                 </div>
 
-                <div class="col-span-6 sm:col-span-4">
-                    <InputLabel for="classroom_no" value="Classroom No">
-                        <template #required>*</template>
-                    </InputLabel>
-                    <TextInput id="classroom_no" v-model="form.classroom_no" required class="mt-1 block w-full"
-                        :class="{ 'border-red-500 focus:border-red-500': form.errors.classroom_no }" type="number"
-                        name="classroom_no" />
-                    <InputError :message="form.errors.classroom_no" class="text-red-500" />
-                </div>
-
-                <div class="col-span-6 sm:col-span-4">
-                    <InputLabel for="name" value="Classroom Name">
-                        <!-- <template #required>*</template> -->
-                    </InputLabel>
-                    <TextInput id="name" v-model="form.name" class="mt-1 block w-full"
-                        :class="{ 'border-red-500 focus:border-red-500': form.errors.name }" type="text" name="name" />
-                    <InputError :message="form.errors.name" class="text-red-500" />
-                </div>
-
-                <div class="col-span-6 sm:col-span-4">
-                    <InputLabel for="student_capacity" value="Student Capacity">
-                        <!-- <template #required>*</template> -->
-                    </InputLabel>
-                    <TextInput id="student_capacity" v-model="form.student_capacity" class="mt-1 block w-full"
-                        :class="{ 'border-red-500 focus:border-red-500': form.errors.student_capacity }" type="number"
-                        name="student_capacity" />
-                    <InputError :message="form.errors.student_capacity" class="text-red-500" />
-                </div>
-
-                <div class="col-span-6 sm:col-span-4">
-                    <InputLabel for="examinee_capacity" value="Examinee Capacity">
-                        <!-- <template #required>*</template> -->
-                    </InputLabel>
-                    <TextInput id="examinee_capacity" v-model="form.examinee_capacity" class="mt-1 block w-full"
-                        :class="{ 'border-red-500 focus:border-red-500': form.errors.examinee_capacity }" type="number"
-                        name="examinee_capacity" />
-                    <InputError :message="form.errors.examinee_capacity" class="text-red-500" />
-                </div>
             </template>
 
             <template #actions>
@@ -136,3 +171,5 @@ const createClassroom = () => {
         </FormSection>
     </div>
 </template>
+
+

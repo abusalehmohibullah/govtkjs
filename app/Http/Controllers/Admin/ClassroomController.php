@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Admin\Classroom;
 use App\Models\Admin\Grade;
+use App\Models\Admin\Group;
 use App\Models\Admin\Building;
 use App\Models\Admin\Room;
 use App\Models\Admin\Section;
@@ -18,7 +19,7 @@ class ClassroomController extends Controller
     {
         // Retrieve paginated records from the classrooms table
         $classrooms = Classroom::orderby('name')
-            ->with(['room', 'section', 'grade', 'createdBy', 'updatedBy'])
+            ->with(['building', 'room', 'section', 'grade', 'createdBy', 'updatedBy'])
             ->paginate(10);
 
         // Pass the paginated data to the Inertia view
@@ -31,38 +32,32 @@ class ClassroomController extends Controller
     public function create()
     {
         // Show the form for create
-        $buildings = Building::with(['room']);
-        $rooms = Room::orderby('name')->get();
-        $sections = Section::orderby('name')->get();
-        $grades = Grade::orderby('name')->get();
+        $buildings = Building::with(['rooms'])->get();
+        $grades = Grade::with(['sections', 'groups'])->get();
 
         return Inertia::render('Admin/Classrooms/Create', [
             'buildings' => $buildings,
-            // 'rooms' => $rooms,
-            'sections' => $sections,
             'grades' => $grades,
         ]);
     }
 
     public function store(Request $request)
     {
-        // dd($request);
+
         // Define validation rules
         $validationRules = [
             'building_id' => 'required',
-            'classroom_no' => 'required',
-            // 'name' => 'required|unique:classrooms',
-            'name' => 'nullable',
-            'student_capacity' => 'nullable',
-            'examinee_capacity' => 'nullable',
+            'room_id' => 'required',
+            'grade_id' => 'required',
+            'section_id' => 'nullable',
+            'group_id' => 'nullable',
         ];
 
         // Custom error messages for validation
         $customMessages = [
             'building_id.required' => 'Please select a building.',
-            'classroom_no.required' => 'Please provide a classroom_no.',
-            // 'name.required' => 'Please provide a name.',
-            // 'name.unique' => 'This Classroom already exists.',
+            'room_id.required' => 'Please select a room.',
+            'grade_id.required' => 'Please select a grade.',
         ];
 
 
@@ -75,14 +70,34 @@ class ClassroomController extends Controller
 
         $classroom->created_by = auth()->id();
 
-        $building = Building::find($validatedData['building_id']);
+        $grade = Grade::find($validatedData['grade_id']);
 
-        if ($building) {
-            $classroom->slug = $building->slug. '#' . $validatedData['classroom_no'];
+        if ($grade) {
+            $classroom->name = $grade->name;
+            $classroom->slug = $grade->slug;
+            if ($validatedData['group_id']) {
+                $group = Group::find($validatedData['group_id']);
+                if ($group) {
+                    $classroom->name = $classroom->name . "-" . $group->name;
+                    $classroom->slug = $classroom->slug . "-" . $group->slug;
+                } else {
+                    return redirect()->back()->withInput()->with('flash.banner', 'Group does not exist.')->with('flash.bannerStyle', 'danger');
+                }
+            }
+
+            if ($validatedData['section_id']) {
+                $section = Section::find($validatedData['section_id']);
+                if ($section) {
+                    $classroom->name = $classroom->name . "(" . $section->name . ")";
+                    $classroom->slug = $classroom->slug . "(" . $section->slug . ")";
+                } else {
+                    return redirect()->back()->withInput()->with('flash.banner', 'Section does not exist.')->with('flash.bannerStyle', 'danger');
+                }
+            }
         } else {
-            return redirect()->back()->withInput()->with('flash.banner', 'Building does not exist.')->with('flash.bannerStyle', 'danger');
+            return redirect()->back()->withInput()->with('flash.banner', 'Grade does not exist.')->with('flash.bannerStyle', 'danger');
         }
-
+        // dd($classroom->slug);
         try {
             // Save the model
             if ($classroom->save()) {
@@ -104,33 +119,45 @@ class ClassroomController extends Controller
     public function edit(Classroom $classroom)
     {
         // Show the form for editing
-        // dd($classroom->building);
-        $buildings = Building::orderby('name')->get();
+        $buildings = Building::with(['rooms'])->get();
+        $grades = Grade::with(['sections', 'groups'])->get();
+
+        // Modify the selected room array to include ID and concatenated name
+        $selectedRoom = $classroom->room;
+        $modifiedSelectedRoom = [
+            'id' => $selectedRoom->id,
+            'name' => $selectedRoom->room_no . ' (' . $selectedRoom->name . ')', // Adjust this concatenation to match your room data structure
+        ];
         // Pass the paginated data to the Inertia view
         return Inertia::render('Admin/Classrooms/Show', [
             'classroom' => $classroom,
             'buildings' => $buildings,
+            'grades' => $grades,
             'selectedBuilding' => $classroom->building,
+            'selectedRoom' => $modifiedSelectedRoom,
+            'selectedGrade' => $classroom->grade,
+            'selectedSection' => $classroom->section,
+            'selectedGroup' => $classroom->group,
         ]);
     }
 
     public function update(Request $request, Classroom $classroom)
     {
+
+        // Define validation rules
         $validationRules = [
             'building_id' => 'required',
-            'classroom_no' => 'required',
-            // 'name' => 'required|unique:classrooms',
-            'name' => 'nullable',
-            'student_capacity' => 'nullable',
-            'examinee_capacity' => 'nullable',
+            'room_id' => 'required',
+            'grade_id' => 'required',
+            'section_id' => 'nullable',
+            'group_id' => 'nullable',
         ];
 
         // Custom error messages for validation
         $customMessages = [
             'building_id.required' => 'Please select a building.',
-            'classroom_no.required' => 'Please provide a classroom_no.',
-            // 'name.required' => 'Please provide a name.',
-            // 'name.unique' => 'This Classroom already exists.',
+            'room_id.required' => 'Please select a room.',
+            'grade_id.required' => 'Please select a grade.',
         ];
 
         // Validate the incoming request data
@@ -140,15 +167,33 @@ class ClassroomController extends Controller
         $classroom->update($validatedData);
         $classroom->updated_by = auth()->id();
 
+        $grade = Grade::find($validatedData['grade_id']);
 
-        $building = Building::find($validatedData['building_id']);
+        if ($grade) {
+            $classroom->name = $grade->name;
+            $classroom->slug = $grade->slug;
+            if ($validatedData['group_id']) {
+                $group = Group::find($validatedData['group_id']);
+                if ($group) {
+                    $classroom->name = $classroom->name . "-" . $group->name;
+                    $classroom->slug = $classroom->slug . "-" . $group->slug;
+                } else {
+                    return redirect()->back()->withInput()->with('flash.banner', 'Group does not exist.')->with('flash.bannerStyle', 'danger');
+                }
+            }
 
-        if ($building) {
-            $classroom->slug = $building->slug. '#' . $validatedData['classroom_no'];
+            if ($validatedData['section_id']) {
+                $section = Section::find($validatedData['section_id']);
+                if ($section) {
+                    $classroom->name = $classroom->name . "(" . $section->name . ")";
+                    $classroom->slug = $classroom->slug . "(" . $section->slug . ")";
+                } else {
+                    return redirect()->back()->withInput()->with('flash.banner', 'Section does not exist.')->with('flash.bannerStyle', 'danger');
+                }
+            }
         } else {
-            return redirect()->back()->withInput()->with('flash.banner', 'Building does not exist.')->with('flash.bannerStyle', 'danger');
+            return redirect()->back()->withInput()->with('flash.banner', 'Grade does not exist.')->with('flash.bannerStyle', 'danger');
         }
-
         try {
 
             // Save the model

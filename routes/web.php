@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\Admin\GradeController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\GroupController;
+use App\Http\Controllers\Admin\StudentController;
 
 use App\Models\Admin\BasicInfo;
 use App\Models\Admin\Notice;
@@ -33,6 +34,7 @@ use App\Models\Admin\Media;
 use App\Models\Admin\Grade;
 use App\Models\Admin\Subject;
 use App\Models\Admin\Group;
+use App\Models\Admin\Classroom;
 
 use Illuminate\Support\Facades\Artisan;
 /*
@@ -228,8 +230,8 @@ Route::prefix('admin')->middleware([
 
     // Route::put('/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
 
-   
-    
+
+
     // Dashboard
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
@@ -246,7 +248,7 @@ Route::prefix('admin')->middleware([
     // Basic Information
     Route::middleware(['restriction:operator,manage_basic_infos'])->group(function () {
         Route::prefix('basic-info')->group(function () {
-            
+
             // Store Basic Information (form submission)
             Route::get('/', [BasicInfoController::class, 'show'])->name('admin.basic-info.show');
 
@@ -344,6 +346,23 @@ Route::prefix('admin')->middleware([
             'names' => 'admin.groups',
         ]);
         Route::put('groups/{group}/status', [GroupController::class, 'status'])->name('admin.groups.status');
+    });
+
+    Route::middleware(['restriction:teacher,manage_students'])->group(function () {
+
+        // Route::get('/students', function () {
+        //     $classrooms = Classroom::orderby('name')
+        //     ->where('status', 1)->get();
+
+        //     return Inertia::render('Admin/Students/ClassroomsList', [
+        //         'classrooms' => $classrooms,
+        //     ]);
+        // })->name('admin.students.classrooms.index');
+
+        Route::resource('students', StudentController::class, [
+            'names' => 'admin.students',
+        ]);
+        Route::put('students/{student}/status', [StudentController::class, 'status'])->name('admin.students.status');
     });
 });
 

@@ -67,7 +67,7 @@ onMounted(() => {
 
 <template>
     <div class="border rounded-md p-2 my-2">
-        <div class="text-base font-semibold mb-2">Assign Sections</div>
+        <div class="text-base font-semibold mb-2">Assign Subjects</div>
         <div class="border rounded-md p-2">
             <!-- Selected Items: -->
             <div class="flex flex-wrap gap-2">
@@ -78,7 +78,7 @@ onMounted(() => {
                         <i class="bi bi-x-lg hover:font-extrabold cursor-pointer text-gray-300 hover:text-white"></i>
                     </label>
                 </div>
-                <div v-else class="text-center w-full font-bold text-lg"> No item selected</div>
+                <div v-else class="text-center w-full font-bold text-lg"> No subject selected</div>
             </div>
         </div>
         <div>

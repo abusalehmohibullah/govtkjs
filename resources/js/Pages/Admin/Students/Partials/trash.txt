@@ -1,0 +1,38 @@
+
+            <!-- Step 2: English name fields -->
+            <template v-else-if="step === 2" #form>
+                <!-- ... fields for English name -->
+
+                <template #actions>
+                    <PrimaryButton @click="nextStep">
+                        Next
+                    </PrimaryButton>
+                </template>
+            </template>
+
+            <!-- Step 3: Bengali name fields -->
+            <template v-else-if="step === 3" #form>
+                <!-- ... fields for Bengali name -->
+
+                <template #actions>
+                    <PrimaryButton @click="nextStep">
+                        Next
+                    </PrimaryButton>
+                </template>
+            </template>
+
+            <!-- Step 4: Contact fields -->
+            <template v-else-if="step === 4" #form>
+                <!-- ... fields for contact -->
+
+                <template #actions>
+                <ActionMessage :on="form.processing" class="mr-3"
+                    :class="{ 'text-green-600': form.recentlySuccessful, ' text-gray-600': form.processing }">
+                    {{ form.processing ? 'Creating...' : (form.recentlySuccessful ? 'Created!' : 'Failed') }}
+                </ActionMessage>
+
+                <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    Create</PrimaryButton>
+            </template>
+            </template>
+            

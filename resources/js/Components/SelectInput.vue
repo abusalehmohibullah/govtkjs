@@ -1,83 +1,77 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount, defineProps, defineEmits } from 'vue';
+import { ref, defineProps, defineEmits, watch, onMounted } from 'vue';
 
-const {
-    options: propOptions,
-    selectedOption: propSelectedOption,
-    inputName: propInputName,
-    fieldName: propFieldName,
-    valueField: propValueField,
-} = defineProps([
-    'options',
-    'selectedOption',
-    'inputName',
-    'fieldName',
-    'valueField',
-]);
+const props = defineProps({
+  options: Array,
+  selectedOption: Array,
+  inputName: String,
+  fieldName: String,
+  valueField: String,
+});
 
-
-const emit = defineEmits(); // Define the 'emit' function
-
-const optionsContainerIsOpen = ref(false);
+const emit = defineEmits();
 
 const selected = ref(null);
 const optionsContainer = ref(null);
-const searchTerm = ref('');
+const optionsContainerIsOpen = ref(false);
 const selectedLabel = ref('Select an Option');
-const selectedId = ref(null); // Store the selected option's ID
+const selectedId = ref(null);
+const searchTerm = ref('');
+const localOptions = ref([]);
+
 const isSelected = (option) => {
-    return option[propFieldName] === selectedLabel.value ? 'selected' : '';
+  return option[props.fieldName] === selectedLabel.value ? 'selected' : '';
 };
 
-let filteredOptions = ref(propOptions); // Initialize filteredOptions with propOptions
-
 const filterList = () => {
-    const searchTermLower = searchTerm.value.toLowerCase();
-    filteredOptions.value = propOptions.filter((option) =>
-        option[propFieldName].toLowerCase().includes(searchTermLower)
-    );
+  const searchTermLower = searchTerm.value.toLowerCase();
+  localOptions.value = props.options.filter((option) =>
+    option[props.fieldName].toLowerCase().includes(searchTermLower)
+  );
 };
 
 const toggleOptionsContainer = () => {
-    optionsContainerIsOpen.value = !optionsContainerIsOpen.value;
-    if (optionsContainer.value) {
-        selected.value.classList.toggle('expanded');
-        searchTerm.value = '';
-        filterList();
-    }
+  optionsContainerIsOpen.value = !optionsContainerIsOpen.value;
+  if (optionsContainer.value) {
+    // Example: selected.value.classList.toggle('expanded');
+    searchTerm.value = '';
+    filterList();
+  }
 };
 
 const handleOptionClick = (option) => {
-    selectedLabel.value = option[propFieldName];
-    selectedId.value = option[propValueField]; // Store the selected option's ID
-    // console.log(selectedId.value);
-    optionsContainerIsOpen.value = false;
-    if (optionsContainer.value) {
-        selected.value.classList.remove('expanded');
-    }
-    emit('option-selected', option[[propValueField]]); // Emit the ID of the selected option
+  selectedLabel.value = option[props.fieldName];
+  selectedId.value = option[props.valueField];
+  optionsContainerIsOpen.value = false;
+  if (optionsContainer.value) {
+    // Example: selected.value.classList.remove('expanded');
+  }
+  emit('option-selected', option[props.valueField]);
 };
 
-onMounted(() => {
-    selected.value = document.querySelector('.selected');
-    optionsContainer.value = document.querySelector('.options-container');
-
-    // Set the initially selected option based on the prop
-    if (propSelectedOption) {
-        selectedLabel.value = propSelectedOption[propFieldName];
-        selectedId.value = propSelectedOption[[propValueField]]; // Initialize the ID
-    }
+watch(() => props.options, (newValue, oldValue) => {
+  localOptions.value = [...newValue];
+  selectedLabel.value = 'Select an Option';
+      selectedId.value = null;
 });
 
-onBeforeUnmount(() => {
-    selected.value.removeEventListener('click', toggleOptionsContainer);
-    optionsContainer.value.querySelectorAll('.option').forEach((option) => {
-        option.removeEventListener('click', () => handleOptionClick(option));
-    });
+onMounted(() => {
+  // Set localOptions initially with the provided props.options
+  selected.value = document.querySelector('.selected');
+  optionsContainer.value = document.querySelector('.options-container');
+
+  // Set the initially selected option based on the propSelectedOption
+  if (props.selectedOption) {
+      selectedLabel.value = props.selectedOption[props.fieldName];
+      selectedId.value = props.selectedOption[props.valueField];
+  }
 });
 </script>
 
+
+
 <template>
+  <!-- <pre>{{ localOptions }}</pre> -->
     <div class="select-box relative flex flex-col">
         <div class="selected relative mb-4 order-none border border-gray-300 active:border-indigo-500 active:ring-indigo-500 rounded-md shadow-sm flex justify-between items-center"
             @click="toggleOptionsContainer">
@@ -88,10 +82,10 @@ onBeforeUnmount(() => {
 
         <div class="options-container border border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
             :class="{ 'active': optionsContainerIsOpen }">
-            <div v-if="filteredOptions.length === 0" class="option">
+            <div v-if="localOptions.length === 0" class="option">
                 <label>No matching options found</label>
             </div>
-            <div v-for="(option, index) in filteredOptions" :key="index" @click="handleOptionClick(option)">
+            <div v-for="(option, index) in localOptions" :key="index" @click="handleOptionClick(option)">
                 <div class="option border-gray-700 focus:border-indigo-500 focus:ring-indigo-500 hover:bg-indigo-200 hover:text-indigo-900 rounded-md shadow-sm"
                     :class="{ 'bg-indigo-100': isSelected(option) }">
                     <input type="radio" class="radio" :id="option.id" :name="inputName" :value="option[valueField]" />
