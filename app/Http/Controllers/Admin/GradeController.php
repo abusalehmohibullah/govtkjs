@@ -99,7 +99,7 @@ class GradeController extends Controller
         $selectedSubject = $grade->subjects;
         // Show the form for editing
         // Pass the paginated data to the Inertia view
-        return Inertia::render('Admin/Grades/Show', [
+        return Inertia::render('Admin/Grades/Edit', [
             'grade' => $grade,
             'sections' => $sections,
             'selectedSection' => $selectedSection,

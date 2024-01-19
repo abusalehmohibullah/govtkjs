@@ -82,7 +82,7 @@ class SectionController extends Controller
         $section = Section::findOrFail($id); // You can adjust the number of records per page (e.g., 10)
 
         // Pass the paginated data to the Inertia view
-        return Inertia::render('Admin/Sections/Show', [
+        return Inertia::render('Admin/Sections/Edit', [
             'section' => $section,
         ]);
     }

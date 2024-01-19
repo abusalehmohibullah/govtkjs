@@ -119,7 +119,7 @@ class SliderController extends Controller
         $slider = Slider::findOrFail($id); // You can adjust the number of records per page (e.g., 10)
 
         // Pass the paginated data to the Inertia view
-        return Inertia::render('Admin/Sliders/Show', [
+        return Inertia::render('Admin/Sliders/Edit', [
             'slider' => $slider,
         ]);
     }

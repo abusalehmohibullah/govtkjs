@@ -84,7 +84,7 @@ class SubjectController extends Controller
         $subject = Subject::findOrFail($id); // You can adjust the number of records per page (e.g., 10)
 
         // Pass the paginated data to the Inertia view
-        return Inertia::render('Admin/Subjects/Show', [
+        return Inertia::render('Admin/Subjects/Edit', [
             'subject' => $subject,
         ]);
     }

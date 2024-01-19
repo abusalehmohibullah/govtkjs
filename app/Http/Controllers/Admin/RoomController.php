@@ -98,7 +98,7 @@ class RoomController extends Controller
         // dd($room->building);
         $buildings = Building::orderby('name')->get();
         // Pass the paginated data to the Inertia view
-        return Inertia::render('Admin/Rooms/Show', [
+        return Inertia::render('Admin/Rooms/Edit', [
             'room' => $room,
             'buildings' => $buildings,
             'selectedBuilding' => $room->building,

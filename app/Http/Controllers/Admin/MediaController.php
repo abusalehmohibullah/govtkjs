@@ -121,7 +121,7 @@ class MediaController extends Controller
         // dd($medium);
         $albums = Album::all();
         // Pass the paginated data to the Inertia view
-        return Inertia::render('Admin/Media/Show', [
+        return Inertia::render('Admin/Media/Edit', [
             'media' => $medium,
             'album' => $album,
             'albums' => $albums,

@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\GradeController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\TeacherController;
 
 use App\Models\Admin\BasicInfo;
 use App\Models\Admin\Notice;
@@ -35,7 +36,7 @@ use App\Models\Admin\Grade;
 use App\Models\Admin\Subject;
 use App\Models\Admin\Group;
 use App\Models\Admin\Classroom;
-
+use App\Models\Admin\Teacher;
 use Illuminate\Support\Facades\Artisan;
 /*
 |--------------------------------------------------------------------------
@@ -136,7 +137,13 @@ Route::get('/admission', function () {
 })->name('admission');
 
 Route::get('/teachers', function () {
-    return Inertia::render('Teachers');
+    $teachers = Teacher::with(['user' => function ($query) {
+        $query->orderBy('name');
+    }])->orderBy('priority')->get()->groupBy('designation');
+    
+    return Inertia::render('Teachers', [
+        'teachers' => $teachers,
+    ]);
 })->name('teachers');
 
 Route::get('/career', function () {
@@ -349,20 +356,17 @@ Route::prefix('admin')->middleware([
     });
 
     Route::middleware(['restriction:teacher,manage_students'])->group(function () {
-
-        // Route::get('/students', function () {
-        //     $classrooms = Classroom::orderby('name')
-        //     ->where('status', 1)->get();
-
-        //     return Inertia::render('Admin/Students/ClassroomsList', [
-        //         'classrooms' => $classrooms,
-        //     ]);
-        // })->name('admin.students.classrooms.index');
-
         Route::resource('students', StudentController::class, [
             'names' => 'admin.students',
         ]);
         Route::put('students/{student}/status', [StudentController::class, 'status'])->name('admin.students.status');
+    });
+
+    Route::middleware(['restriction:operator,manage_teachers'])->group(function () {
+        Route::resource('teachers', TeacherController::class, [
+            'names' => 'admin.teachers',
+        ]);
+        Route::put('teachers/{teacher}/status', [TeacherController::class, 'status'])->name('admin.teachers.status');
     });
 });
 

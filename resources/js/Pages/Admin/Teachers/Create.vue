@@ -3,17 +3,17 @@
 
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
-import UpdateSliderForm from '@/Pages/Admin/Sliders/Partials/UpdateSliderForm.vue';
+import CreateTeacherForm from '@/Pages/Admin/Teachers/Partials/CreateTeacherForm.vue';
 
-const { slider } = defineProps(['slider']);
+const { users,  classrooms, subjects} = defineProps(['users', 'classrooms', 'subjects']);
 
 </script>
 
 <template>
-    <AdminLayout title="Edit Slider">
+    <AdminLayout title="Basic Info">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Edit Slider
+                Create Teachers
             </h2>
         </template>
 
@@ -21,7 +21,7 @@ const { slider } = defineProps(['slider']);
 
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <!-- Use the Form component to wrap your form -->
-                <UpdateSliderForm :slider="slider"/>
+                <CreateTeacherForm :users="users" :classrooms="classrooms" :subjects="subjects"/>
             </div>
 
 

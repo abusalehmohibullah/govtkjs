@@ -4,29 +4,28 @@
 import { Link } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
-import StudentTable from '@/Pages/Admin/Students/Partials/StudentTable.vue';
+import TeacherTable from '@/Pages/Admin/Teachers/Partials/TeacherTable.vue';
 import Header from '@/Components/Header.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import Pagination from '@/Components/Pagination.vue';
 
-const { students, selected_classroom } = defineProps(['students', 'selected_classroom']);
+const { teachers } = defineProps(['teachers']);
 
 </script>
 
 <template>
-    <AdminLayout title="Basic Info">
+    <AdminLayout title="Teachers">
 
         <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
 
             <Header>
                 <template #header>
-                    Students
+                    Teachers
                 </template>
                 <template #description>
                     Lorem ipsumuasi eniumquam error aspernatsuscipit.
                 </template>
                 <template #aside>
-                    <Link :href="route('admin.students.create', { selected_classroom: selected_classroom})">
+                    <Link :href="route('admin.teachers.create')">
                     <PrimaryButton>
                         Create
                     </PrimaryButton>
@@ -34,8 +33,8 @@ const { students, selected_classroom } = defineProps(['students', 'selected_clas
                 </template>
             </Header>
 
-            <StudentTable :students="students" :selected_classroom="selected_classroom" />
-            
+            <TeacherTable :teachers="teachers" />
+
         </div>
 
     </AdminLayout>

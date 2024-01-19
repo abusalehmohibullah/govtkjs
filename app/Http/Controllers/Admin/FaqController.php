@@ -97,7 +97,7 @@ class FaqController extends Controller
         $faq = Faq::findOrFail($id); // You can adjust the number of records per page (e.g., 10)
 
         // Pass the paginated data to the Inertia view
-        return Inertia::render('Admin/Faqs/Show', [
+        return Inertia::render('Admin/Faqs/Edit', [
             'faq' => $faq,
         ]);
     }

@@ -104,7 +104,7 @@ class AlbumController extends Controller
     public function edit(Album $album)
     {
         // Pass the paginated data to the Inertia view
-        return Inertia::render('Admin/Albums/Show', [
+        return Inertia::render('Admin/Albums/Edit', [
             'album' => $album,
         ]);
     }

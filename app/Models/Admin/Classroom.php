@@ -18,6 +18,11 @@ class Classroom extends Model
         'group_id',
     ];
 
+    public function teacher()
+    {
+        return $this->hasOne(Teacher::class); 
+    }
+    
     public function building()
     {
         return $this->belongsTo(Building::class, 'building_id');

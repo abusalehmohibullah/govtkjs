@@ -123,7 +123,7 @@ class NoticeController extends Controller
     {
 
         // Pass the paginated data to the Inertia view
-        return Inertia::render('Admin/Notices/Show', [
+        return Inertia::render('Admin/Notices/Edit', [
             'notice' => $notice,
         ]);
     }

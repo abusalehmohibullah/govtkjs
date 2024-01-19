@@ -61,10 +61,11 @@ onMounted(() => {
   optionsContainer.value = document.querySelector('.options-container');
 
   // Set the initially selected option based on the propSelectedOption
-  if (props.selectedOption) {
-      selectedLabel.value = props.selectedOption[props.fieldName];
-      selectedId.value = props.selectedOption[props.valueField];
-  }
+if (props.selectedOption && props.selectedOption[props.fieldName] !== '') {
+    selectedLabel.value = props.selectedOption[props.fieldName];
+    selectedId.value = props.selectedOption[props.valueField];
+}
+
 });
 </script>
 

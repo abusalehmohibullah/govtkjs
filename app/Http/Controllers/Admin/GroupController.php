@@ -82,7 +82,7 @@ class GroupController extends Controller
         $group = Group::findOrFail($id); // You can adjust the number of records per page (e.g., 10)
 
         // Pass the paginated data to the Inertia view
-        return Inertia::render('Admin/Groups/Show', [
+        return Inertia::render('Admin/Groups/Edit', [
             'group' => $group,
         ]);
     }

@@ -75,6 +75,17 @@ class ClassroomController extends Controller
         if ($grade) {
             $classroom->name = $grade->name;
             $classroom->slug = $grade->slug;
+            
+            if ($validatedData['section_id']) {
+                $section = Section::find($validatedData['section_id']);
+                if ($section) {
+                    $classroom->name = $classroom->name . "(" . $section->name . ")";
+                    $classroom->slug = $classroom->slug . "(" . $section->slug . ")";
+                } else {
+                    return redirect()->back()->withInput()->with('flash.banner', 'Section does not exist.')->with('flash.bannerStyle', 'danger');
+                }
+            }
+            
             if ($validatedData['group_id']) {
                 $group = Group::find($validatedData['group_id']);
                 if ($group) {
@@ -85,15 +96,6 @@ class ClassroomController extends Controller
                 }
             }
 
-            if ($validatedData['section_id']) {
-                $section = Section::find($validatedData['section_id']);
-                if ($section) {
-                    $classroom->name = $classroom->name . "(" . $section->name . ")";
-                    $classroom->slug = $classroom->slug . "(" . $section->slug . ")";
-                } else {
-                    return redirect()->back()->withInput()->with('flash.banner', 'Section does not exist.')->with('flash.bannerStyle', 'danger');
-                }
-            }
         } else {
             return redirect()->back()->withInput()->with('flash.banner', 'Grade does not exist.')->with('flash.bannerStyle', 'danger');
         }
@@ -129,7 +131,7 @@ class ClassroomController extends Controller
             'name' => $selectedRoom->room_no . ' (' . $selectedRoom->name . ')', // Adjust this concatenation to match your room data structure
         ];
         // Pass the paginated data to the Inertia view
-        return Inertia::render('Admin/Classrooms/Show', [
+        return Inertia::render('Admin/Classrooms/Edit', [
             'classroom' => $classroom,
             'buildings' => $buildings,
             'grades' => $grades,
@@ -172,6 +174,16 @@ class ClassroomController extends Controller
         if ($grade) {
             $classroom->name = $grade->name;
             $classroom->slug = $grade->slug;
+            if ($validatedData['section_id']) {
+                $section = Section::find($validatedData['section_id']);
+                if ($section) {
+                    $classroom->name = $classroom->name . "(" . $section->name . ")";
+                    $classroom->slug = $classroom->slug . "(" . $section->slug . ")";
+                } else {
+                    return redirect()->back()->withInput()->with('flash.banner', 'Section does not exist.')->with('flash.bannerStyle', 'danger');
+                }
+            }
+
             if ($validatedData['group_id']) {
                 $group = Group::find($validatedData['group_id']);
                 if ($group) {
@@ -182,15 +194,6 @@ class ClassroomController extends Controller
                 }
             }
 
-            if ($validatedData['section_id']) {
-                $section = Section::find($validatedData['section_id']);
-                if ($section) {
-                    $classroom->name = $classroom->name . "(" . $section->name . ")";
-                    $classroom->slug = $classroom->slug . "(" . $section->slug . ")";
-                } else {
-                    return redirect()->back()->withInput()->with('flash.banner', 'Section does not exist.')->with('flash.bannerStyle', 'danger');
-                }
-            }
         } else {
             return redirect()->back()->withInput()->with('flash.banner', 'Grade does not exist.')->with('flash.bannerStyle', 'danger');
         }

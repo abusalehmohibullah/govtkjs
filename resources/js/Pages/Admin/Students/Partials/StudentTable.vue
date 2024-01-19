@@ -17,6 +17,7 @@ import DeleteStudentForm from '@/Pages/Admin/Students/Partials/DeleteStudentForm
 
 const props = defineProps({
     students: Object,
+    selected_classroom: String,
 });
 
 const showModal = ref(false);
@@ -34,9 +35,13 @@ const toggleModal = (student) => {
     <Table>
         <template #thead>
             <tr>
-                <th class="py-2 px-4 border-b bg-slate-200">#</th>
-                <th class="py-2 px-4 border-b bg-slate-200">Caption</th>
-                <th class="py-2 px-4 border-b bg-slate-200">Path</th>
+                <th class="py-2 px-4 border-b bg-slate-200">Roll No</th>
+                <th class="py-2 px-4 border-b bg-slate-200">Student ID</th>
+                <th class="py-2 px-4 border-b bg-slate-200">Reg. No</th>
+                <th class="py-2 px-4 border-b bg-slate-200">Name</th>
+                <th class="py-2 px-4 border-b bg-slate-200">Father's Name</th>
+                <th class="py-2 px-4 border-b bg-slate-200">Mother's Name</th>
+                <th class="py-2 px-4 border-b bg-slate-200">Photo</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Created/Edited</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Action</th>
             </tr>
@@ -45,20 +50,40 @@ const toggleModal = (student) => {
 
 
             <tr v-if="students.data.length > 0" v-for="(student, index) in students.data" :key="index"
-                class="hover:bg-blue-100" :class="student.status === 0 ? 'bg-gray-200 opacity-70' : ''">
-                <td class="py-2 px-4 border-b">{{ (students.current_page - 1) * students.per_page + index + 1 }}</td>
+                class="hover:bg-blue-100">
+                <td class="py-2 px-4 border-b text-center">{{ student.roll_no }}</td>
                 <td class="py-2 px-4 border-b">
-                    <div class="font-medium text-slate-500">{{ student.caption }}</div>
+                    <div class="font-medium text-center text-slate-500">{{ student.student_id }}</div>
                 </td>
-                <td class="py-2 px-4 border-b text-center">{{ student.path }}</td>
+                <td class="py-2 px-4 border-b text-center">{{ student.registration_no }}</td>
+                <td class="py-2 px-4 border-b">
+                    <div>{{ student.student_name_en }}</div>
+                    <div>{{ student.student_name_bn }}</div>
+                </td>
+                <td class="py-2 px-4 border-b">
+                    <div>{{ student.father_name_en }}</div>
+                    <div>{{ student.father_name_bn }}</div>
+                </td>
+                <td class="py-2 px-4 border-b">
+                    <div>{{ student.mother_name_en }}</div>
+                    <div>{{ student.mother_name_bn }}</div>
+                </td>
+                <td class="py-2 px-4 border-b flex items-center justify-center">
+                    <div v-if="student.photo != ''"><img :src="'/storage/' + student.photo" class="d-block h-24 w-20" alt="..."></div>
+                    <div v-else class="h-24 w-20 flex justify-center items-center flex-col">
+                        <div>No</div>
+                        <div>Photo</div>
+                        <div>Found</div>
+                    </div>
+                </td>
                 <td class="py-2 px-4 border-b text-center">
                     <CreatedUpdatedBy :createdUpdatedBy="student" />
                 </td>
                 <td class="py-2 px-4 border-b">
                     <div class="flex justify-center">
-                        <ToggleStatus :toggle="student" :toggleType="`students`" />
+                        <!-- <ToggleStatus :toggle="student" :toggleType="`students`" /> -->
 
-                        <Link :href="route('admin.students.edit', student.id)">
+                        <Link :href="route('admin.students.edit', { student: student.student_id, selected_classroom: selected_classroom })">
                         <PrimaryIconButton>
                             <i class="fas fa-pen"></i>
                         </PrimaryIconButton>
@@ -87,7 +112,7 @@ const toggleModal = (student) => {
     <div class="mt-5">
         <template v-for="(link, index) in students.links">
             <template v-if="link.url">
-                <Link :href="link.url">
+                <Link :href="`${link.url}&selected_classroom=${selected_classroom}`">
                 <template v-if="link.active">
                     <PrimaryPaginatorButton v-html="link.label" />
                 </template>

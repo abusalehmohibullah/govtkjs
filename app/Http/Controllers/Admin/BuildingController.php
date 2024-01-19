@@ -91,7 +91,7 @@ class BuildingController extends Controller
         $branches = Branch::orderBy('name')->get();
        
         // Show the form for editing
-        return Inertia::render('Admin/Buildings/Show', [
+        return Inertia::render('Admin/Buildings/Edit', [
             'branches' => $branches,
             'selectedBranch' => $building->branch,
             'building' => $building,

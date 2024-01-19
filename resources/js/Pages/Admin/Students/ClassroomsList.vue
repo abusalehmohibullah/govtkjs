@@ -46,8 +46,12 @@ const { classrooms } = defineProps(['classrooms']);
                             <div class="show-first-child card w-full">
                                 <div class="w-full  rounded-md bg-white border shadow-sm position-relative">
                                     <div class="w-full ratio ratio-4x3 overflow-hidden rounded-t-md">
-                                        
-                                        <!-- <img :src="album.path ? '/storage/' + album.path : '/assets/images/album-icon.png'"
+                                        <div class="flex justify-center items-center flex-col">
+                                            <div class="text-3xl font-bold"><span>{{ classroom.grade.name }}</span>
+                                            <span  v-if="classroom.section">({{ classroom.section.name }})</span></div>
+                                            <div class="text-base" v-if="classroom.group">{{ classroom.group.name }}</div>
+                                        </div>
+                                            <!-- <img :src="album.path ? '/storage/' + album.path : '/assets/images/album-icon.png'"
                                             class="object-cover" /> -->
 
                                     </div>

@@ -161,20 +161,20 @@ class UserController extends Controller
 
 
 
-    public function updatePermissions(Request $request)
-    {
-        // Validate the request data
-        $request->validate([
-            'roles.*.id' => 'required|exists:roles,id',
-            'permissions.*' => 'nullable|exists:permissions,id',
-        ]);
+    // public function updatePermissions(Request $request)
+    // {
+    //     // Validate the request data
+    //     $request->validate([
+    //         'roles.*.id' => 'required|exists:roles,id',
+    //         'permissions.*' => 'nullable|exists:permissions,id',
+    //     ]);
 
-        // Process and update permissions for each role
-        foreach ($request->input('roles') as $roleData) {
-            $role = Role::find($roleData['id']);
-            $role->syncPermissions($roleData['permissions']);
-        }
+    //     // Process and update permissions for each role
+    //     foreach ($request->input('roles') as $roleData) {
+    //         $role = Role::find($roleData['id']);
+    //         $role->syncPermissions($roleData['permissions']);
+    //     }
 
-        return redirect()->back()->with('success', 'Permissions updated successfully.');
-    }
+    //     return redirect()->back()->with('success', 'Permissions updated successfully.');
+    // }
 }

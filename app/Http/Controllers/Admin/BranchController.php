@@ -82,7 +82,7 @@ class BranchController extends Controller
         // Show the form for editing
 
         // Pass the paginated data to the Inertia view
-        return Inertia::render('Admin/Branches/Show', [
+        return Inertia::render('Admin/Branches/Edit', [
             'branch' => $branch,
         ]);
     }

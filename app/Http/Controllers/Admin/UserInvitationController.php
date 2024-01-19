@@ -219,7 +219,7 @@ class UserInvitationController extends Controller
         // Get user's roles for reference
         $roles = Role::with('permissions')->get();
 
-        return Inertia::render('Admin/UserInvitations/Show', [
+        return Inertia::render('Admin/UserInvitations/Edit', [
             'user' => $userInvitation,
             'userRoles' => $userRoles,
             'roles' => $roles,

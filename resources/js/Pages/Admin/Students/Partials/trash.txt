@@ -36,3 +36,150 @@
             </template>
             </template>
             
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <!-- Step description and tooltip for the current step -->
+                                    <!-- <div class="relative" v-if="index === currentStep">
+                                    <div class="absolute right-0 -mr-2">
+                                        <div class="relative bg-white shadow-lg px-2 py-1 rounded mt-16 -mr-12">
+                                            <svg class="absolute top-0 -mt-1 w-full right-0 left-0" width="16px"
+                                                height="8px" viewBox="0 0 16 8" version="1.1"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <g id="Page-1" stroke="none" stroke-width="1" fill="none"
+                                                    fill-rule="evenodd">
+                                                    <g id="Progress-Bars" transform="translate(-322.000000, -198.000000)"
+                                                        fill="#FFFFFF">
+                                                        <g id="Group-4" transform="translate(310.000000, 198.000000)">
+                                                            <polygon id="Triangle" points="20 0 28 8 12 8"></polygon>
+                                                        </g>
+                                                    </g>
+                                                </g>
+                                            </svg>
+                                            <p tabindex="0" class="focus:outline-none text-indigo-700 text-xs font-bold">
+                                                Step {{ currentStep }}: Analyzing
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                        $validationRules = [
+            'step1' => [
+                'classroom_id' => 'nullable|exists:classrooms,id',
+                'unique_id' => 'nullable',
+                'registration_no' => 'nullable',
+                'date_of_birth' => 'required|date',
+                'brid' => 'required|digits:17',
+            ],
+            'step2' => [
+                'student_name_en' => 'required',
+                'father_name_en' => 'required',
+                'mother_name_en' => 'required',
+                'guardian_name_en' => 'nullable',
+                'address_en' => 'nullable',
+            ],
+            'step3' => [
+                'student_name_bn' => 'required',
+                'father_name_bn' => 'required',
+                'mother_name_bn' => 'required',
+                'guardian_name_bn' => 'nullable',
+                'address_bn' => 'nullable',
+            ],
+            'step4' => [
+                'email' => 'nullable|email',
+                'student_mobile_no' => 'required|digits:11',
+                'father_mobile_no' => 'nullable|digits:11',
+                'mother_mobile_no' => 'nullable|digits:11',
+                'guardian_mobile_no' => 'nullable|digits:11',
+
+                'gender_en' => 'required|in:Male,Female,Others',
+                'gender_bn' => 'required|in:বালক,বালিকা,অন্যান্য',
+                'religion_en' => 'required|in:Islam,Hinduism,Buddhism,Christianity,Others',
+                'religion_bn' => 'required|in:ইসলাম,হিন্দু,বৌদ্ধ,খ্রিষ্টান,অন্যান্য',
+                'disability_status_en' => 'nullable|in:None,Physical,Visual,Hearing,Verbal,Intellectual,Others',
+                'disability_status_bn' => 'nullable|in:প্রযোজ্য নয়,শারীরিক প্রতিবন্ধী,দৃষ্টি প্রতিবন্ধী,শ্রবণ প্রতিবন্ধী,বাক প্রতিবন্ধী,বুদ্ধি প্রতিবন্ধী,অন্যান্য',
+            ],
+            'step5' => [
+                'photo' => 'image|mimes:jpeg,png,jpg,gif|max:20000',
+            ],
+            // 'student_id' => 'required|unique:students',
+            // 'roll_no' => 'required',
+            // 'unique_id' => 'nullable',
+            // 'registration_no' => 'nullable',
+        ];
+
+        // Custom error messages for validation
+        $customMessages = [
+            // 'unique_id.required' => 'Please provide a student ID.',
+            // 'unique_id.unique' => 'This unique ID is already in use.',
+            // 'roll_no.required' => 'Please provide a roll no.',
+
+            'step1.classroom_id.exists' => 'Selected classroom does not exist.',
+            'step1.date_of_birth.required' => 'Please provide a valid date of birth.',
+            'step1.date_of_birth.date' => 'Date of birth must be a valid date.',
+            'step1.brid.required' => 'Please provide a valid Birth Regestration ID.',
+            'step1.brid.digits' => 'Birth registration ID should be 17 digits long.',
+
+
+            'step2.student_name_en.required' => 'Please provide the student name in English.',
+            'step2.father_name_en.required' => 'Please provide the father name in English.',
+            'step2.mother_name_en.required' => 'Please provide the mother name in English.',
+
+            'step3.student_name_bn.required' => 'Please provide the student name in Bengali.',
+            'step3.father_name_bn.required' => 'Please provide the father name in Bengali.',
+            'step3.mother_name_bn.required' => 'Please provide the mother name in Bengali.',
+
+            'step4.student_mobile_no.required' => 'Please provide the student mobile number.',
+            'step4.student_mobile_no.digits' => 'Student mobile number should be 11 digits.',
+            'step4.father_mobile_no.digits' => 'Father mobile number should be 11 digits.',
+            'step4.mother_mobile_no.digits' => 'Mother mobile number should be 11 digits.',
+            'step4.guardian_mobile_no.digits' => 'Guardian mobile number should be 11 digits.',
+            'step4.gender_en.required' => 'Please select a valid gender.',
+            'step4.gender_en.in' => 'Please select a valid gender.',
+            'step4.gender_bn.required' => 'Please select a valid gender.',
+            'step4.gender_bn.in' => 'Please select a valid gender.',
+            'step4.religion_en.required' => 'Please select a valid religion.',
+            'step4.religion_en.in' => 'Please select a valid religion.',
+            'step4.religion_bn.required' => 'Please select a valid religion.',
+            'step4.religion_bn.in' => 'Please select a valid religion.',
+            'step4.disability_status_en.in' => 'Please select a valid disability status.',
+            'step4.disability_status_bn.in' => 'Please select a valid disability status.',
+
+
+            'step5.photo.image' => 'The file must be an image.',
+            'step5.photo.mimes' => 'The file must be a JPEG, PNG, JPG, or GIF.',
+            'step5.photo.max' => 'The file size must be less than 200KB.',
+            // Add more messages for other fields as needed...
+        ];
