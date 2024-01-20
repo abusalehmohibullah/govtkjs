@@ -2,6 +2,7 @@
 <script setup>
 
 import { useForm } from '@inertiajs/vue3';
+import { ref, watch } from 'vue';
 
 import FormSection from '@/Components/FormSection.vue';
 import ActionMessage from '@/Components/ActionMessage.vue';
@@ -13,16 +14,64 @@ import FileInput from '@/Components/FileInput.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import SelectInput from '@/Components/SelectInput.vue';
 
 const props = defineProps({
     slider: Object,
+    priorities: Object,
 });
 
 const form = useForm({
     _method: 'PUT',
     caption: props.slider.caption,
     path: '', 
+    priority: props.slider.priority, 
 });
+const selectedPriority = ref({ id: '', name: '' });
+const selectedPriorityOption = props.priorities.find(priority => priority.id === form.priority);
+    if (selectedPriorityOption) {
+        selectedPriority.value = { id: selectedPriorityOption.id, name: selectedPriorityOption.name };
+    } else {
+        selectedPriority.value = { id: '', name: '' };
+    }
+
+watch(() => form.priority, (newPriority, oldPriority) => {
+    const selectedPriorityOption = props.priorities.find(priority => priority.id === newPriority);
+    if (selectedPriorityOption) {
+        selectedPriority.value = { id: selectedPriorityOption.id, name: selectedPriorityOption.name };
+    } else {
+        selectedPriority.value = { id: '', name: '' };
+    }
+});
+
+const handlePrioritySelected = (selectedLabel) => {
+    form.priority = selectedLabel;
+};
+
+
+const photoPreview = ref(null);
+
+const previewPhoto = (event) => {
+    const file = event.target.files[0];
+
+    if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+            photoPreview.value = e.target.result;
+        };
+
+        reader.readAsDataURL(file);
+
+        // Set the file to the form property
+        form.photo = file;
+    } else {
+        // Clear the preview and reset the form property
+        photoPreview.value = null;
+        form.photo = null;
+    }
+};
+
 
 const updateSlider = () => {
     form.post(route('admin.sliders.update', props.slider.id), {
@@ -46,6 +95,30 @@ const updateSlider = () => {
 
             <template #form>
                 <!-- Use the Text Input component for each form field -->
+                <div class="w-full flex justify-center items-center">
+                    <div class="w-full aspect-video border shadow">
+                        <img v-if="photoPreview" :src="photoPreview" alt="Photo Preview"
+                            class="object-cover w-full aspect-video" />
+                        <img v-else :src="'/storage/' + slider.path" alt="Photo Preview"
+                            class="object-contain w-full aspect-video" />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-12 col-span-6 sm:col-span-4 gap-3 xl:gap-0">
+                    <div class="col-span-12">
+                        <InputLabel for="path" value="Image">
+                            <template #required>*</template>
+                        </InputLabel>
+                        <FileInput @input="form.path = $event.target.files[0]" id="path" v-model="form.path"
+                            class="form-control mt-1 block"
+                            :class="{ 'border-red-500 focus:border-red-500': form.errors.path }" type="file"
+                            accept="image/*" @change="previewPhoto" />
+                        <progress v-if="form.progress" :value="form.progress.percentage" max="100" class="absolute h-[2px]">
+                            {{ form.progress.percentage }}%
+                        </progress>
+                        <InputError :message="form.errors.path" class="text-red-500" />
+                    </div>
+                </div>
 
                 <div class="col-span-6 sm:col-span-4">
                     <InputLabel for="caption" value="Caption">
@@ -55,18 +128,15 @@ const updateSlider = () => {
                         :class="{ 'border-red-500 focus:border-red-500': form.errors.caption }" type="text" name="caption" />
                     <InputError :message="form.errors.caption" class="text-red-500" />
                 </div>
-                <div class="grid grid-cols-12 col-span-6 sm:col-span-4 gap-3 xl:gap-0">
 
-                    <div class="col-span-12">
-                        <InputLabel for="path" value="Path" />
-                        <FileInput @input="form.path = $event.target.files[0]" id="path"
-                            v-model="form.path" class="form-control mt-1 block"
-                            :class="{ 'border-red-500 focus:border-red-500': form.errors.path }" type="file" />
-                        <progress v-if="form.progress" :value="form.progress.percentage" max="100" class="absolute h-[2px]">
-                            {{ form.progress.percentage }}%
-                        </progress>
-                        <InputError :message="form.errors.path" class="text-red-500" />
-                    </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <InputLabel for="priority" value="Select Order">
+                        <template #required>*</template>
+                    </InputLabel>
+                    <SelectInput :options="priorities" inputName="priority" :fieldName="'name'" :valueField="'id'"
+                        :selectedOption="selectedPriority" @option-selected="handlePrioritySelected" />
+
+                    <InputError :message="form.errors.priority" class="text-red-500" />
                 </div>
             </template>
 

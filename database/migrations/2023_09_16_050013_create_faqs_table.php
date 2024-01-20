@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('question');
             $table->string('slug')->unique();
             $table->longText('answer')->nullable();
+            $table->integer('priority')->unsigned()->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();

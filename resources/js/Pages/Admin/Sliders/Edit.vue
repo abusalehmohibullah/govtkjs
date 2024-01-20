@@ -5,7 +5,7 @@ import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 import UpdateSliderForm from '@/Pages/Admin/Sliders/Partials/UpdateSliderForm.vue';
 
-const { slider } = defineProps(['slider']);
+const { slider, priorities } = defineProps(['slider', 'priorities']);
 
 </script>
 
@@ -21,7 +21,7 @@ const { slider } = defineProps(['slider']);
 
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <!-- Use the Form component to wrap your form -->
-                <UpdateSliderForm :slider="slider"/>
+                <UpdateSliderForm :slider="slider" :priorities="priorities" />
             </div>
 
 

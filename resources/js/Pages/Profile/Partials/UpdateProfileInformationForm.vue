@@ -8,16 +8,29 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import TextArea from '@/Components/TextArea.vue';
+import DateInput from '@/Components/DateInput.vue';
 
 const props = defineProps({
     user: Object,
+    teacher: Object,
 });
 
 const form = useForm({
     _method: 'PUT',
-    name: props.user.name,
-    email: props.user.email,
     photo: null,
+    name: props.user.name,
+    nid: props.teacher.nid,
+    date_of_birth: props.teacher.date_of_birth,
+    joining_date: props.teacher.joining_date,
+    qualification: props.teacher.qualification,
+    mobile_no: props.teacher.mobile_no,
+    email: props.user.email,
+    facebook: props.teacher.facebook,
+    instagram: props.teacher.instagram,
+    twitter: props.teacher.twitter,
+    linkedin: props.teacher.linkedin,
+    youtube: props.teacher.youtube,
 });
 
 const verificationLinkSent = ref(null);
@@ -86,6 +99,7 @@ const clearPhotoFileInput = () => {
         </template>
 
         <template #form>
+            
             <!-- Profile Photo -->
             <!-- <div v-if="$page.props.jetstream.managesProfilePhotos" class="col-span-6 sm:col-span-4"> -->
             <div class="col-span-6 sm:col-span-4">
@@ -116,37 +130,146 @@ const clearPhotoFileInput = () => {
                 <InputError :message="form.errors.photo" class="mt-2" />
             </div>
 
-            <!-- Name -->
-            <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="name" value="Name" />
-                <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" required
-                    autocomplete="name" />
-                <InputError :message="form.errors.name" class="mt-2" />
-            </div>
 
-            <!-- Email -->
-            <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="email" value="Email" />
-                <TextInput id="email" v-model="form.email" type="email" class="mt-1 block w-full" required
-                    autocomplete="username" />
-                <InputError :message="form.errors.email" class="mt-2" />
+            <div class="border rounded p-2 flex flex-col gap-5">
+                <div class="text-end p-0">
+                    Personal Details
+                    <hr class="p-0 m-0">
+                </div>
 
-                <div v-if="$page.props.jetstream.hasEmailVerification && user.email_verified_at === null">
-                    <p class="text-sm mt-2">
-                        Your email address is unverified.
+                <!-- Name -->
+                <div class="col-span-6 sm:col-span-4">
+                    <InputLabel for="name" value="Name" />
+                    <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-full" required
+                        autocomplete="name" />
+                    <InputError :message="form.errors.name" class="mt-2" />
+                </div>
 
-                        <Link :href="route('verification.send')" method="post" as="button"
-                            class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            @click.prevent="sendEmailVerification">
-                        Click here to re-send the verification email.
-                        </Link>
-                    </p>
+                <!-- Date of Birth -->
+                <div class="col-span-6 sm:col-span-4">
+                    <InputLabel for="date_of_birth" value="Date of Birth" />
+                    <DateInput id="date_of_birth" v-model="form.date_of_birth" type="date" class="mt-1 block w-full"
+                        required autocomplete="date_of_birth" />
+                    <InputError :message="form.errors.date_of_birth" class="mt-2" />
+                </div>
 
-                    <div v-show="verificationLinkSent" class="mt-2 font-medium text-sm text-green-600">
-                        A new verification link has been sent to your email address.
-                    </div>
+                <!-- NID -->
+                <div class="col-span-6 sm:col-span-4">
+                    <InputLabel for="nid" value="National Identification No (NID)" />
+                    <TextInput id="nid" v-model="form.nid" type="text" class="mt-1 block w-full" required
+                        autocomplete="nid" />
+                    <InputError :message="form.errors.nid" class="mt-2" />
                 </div>
             </div>
+
+            <div class="border rounded p-2 flex flex-col gap-5">
+                <div class="text-end">
+                    Career Details
+                    <hr class="p-0 m-0">
+                </div>
+                <!-- Joining Date -->
+                <div class="col-span-6 sm:col-span-4">
+                    <InputLabel for="joining_date" value="Joining Date" />
+                    <DateInput id="joining_date" v-model="form.joining_date" type="date" class="mt-1 block w-full" required
+                        autocomplete="joining_date" />
+                    <InputError :message="form.errors.joining_date" class="mt-2" />
+                </div>
+
+                <!-- Qualification -->
+                <div class="col-span-6 sm:col-span-4">
+                    <InputLabel for="qualification" value="Qualification" />
+                    <TextArea id="qualification" v-model="form.qualification" type="text" class="mt-1 block w-full" required
+                        autocomplete="qualification" />
+                    <InputError :message="form.errors.qualification" class="mt-2" />
+                </div>
+            </div>
+
+            <div class="border rounded p-2 flex flex-col gap-5">
+                <div class="text-end">
+                    Contact Details
+                    <hr class="p-0 m-0">
+                </div>
+
+                <!-- Email -->
+                <div class="col-span-6 sm:col-span-4">
+                    <InputLabel for="email" value="Email" />
+                    <TextInput id="email" v-model="form.email" type="email" class="mt-1 block w-full" required
+                        autocomplete="username" />
+                    <InputError :message="form.errors.email" class="mt-2" />
+
+                    <div v-if="$page.props.jetstream.hasEmailVerification && user.email_verified_at === null">
+                        <p class="text-sm mt-2">
+                            Your email address is unverified.
+
+                            <Link :href="route('verification.send')" method="post" as="button"
+                                class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                @click.prevent="sendEmailVerification">
+                            Click here to re-send the verification email.
+                            </Link>
+                        </p>
+
+                        <div v-show="verificationLinkSent" class="mt-2 font-medium text-sm text-green-600">
+                            A new verification link has been sent to your email address.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile_no -->
+                <div class="col-span-6 sm:col-span-4">
+                    <InputLabel for="mobile_no" value="Mobile No" />
+                    <TextInput id="mobile_no" v-model="form.mobile_no" type="text" class="mt-1 block w-full" required
+                        autocomplete="mobile_no" />
+                    <InputError :message="form.errors.mobile_no" class="mt-2" />
+                </div>
+            </div>
+
+            <div class="border rounded p-2 flex flex-col gap-5">
+                <div class="text-end">
+                    Social Media Links
+                    <hr class="p-0 m-0">
+                </div>
+
+                <!-- Facebook -->
+                <div class="col-span-6 sm:col-span-4">
+                    <InputLabel for="facebook" value="Facebook Account Link" />
+                    <TextInput id="facebook" v-model="form.facebook" type="text" class="mt-1 block w-full" 
+                        autocomplete="facebook" />
+                    <InputError :message="form.errors.facebook" class="mt-2" />
+                </div>
+
+                <!-- Instagram -->
+                <div class="col-span-6 sm:col-span-4">
+                    <InputLabel for="instagram" value="Instagram Account Link" />
+                    <TextInput id="instagram" v-model="form.instagram" type="text" class="mt-1 block w-full" 
+                        autocomplete="instagram" />
+                    <InputError :message="form.errors.instagram" class="mt-2" />
+                </div>
+
+                <!-- Twitter -->
+                <div class="col-span-6 sm:col-span-4">
+                    <InputLabel for="twitter" value="Twitter Account Link" />
+                    <TextInput id="twitter" v-model="form.twitter" type="text" class="mt-1 block w-full" 
+                        autocomplete="twitter" />
+                    <InputError :message="form.errors.twitter" class="mt-2" />
+                </div>
+
+                <!-- Linkedin -->
+                <div class="col-span-6 sm:col-span-4">
+                    <InputLabel for="linkedin" value="Linkedin Account Link" />
+                    <TextInput id="linkedin" v-model="form.linkedin" type="text" class="mt-1 block w-full" 
+                        autocomplete="linkedin" />
+                    <InputError :message="form.errors.linkedin" class="mt-2" />
+                </div>
+
+                <!-- Youtube -->
+                <div class="col-span-6 sm:col-span-4">
+                    <InputLabel for="youtube" value="Youtube Channel Link" />
+                    <TextInput id="youtube" v-model="form.youtube" type="text" class="mt-1 block w-full" 
+                        autocomplete="youtube" />
+                    <InputError :message="form.errors.youtube" class="mt-2" />
+                </div>
+            </div>
+
         </template>
 
         <template #actions>

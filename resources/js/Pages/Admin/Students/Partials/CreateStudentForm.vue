@@ -634,6 +634,8 @@ const createStudent = () => {
                         <div class="w-[240px] h-[300px] border shadow">
                             <img v-if="photoPreview" :src="photoPreview" alt="Photo Preview"
                                 class="object-cover w-[240px] h-[300px]" />
+                                <img v-else :src="'/assets/images/profile-preview.jpg'" alt="Photo Preview"
+                            class="object-contain w-[240px] h-[300px]" />
                         </div>
                     </div>
                     <div class="col-span-6 sm:col-span-5">

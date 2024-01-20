@@ -21,10 +21,10 @@ defineProps({
 <template>
     <GeneralLayout>
         <div class="container p-5">
-            <div class="bg-white p-8 relative rotate-[-2deg] shadow-lg drop-shadow-lg mt-2 mb-5">
+            <div class="bg-white p-8 relative rotate-[-1deg] shadow-lg drop-shadow-lg mt-2 mb-5">
                 <div class="text-2xl font-bold">{{ notice.title }}</div>
                 <div class="text-base">{{ notice.content }}</div>
-                <iframe :src="notice.attachment" width="100%" height="700px"></iframe>
+                <iframe v-if="notice.attachment" :src="'/storage/' + notice.attachment" width="100%" height="700px"></iframe>
                 <img :src="`/assets/images/pin/${randomColorName}-pin.png`" alt=""
                         class="h-8 absolute top-1 left-1/2 drop-shadow-xl">
             </div>

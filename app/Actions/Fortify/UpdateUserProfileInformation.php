@@ -3,6 +3,7 @@
 namespace App\Actions\Fortify;
 
 use App\Models\User;
+use App\Models\Teacher;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -21,6 +22,16 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
+            'date_of_birth' => ['required', 'date', 'max:255'],
+            'nid' => ['required', 'string', 'max:255'],
+            'joining_date' => ['required', 'date', 'max:255'],
+            'qualification' => ['required', 'string'],
+            'mobile_no' => ['required', 'string'],
+            'facebook' => ['nullable', 'string'],
+            'instagram' => ['nullable', 'string'],
+            'twitter' => ['nullable', 'string'],
+            'linkedin' => ['nullable', 'string'],
+            'youtube' => ['nullable', 'string'],
         ])->validateWithBag('updateProfileInformation');
 
         if (isset($input['photo'])) {
@@ -36,6 +47,19 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'email' => $input['email'],
             ])->save();
         }
+
+        $user->teacher()->update([
+            'date_of_birth' => $input['date_of_birth'],
+            'nid' => $input['nid'],
+            'joining_date' => $input['joining_date'],
+            'qualification' => $input['qualification'],
+            'mobile_no' => $input['mobile_no'],
+            'facebook' => $input['facebook'],
+            'instagram' => $input['instagram'],
+            'twitter' => $input['twitter'],
+            'linkedin' => $input['linkedin'],
+            'youtube' => $input['youtube'],
+        ]);
     }
 
     /**

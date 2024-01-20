@@ -65,6 +65,8 @@ use Illuminate\Support\Facades\Artisan;
 // });
 
 // require_once __DIR__ . '/fortify.php';
+// require_once __DIR__ . '/jetstream.php';
+//declared in route service provider
 
 Route::get('/', function () {
     // Fetch data from multiple tables using Eloquent or database queries
@@ -81,7 +83,7 @@ Route::get('/', function () {
 
 
     $faqs = Faq::where('status', 1) // Filter by status = 1
-        ->latest('created_at') // Order by created_at in descending order
+        ->orderBy('priority') // Order by priority
         ->get();
 
     $albums = Album::with('media')
@@ -91,7 +93,7 @@ Route::get('/', function () {
 
 
     $sliders = Slider::where('status', 1)
-        ->orderByDesc('created_at')
+        ->orderBy('priority') // Order by priority
         ->get()
         ->map(function ($slider) {
             return [
@@ -140,7 +142,7 @@ Route::get('/teachers', function () {
     $teachers = Teacher::with(['user' => function ($query) {
         $query->orderBy('name');
     }])->orderBy('priority')->get()->groupBy('designation');
-    
+
     return Inertia::render('Teachers', [
         'teachers' => $teachers,
     ]);
@@ -167,6 +169,15 @@ Route::get('/result', function () {
 })->name('result');
 
 
+Route::get('/notices', function () {
+
+    $notices = Notice::where('status', 1)->orderBy('published_on', 'desc')->paginate(10);
+
+    return Inertia::render('Notices', [
+        'notices' => $notices,
+    ]);
+})->name('notices.index');
+
 Route::get('/notice/{slug}', function ($slug) {
 
     $notice = Notice::where('slug', $slug)->first();
@@ -175,6 +186,7 @@ Route::get('/notice/{slug}', function ($slug) {
         'notice' => $notice,
     ]);
 })->name('notice.show');
+Route::get('notices/{notice}/download', [NoticeController::class, 'download'])->name('notice.download');
 
 Route::get('/history', function () {
 
@@ -212,7 +224,6 @@ Route::get('/message2', function () {
         'message_2_image' => $message_2_image,
     ]);
 })->name('message_2.show');
-
 
 Route::prefix('admin')->middleware([
     'auth:sanctum',

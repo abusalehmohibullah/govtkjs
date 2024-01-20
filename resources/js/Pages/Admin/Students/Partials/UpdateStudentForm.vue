@@ -684,7 +684,7 @@ const updateStudent = () => {
                         <div class="w-[240px] h-[300px] border shadow">
                             <img v-if="photoPreview" :src="photoPreview" alt="Photo Preview"
                                 class="object-cover w-[240px] h-[300px]" />
-                                <img v-else="photoPreview" :src="'/storage/' + student.photo" alt="Photo Preview"
+                                <img v-else :src="'/storage/' + student.photo" alt="Photo Preview"
                                 class="object-cover w-[240px] h-[300px]" />
                         </div>
                     </div>

@@ -5,7 +5,7 @@ import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 import UpdateFaqForm from '@/Pages/Admin/Faqs/Partials/UpdateFaqForm.vue';
 
-const { faq } = defineProps(['faq']);
+const { faq, priorities }= defineProps(['faq', 'priorities']);
 
 </script>
 
@@ -21,7 +21,7 @@ const { faq } = defineProps(['faq']);
 
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <!-- Use the Form component to wrap your form -->
-                <UpdateFaqForm :faq="faq"/>
+                <UpdateFaqForm :faq="faq" :priorities="priorities" />
             </div>
 
 

@@ -1,7 +1,7 @@
   
 <script setup>
 import { useForm } from '@inertiajs/vue3';
-
+import { ref, watch } from 'vue';
 import FormSection from '@/Components/FormSection.vue';
 import ActionMessage from '@/Components/ActionMessage.vue';
 import TextInput from '@/Components/TextInput.vue';
@@ -9,9 +9,11 @@ import TextArea from '@/Components/TextArea.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import SelectInput from '@/Components/SelectInput.vue';
 
 const props = defineProps({
     faq: Object,
+    priorities: Object,
 });
 
 const form = useForm({
@@ -21,7 +23,30 @@ const form = useForm({
     published_on: props.faq.published_on,
     scroll: props.faq.scroll, // Ensure scroll is a string
     attachment: null, // Initialize attachment as null
+    priority: props.faq.priority, 
 });
+
+const selectedPriority = ref({ id: '', name: '' });
+const selectedPriorityOption = props.priorities.find(priority => priority.id === form.priority);
+    if (selectedPriorityOption) {
+        selectedPriority.value = { id: selectedPriorityOption.id, name: selectedPriorityOption.name };
+    } else {
+        selectedPriority.value = { id: '', name: '' };
+    }
+
+watch(() => form.priority, (newPriority, oldPriority) => {
+    const selectedPriorityOption = props.priorities.find(priority => priority.id === newPriority);
+    if (selectedPriorityOption) {
+        selectedPriority.value = { id: selectedPriorityOption.id, name: selectedPriorityOption.name };
+    } else {
+        selectedPriority.value = { id: '', name: '' };
+    }
+});
+
+const handlePrioritySelected = (selectedLabel) => {
+    form.priority = selectedLabel;
+};
+
 
 const updateFaq = () => {
     form.post(route('admin.faqs.update', props.faq.id), {
@@ -61,6 +86,15 @@ const updateFaq = () => {
                     <InputError :message="form.errors.answer" class="text-red-500" />
                 </div>
 
+                <div class="col-span-6 sm:col-span-4">
+                    <InputLabel for="priority" value="Select Order">
+                        <template #required>*</template>
+                    </InputLabel>
+                    <SelectInput :options="priorities" inputName="priority" :fieldName="'name'" :valueField="'id'"
+                        :selectedOption="selectedPriority" @option-selected="handlePrioritySelected" />
+
+                    <InputError :message="form.errors.priority" class="text-red-500" />
+                </div>
             </template>
 
             <template #actions>

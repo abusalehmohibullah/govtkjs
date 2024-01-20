@@ -5,6 +5,7 @@ import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 import CreateSliderForm from '@/Pages/Admin/Sliders/Partials/CreateSliderForm.vue';
 
+const {priorities } = defineProps(['priorities']);
 
 </script>
 
@@ -20,7 +21,7 @@ import CreateSliderForm from '@/Pages/Admin/Sliders/Partials/CreateSliderForm.vu
 
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <!-- Use the Form component to wrap your form -->
-                <CreateSliderForm />
+                <CreateSliderForm :priorities="priorities" />
             </div>
 
 

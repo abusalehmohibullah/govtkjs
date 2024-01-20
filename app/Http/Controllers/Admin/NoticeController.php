@@ -244,18 +244,17 @@ class NoticeController extends Controller
 
     public function download(Notice $notice)
     {
+
         // Check if the attachment exists
         if ($notice->attachment) {
             // Get the attachment path
             $attachmentPath = storage_path('app/public/' . $notice->attachment);
-
             // Check if the file exists
             if (file_exists($attachmentPath)) {
                 // Extract the filename from the path
                 $filename = pathinfo($attachmentPath, PATHINFO_BASENAME);
                 // dd($attachmentPath);
                 // $response = response()->download($attachmentPath, $filename);
-
                 // dd($response);
                 // Return the file for download
                 return response()->download($attachmentPath, $filename);

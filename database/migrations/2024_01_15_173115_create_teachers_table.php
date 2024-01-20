@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('nid')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->date('joining_date')->nullable();
-            $table->string('email')->nullable();
             $table->string('mobile_no')->nullable();
             $table->string('facebook')->nullable();
             $table->string('instagram')->nullable();

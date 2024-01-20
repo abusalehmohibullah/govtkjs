@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->mediumText('description')->nullable();
             $table->string('path');
+            $table->integer('priority')->unsigned()->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
