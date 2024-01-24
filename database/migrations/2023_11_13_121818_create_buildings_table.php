@@ -21,9 +21,9 @@ return new class extends Migration
             $table->timestamps();
             $table->integer('status')->default(1);
                         
-            $table->foreign('branch_id')->references('id')->on('branches');
-            $table->foreign('created_by')->references('id')->on('users');
-            $table->foreign('updated_by')->references('id')->on('users');
+            $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
         });
     }
 

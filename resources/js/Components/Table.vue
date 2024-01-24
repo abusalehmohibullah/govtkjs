@@ -5,7 +5,7 @@ import { computed, useSlots } from 'vue';
 </script>
 
 <template>
-        <div class="mt-5">
+        <div class="mt-5 overflow-auto">
             <table class="w-full border-collapse border bg-white">
                     <thead>
                         <slot name="thead"></slot>

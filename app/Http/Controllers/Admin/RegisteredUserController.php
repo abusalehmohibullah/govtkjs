@@ -12,6 +12,9 @@ use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Fortify\Contracts\RegisterResponse;
 use Laravel\Fortify\Contracts\RegisterViewResponse;
 use Inertia\Inertia;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Carbon\Carbon;;
 
 class RegisteredUserController extends Controller
 {
@@ -66,7 +69,22 @@ class RegisteredUserController extends Controller
     ): RegisterResponse {
         event(new Registered($user = $creator->create($request->all(), $token)));
 
+        $emailVerifiedAt = Carbon::now();
+        $user->update(['email_verified_at' => $emailVerifiedAt]);
+        
         $this->guard->login($user);
+        
+        // Find and delete the invitation record based on the email
+        $invitation = UserInvitation::with(['roles', 'permissions'])->where('email', $request->input('email'))->first();
+
+        // Assign roles and permissions from the invitation to the user
+        $invitationRoles = $invitation->roles->pluck('id')->toArray();
+        $invitationPermissions = $invitation->permissions->pluck('id')->toArray();
+
+        $user->assignRole($invitationRoles);
+        $user->givePermissionTo($invitationPermissions);
+        
+        $invitation->update(['status' => 'accepted']);
 
         return app(RegisterResponse::class);
     }

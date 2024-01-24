@@ -21,7 +21,7 @@ const hasRolesAndPermissions = computed(() => page.props)
     <div class="simplebar-content" style="padding: 0px;">
         <a class="sidebar-brand" href="/">
             <span class="sidebar-brand-text align-middle">
-                AdminKit
+                Menu
             </span>
         </a>
 
@@ -326,7 +326,47 @@ const hasRolesAndPermissions = computed(() => page.props)
             </Dropdown>
 
 
-            <Dropdown align="right" width="100%" content-classes="relative z-50 bg-white">
+            <!-- students -->
+            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('teacher')
+                || hasRolesAndPermissions.hasPermissions.includes('manage_students'))
+                &&
+                !(hasRolesAndPermissions.hasRoles.includes('teacher')
+                    && hasRolesAndPermissions.hasPermissions.includes('manage_students'))"
+                :href="route('admin.students.index', { select_classroom: 'true' })"
+                :active="route().current('admin.students.*')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-users align-middle me-2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                <span class="align-middle">Students</span>
+            </SideNavLink>
+
+            <!-- teachers -->
+            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+                || hasRolesAndPermissions.hasPermissions.includes('manage_teachers'))
+                &&
+                !(hasRolesAndPermissions.hasRoles.includes('operator')
+                    && hasRolesAndPermissions.hasPermissions.includes('manage_teachers'))"
+                :href="route('admin.teachers.index')" :active="route().current('admin.teachers.*')">
+                <i class="bi bi-person-lines-fill text-base"></i>
+                <span class="align-middle">Teachers</span>
+            </SideNavLink>
+
+            
+            <Dropdown v-if="((hasRolesAndPermissions.hasRoles.includes('operator')
+                || hasRolesAndPermissions.hasPermissions.includes('manage_users'))
+                &&
+                !(hasRolesAndPermissions.hasRoles.includes('operator')
+                    && hasRolesAndPermissions.hasPermissions.includes('manage_users')))
+                || ((hasRolesAndPermissions.hasRoles.includes('operator')
+                    || hasRolesAndPermissions.hasPermissions.includes('manage_invitations'))
+                    &&
+                    !(hasRolesAndPermissions.hasRoles.includes('operator')
+                        && hasRolesAndPermissions.hasPermissions.includes('manage_invitations')))" align="right" width="100%" content-classes="relative z-50 bg-white">
                 <template #trigger>
                     <span class="flex sidebar-item"
                         :class="(route().current('admin.users.*')) || (route().current('admin.user-invitations.*')) ? 'active' : ''">
@@ -335,11 +375,10 @@ const hasRolesAndPermissions = computed(() => page.props)
                             <div class="inline-flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-users align-middle me-2">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="9" cy="7" r="4"></circle>
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                    stroke-linejoin="round" class="feather feather-user-check align-middle me-2">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="8.5" cy="7" r="4"></circle>
+                                    <polyline points="17 11 19 13 23 9"></polyline>
                                 </svg>
                                 Manage Users
                             </div>
@@ -354,7 +393,12 @@ const hasRolesAndPermissions = computed(() => page.props)
 
                 <template #content>
                     <div class="w-100 bg-gray-100">
-                        <SideNavLink :href="route('admin.users.index')" :active="route().current('admin.users.*')">
+                        <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+                            || hasRolesAndPermissions.hasPermissions.includes('manage_users'))
+                            &&
+                            !(hasRolesAndPermissions.hasRoles.includes('operator')
+                                && hasRolesAndPermissions.hasPermissions.includes('manage_users'))"
+                            :href="route('admin.users.index')" :active="route().current('admin.users.*')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                 class="feather feather-chevron-right align-middle me-2">
@@ -363,7 +407,11 @@ const hasRolesAndPermissions = computed(() => page.props)
                             <span class="align-middle">Users</span>
                         </SideNavLink>
 
-                        <SideNavLink :href="route('admin.user-invitations.index')"
+                        <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+                            || hasRolesAndPermissions.hasPermissions.includes('manage_invitations'))
+                            &&
+                            !(hasRolesAndPermissions.hasRoles.includes('operator')
+                                && hasRolesAndPermissions.hasPermissions.includes('manage_invitations'))" :href="route('admin.user-invitations.index')"
                             :active="route().current('admin.user-invitations.*')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -375,43 +423,6 @@ const hasRolesAndPermissions = computed(() => page.props)
                     </div>
                 </template>
             </Dropdown>
-
-
-            <!-- students -->
-            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('teacher')
-                || hasRolesAndPermissions.hasPermissions.includes('manage_students'))
-                &&
-                !(hasRolesAndPermissions.hasRoles.includes('teacher')
-                    && hasRolesAndPermissions.hasPermissions.includes('manage_students'))"
-                :href="route('admin.students.index', { select_classroom: 'true' })" :active="route().current('admin.students.*')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-help-circle align-middle me-2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                </svg>
-                <span class="align-middle">Students</span>
-            </SideNavLink>
-
-            <!-- teachers -->
-            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
-                || hasRolesAndPermissions.hasPermissions.includes('manage_teachers'))
-                &&
-                !(hasRolesAndPermissions.hasRoles.includes('operator')
-                    && hasRolesAndPermissions.hasPermissions.includes('manage_teachers'))"
-                :href="route('admin.teachers.index')" :active="route().current('admin.teachers.*')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-help-circle align-middle me-2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                </svg>
-                <span class="align-middle">Teachers</span>
-            </SideNavLink>
-
-        </ul>
-    </div>
-</template>
+    </ul>
+</div></template>
 

@@ -1,7 +1,9 @@
   
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, watch,reactive } from 'vue';
 import { useForm, Link } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3'
+import { usePage } from '@inertiajs/vue3';
 // import { Inertia } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
@@ -9,8 +11,17 @@ import Table from '@/Components/Table.vue';
 import PrimaryPaginatorButton from '@/Components/PrimaryPaginatorButton.vue';
 import SecondaryPaginatorButton from '@/Components/SecondaryPaginatorButton.vue';
 import PrimaryIconButton from '@/Components/PrimaryIconButton.vue';
+import SecondaryIconButton from '@/Components/SecondaryIconButton.vue';
 import DangerIconButton from '@/Components/DangerIconButton.vue';
-// import DeleteUserForm from '@/Pages/Admin/Users/Partials/DeleteUserForm.vue';
+import DeleteUserInvitationForm from '@/Pages/Admin/UserInvitations/Partials/DeleteUserInvitationForm.vue';
+
+const page = usePage();
+
+const isResending = ref(false);
+
+watch(() => page.props.jetstream.flash, (newValue, oldValue) => {
+    isResending.value = false;
+});
 
 
 const props = defineProps({
@@ -26,6 +37,50 @@ const toggleModal = (user) => {
 };
 
 
+const invitationStatus = ref({}); // Object to store status for each invitation
+
+const startCountdown = (invitation) => {
+    invitationStatus.value[invitation].showCountdown = true;
+    invitationStatus.value[invitation].resendButtonDisabled = true;
+
+    const countdownInterval = setInterval(() => {
+        invitationStatus.value[invitation].countdownTimer--;
+
+        if (invitationStatus.value[invitation].countdownTimer <= 0) {
+            clearInterval(countdownInterval);
+            invitationStatus.value[invitation].showCountdown = false;
+            invitationStatus.value[invitation].resendButtonDisabled = false;
+            invitationStatus.value[invitation].countdownTimer = 60;
+        }
+    }, 1000);
+};
+
+const resend = async (invitation) => {
+    if (isResending.value) {
+        return;
+    }
+
+    isResending.value = true;
+
+    invitationStatus.value[invitation] = {
+        showCountdown: true,
+        resendButtonDisabled: true,
+        countdownTimer: 60,
+    };
+        // Start the countdown timer
+        startCountdown(invitation);
+
+
+        const url = route('admin.user-invitations.resend', invitation);
+
+        await router.put(url, {
+            preserveScroll: true,
+        });
+
+
+}
+
+
 </script>
 
 <template>
@@ -37,6 +92,7 @@ const toggleModal = (user) => {
                 <th class="py-2 px-4 border-b bg-slate-200">Role</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Extra Ability</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Restriction</th>
+                <th class="py-2 px-4 border-b bg-slate-200">Status</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Action</th>
             </tr>
         </template>
@@ -47,8 +103,6 @@ const toggleModal = (user) => {
                 <td class="py-2 px-4 border-b text-center">{{ (users.current_page - 1) * users.per_page + index + 1 }}</td>
                 <td class="py-2 px-4 border-b">
                     <div>{{ user.email }}</div>
-                    <div class="capitalize">{{ user.designation }}</div>
-
                 </td>
                 <td class="py-2 px-4 border-b text-center">
                     <div v-if="user.roles.length > 0" class="flex flex-wrap gap-1 justify-center">
@@ -65,43 +119,56 @@ const toggleModal = (user) => {
                 <td class="py-2 px-4 border-b text-center">
                     <div v-if="user.extras.length > 0" class="flex flex-wrap gap-1 justify-center">
                         <div v-for="extra in user.extras" :key="extra"
-                            class="bg-green-700 text-white rounded-full px-2 py-1 capitalize text-xs">{{ extra.replace(/_/g, ' ')
+                            class="bg-green-700 text-white rounded-full px-2 py-1 capitalize text-xs">{{ extra.replace(/_/g,
+                                ' ')
                             }}</div>
                     </div>
-                    <div v-else>No extras permission</div>
+                    <div v-else>No extra permissions</div>
                 </td>
                 <td class="py-2 px-4 border-b text-center">
                     <div v-if="user.restrictions.length > 0" class="flex flex-wrap gap-1 justify-center">
                         <div v-for="restriction in user.restrictions" :key="restriction"
-                            class="bg-red-700 text-white rounded-full px-2 py-1 capitalize text-xs">{{ restriction.replace(/_/g, ' ') }}</div>
+                            class="bg-red-700 text-white rounded-full px-2 py-1 capitalize text-xs">{{
+                                restriction.replace(/_/g, ' ') }}</div>
                     </div>
                     <div v-else>No restrictions</div>
                 </td>
+                <td class="py-2 px-4 border-b text-center">
+                    <div class="capitalize font-semibold"
+                        :class="{ 'text-green-700': user.status == 'accepted' }, { 'text-gray-400': user.status == 'pending' }, { 'text-red-700': user.status == 'expired' }">
+                        {{ user.status }}</div>
+                </td>
 
-                <td class="py-2 px-4 border-b">
-                    <div class="flex justify-center">
-                        <div class="form-check form-switch relative">
-                            <input class="form-check-input checked:bg-auto checked:bg-right" type="checkbox" role="switch"
-                                :id="'switch-' + (index + 1)">
-
-                            <!-- <label class="form-check-label" for="flexSwitchCheckDefault">SHOW</label> -->
-                            <div class="absolute top-[14px] left-0">
-                                <label class="form-check-label text-[8px] select-none"
-                                    :for="'switch-' + (index + 1)"><small>SHOWED</small></label>
-                            </div>
+                <td class="py-2 px-4 border-b text-center">
+                    <div v-if="user.status != 'accepted'">
+                        <div v-if="invitationStatus[user.id]?.showCountdown">
+                            Resend in {{ invitationStatus[user.id]?.countdownTimer }}s
                         </div>
-                        <Link :href="route('admin.user-invitations.edit', user.id)">
-                        <PrimaryIconButton>
-                            <i class="fas fa-pen"></i>
-                        </PrimaryIconButton>
-                        </Link>
+                        <div v-else class="flex justify-center">
+                            <button @click="resend(user.id)"
+                                :disabled="isResending || invitationStatus[user.id]?.resendButtonDisabled">
+                                <SecondaryIconButton
+                                :class="{'cursor-not-allowed' : isResending}">
+                                    <i class="fas fa-paper-plane"></i>
+                                </SecondaryIconButton>
+                            </button>
 
-                        <!-- Delete button -->
-                        <DangerIconButton class="ml-1" @click="() => toggleModal(user)">
-                            <i class="fas fa-trash"></i>
-                        </DangerIconButton>
+                            <Link class="ml-1" :href="route('admin.user-invitations.edit', user.id)">
+                            <PrimaryIconButton>
+                                <i class="fas fa-pen"></i>
+                            </PrimaryIconButton>
+                            </Link>
+
+                            <!-- Delete button -->
+                            <DangerIconButton class="ml-1" @click="() => toggleModal(user)">
+                                <i class="fas fa-trash"></i>
+                            </DangerIconButton>
+
+                        </div>
 
                     </div>
+
+                    <div v-else>-</div>
                 </td>
             </tr>
 
@@ -113,7 +180,7 @@ const toggleModal = (user) => {
         </template>
     </Table>
     <!-- Modal form outside the table -->
-    <DeleteUserForm :show="showModal" :user="selectedUser" @close="toggleModal" />
+    <DeleteUserInvitationForm :show="showModal" :user="selectedUser" @close="toggleModal" />
     <div class="mt-5">
         <template v-for="(link, index) in users.links">
             <template v-if="link.url">

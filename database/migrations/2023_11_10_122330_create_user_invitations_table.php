@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('user_invitations', function (Blueprint $table) {
             $table->id();
             $table->string('email')->unique();
-            $table->string('designation')->nullable();
             $table->string('token')->unique();
             $table->enum('status', ['pending', 'accepted', 'expired'])->default('pending');
             $table->unsignedBigInteger('invited_by')->nullable();

@@ -36,6 +36,7 @@ const toggleModal = (teacher) => {
             <tr>
                 <th class="py-2 px-4 border-b bg-slate-200">#</th>
                 <th class="py-2 px-4 border-b bg-slate-200">ID</th>
+                <th class="py-2 px-4 border-b bg-slate-200">Photo</th>
                 <th class="py-2 px-4 border-b bg-slate-200 whitespace-nowrap">Teacher Name</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Designation</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Subject</th>
@@ -52,6 +53,14 @@ const toggleModal = (teacher) => {
                 <td class="py-2 px-4 border-b text-center">{{ (teachers.current_page - 1) * teachers.per_page + index + 1
                 }}</td>
                 <td class="py-2 px-4 border-b text-center">{{ teacher.unique_id }}</td>
+                <td class="py-2 px-4 border-b flex items-center justify-center">
+                    <div v-if="teacher.user.profile_photo_url != ''"><img :src="teacher.user.profile_photo_url" class="d-block h-24 w-20" alt="..."></div>
+                    <div v-else class="h-24 w-20 flex justify-center items-center flex-col">
+                        <div>No</div>
+                        <div>Photo</div>
+                        <div>Found</div>
+                    </div>
+                </td>
                 <td class="py-2 px-4 border-b">{{ teacher.user.name }}</td>
                 <td class="py-2 px-4 border-b text-center">{{ teacher.designation }}</td>
                 <td class="py-2 px-4 border-b text-center" v-if="teacher.subject">{{ teacher.subject.name + '(' +

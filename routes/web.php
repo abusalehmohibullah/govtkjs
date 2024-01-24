@@ -252,7 +252,25 @@ Route::prefix('admin')->middleware([
 
     // Dashboard
     Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
+        $user = auth()->user();
+        $classroom = null;
+        if ($user) {
+            $teacher = $user->teacher;
+
+            if ($teacher) {
+                $classroom = $teacher->classroom;
+                if ($classroom) {
+                    // Eager load related models (Grade, Section, Group)
+                    $classroom = $classroom->load(['grade', 'section', 'group']);
+                }
+            }
+        }
+
+        return Inertia::render('Dashboard', [
+            'classroom' => $classroom,
+            // 'message_2_content' => $message_2_content,
+            // 'message_2_image' => $message_2_image,
+        ]);
     })->name('dashboard');
 
     Route::resource('users', UserController::class, [
@@ -262,6 +280,7 @@ Route::prefix('admin')->middleware([
     Route::resource('user-invitations', UserInvitationController::class, [
         'names' => 'admin.user-invitations',
     ]);
+    Route::put('user-invitations/{user_invitation}/resend', [UserInvitationController::class, 'resend'])->name('admin.user-invitations.resend');
 
     // Basic Information
     Route::middleware(['restriction:operator,manage_basic_infos'])->group(function () {

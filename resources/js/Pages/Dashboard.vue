@@ -1,6 +1,8 @@
 <script setup>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import Welcome from '@/Components/Welcome.vue';
+
+const { classroom } = defineProps(['classroom']);
 </script>
 
 <template>
@@ -12,6 +14,6 @@ import Welcome from '@/Components/Welcome.vue';
                 </h2>
             </div>
         </template>
-        <Welcome />
+        <Welcome :classroom="classroom" />
     </AdminLayout>
 </template>

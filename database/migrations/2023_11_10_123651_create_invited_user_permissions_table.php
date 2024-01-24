@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('invited_user_permissions', function (Blueprint $table) {
             $table->unsignedBigInteger('permission_id');
             $table->unsignedBigInteger('invitation_id');
-            
+                    
             $table->primary(['permission_id', 'invitation_id']);
-
-            $table->foreign('permission_id')->references('id')->on('permissions');
-            $table->foreign('invitation_id')->references('id')->on('user_invitations');
+        
+            $table->foreign('permission_id')->references('id')->on('permissions')->onDelete('cascade');
+            $table->foreign('invitation_id')->references('id')->on('user_invitations')->onDelete('cascade');
         });
     }
 

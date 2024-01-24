@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('invited_user_roles', function (Blueprint $table) {
             $table->unsignedBigInteger('role_id');
             $table->unsignedBigInteger('invitation_id');
-            
+                    
             $table->primary(['role_id', 'invitation_id']);
-            
-            $table->foreign('role_id')->references('id')->on('roles');
-            $table->foreign('invitation_id')->references('id')->on('user_invitations');
+                    
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
+            $table->foreign('invitation_id')->references('id')->on('user_invitations')->onDelete('cascade');
         });
+        
         
     }
 

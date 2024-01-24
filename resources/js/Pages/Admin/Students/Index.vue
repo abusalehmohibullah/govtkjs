@@ -9,7 +9,7 @@ import Header from '@/Components/Header.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import Pagination from '@/Components/Pagination.vue';
 
-const { students, selected_classroom } = defineProps(['students', 'selected_classroom']);
+const { students, selected_classroom, classrooms } = defineProps(['students', 'selected_classroom', 'classrooms']);
 
 </script>
 
@@ -34,7 +34,7 @@ const { students, selected_classroom } = defineProps(['students', 'selected_clas
                 </template>
             </Header>
 
-            <StudentTable :students="students" :selected_classroom="selected_classroom" />
+            <StudentTable :students="students" :selected_classroom="selected_classroom" :classrooms="classrooms" />
             
         </div>
 

@@ -17,7 +17,6 @@ const props = defineProps({
 
 const form = useForm({
     email: '',
-    designation: '',
     selectedRoles: [], // Add your selected roles array here
     selectedPermissions: [], // Add your selected permissions array here
     // Other form fields
@@ -31,11 +30,6 @@ const handleSelectedRolesUpdated = (newSelectedRoles) => {
 const handleSelectedPermissionsUpdated = (newSelectedPermissions) => {
     // console.log('Selected Permissions Updated:', newSelectedPermissions);
     form.selectedPermissions = newSelectedPermissions;
-};
-
-const handleOptionSelected = (selectedLabel) => {
-    form.designation = selectedLabel; // Update albumName ref
-    // console.log('gg');
 };
 
 const inviteUser = () => {
@@ -69,13 +63,6 @@ const inviteUser = () => {
                     <TextInput id="email" v-model="form.email" required class="mt-1 block w-full"
                         :class="{ 'border-red-500 focus:border-red-500': form.errors.email }" type="email" name="email" />
                     <InputError :message="form.errors.email" class="text-red-500" />
-                </div>
-
-                <div class="col-span-6 sm:col-span-4">
-                    <InputLabel for="designation" value="Designation" />
-                    <SelectInput :options="roles" inputName="designation" :fieldName="'name'" :valueField="'name'" @option-selected="handleOptionSelected" class="capitalize" />
-
-                    <InputError :message="form.errors.designation" class="text-red-500" />
                 </div>
 
                 <RolePermission :roles="roles"

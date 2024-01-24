@@ -10,7 +10,6 @@ const props = defineProps({
     roles: Array,
     userRoles: Object,
     userPermissions: Array,
-    designation: Array,
 });
 
 </script>
@@ -27,7 +26,7 @@ const props = defineProps({
 
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <!-- Use the Form component to wrap your form -->
-                <UpdateUserInvitationForm :user="user" :userPermissions="userPermissions" :roles="roles" :userRoles="userRoles" :designation="designation" />
+                <UpdateUserInvitationForm :user="user" :userPermissions="userPermissions" :roles="roles" :userRoles="userRoles" />
             </div>
 
 

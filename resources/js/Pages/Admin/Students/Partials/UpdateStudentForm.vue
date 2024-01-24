@@ -21,7 +21,7 @@ const { student, classrooms } = defineProps(['student', 'classrooms']);
 const form = useForm({
     _method: 'PUT',
     classroom_id: student.classroom_id,
-    // grade: classroom.grade.name,
+    session: student.session,
     roll_no: student.roll_no,
     registration_no: student.registration_no,
     unique_id: student.unique_id,
@@ -53,19 +53,19 @@ const form = useForm({
 
 
 
-const selectedClassroom = ref({id: '', name: ''});
+const selectedClassroom = ref({ id: '', name: '' });
 const selectedClass = classrooms.find(classroom => classroom.id === form.classroom_id);
-    if (selectedClass) {
-        selectedClassroom.value = { id: selectedClass.id, name: selectedClass.name };
-    } else {
-        selectedClassroom.value = {id: '', name: ''};
-    }
+if (selectedClass) {
+    selectedClassroom.value = { id: selectedClass.id, name: selectedClass.name };
+} else {
+    selectedClassroom.value = { id: '', name: '' };
+}
 watch(() => form.classroom_id, (newClassroom, oldClassroom) => {
     const selectedClass = classrooms.find(classroom => classroom.id === newClassroom);
     if (selectedClass) {
         selectedClassroom.value = { id: selectedClass.id, name: selectedClass.name };
     } else {
-        selectedClassroom.value = {id: '', name: ''};
+        selectedClassroom.value = { id: '', name: '' };
     }
 });
 
@@ -74,25 +74,108 @@ const handleClassroomSelected = (selectedLabel) => {
 };
 
 
+const currentGrade = ref(selectedClassroom.value.name);
+const match = currentGrade.value.match(/^\d+/);
+
+const grade = match[0];
+
+const currentYear = new Date().getFullYear();
+
+// Generate sessions with single years
+const singleYearSessions = Array.from(
+    { length: 5 },
+    (_, index) => ({ id: index + 1, name: (currentYear - 2 + index).toString() })
+);
+
+// Generate sessions with two-year combinations
+const twoYearSessions = Array.from(
+    { length: 5 },
+    (_, index) => ({
+        id: index, // Adjust the starting index based on the previous array length
+        name: `${currentYear - 3 + index}-${(currentYear - 2 + index).toString().slice(-2)}`,
+    })
+);
+
+
+const selectedSession = ref({ id: '', name: '' });
+
+if (grade < 11) {
+    const selectedSessionOption = singleYearSessions.find(session => session.name == student.session);
+    if (selectedSessionOption) {
+        selectedSession.value = { id: selectedSessionOption.id, name: selectedSessionOption.name };
+    } else {
+        selectedSession.value = { id: '', name: '' };
+    }
+} else {
+    const selectedSessionOption = twoYearSessions.find(session => session.name == student.session);
+    if (selectedSessionOption) {
+        selectedSession.value = { id: selectedSessionOption.id, name: selectedSessionOption.name };
+    } else {
+        selectedSession.value = { id: '', name: '' };
+    }
+
+}
+
+
+watch(() => form.session, (newSession, oldSession) => {
+    if (grade < 11) {
+        const selectedSessionOption = singleYearSessions.find(session => session.name == newSession);
+        if (selectedSessionOption) {
+            selectedSession.value = { id: selectedSessionOption.id, name: selectedSessionOption.name };
+        } else {
+            selectedSession.value = { id: '', name: '' };
+        }
+    } else {
+        const selectedSessionOption = twoYearSessions.find(session => session.name == newSession);
+        if (selectedSessionOption) {
+            selectedSession.value = { id: selectedSessionOption.id, name: selectedSessionOption.name };
+        } else {
+            selectedSession.value = { id: '', name: '' };
+        }
+
+    }
+});
+
+const handleSessionSelected = (selectedLabel) => {
+    const selectedId = parseInt(selectedLabel); // Convert selected label to integer
+
+    if (grade < 11) {
+        const selectedSessionOption = singleYearSessions.find(session => session.id == selectedId);
+        if (selectedSessionOption) {
+            form.session = selectedSessionOption.name.toString();
+        }
+    } else {
+        const selectedSessionOption = twoYearSessions.find(session => session.id == selectedId);
+        if (selectedSessionOption) {
+            form.session = selectedSessionOption.name.toString();
+        }
+    }
+
+};
+
+
+
+
+
 const gendersEn = [
     { id: 1, name: 'Male' },
     { id: 2, name: 'Female' },
     { id: 3, name: 'Others' }
 ];
 
-const selectedGenderEn = ref({id: '', name: ''});
+const selectedGenderEn = ref({ id: '', name: '' });
 const selectedGender = gendersEn.find(gender => gender.name === form.gender_en);
-    if (selectedGender) {
-        selectedGenderEn.value = { id: selectedGender.id, name: selectedGender.name };
-    } else {
-        selectedGenderEn.value = {id: '', name: ''};
-    }
+if (selectedGender) {
+    selectedGenderEn.value = { id: selectedGender.id, name: selectedGender.name };
+} else {
+    selectedGenderEn.value = { id: '', name: '' };
+}
 watch(() => form.gender_en, (newGenderEn, oldGenderEn) => {
     const selectedGender = gendersEn.find(gender => gender.name === newGenderEn);
     if (selectedGender) {
         selectedGenderEn.value = { id: selectedGender.id, name: selectedGender.name };
     } else {
-        selectedGenderEn.value = {id: '', name: ''};
+        selectedGenderEn.value = { id: '', name: '' };
     }
 });
 
@@ -113,19 +196,19 @@ const religionsEn = [
 ];
 
 
-const selectedReligionEn = ref({id: '', name: ''});
+const selectedReligionEn = ref({ id: '', name: '' });
 const selectedReligion = religionsEn.find(religion => religion.name === form.religion_en);
-    if (selectedReligion) {
-        selectedReligionEn.value = { id: selectedReligion.id, name: selectedReligion.name };
-    } else {
-        selectedReligionEn.value = {id: '', name: ''};
-    }
+if (selectedReligion) {
+    selectedReligionEn.value = { id: selectedReligion.id, name: selectedReligion.name };
+} else {
+    selectedReligionEn.value = { id: '', name: '' };
+}
 watch(() => form.religion_en, (newReligionEn, oldReligionEn) => {
     const selectedReligion = religionsEn.find(religion => religion.name === newReligionEn);
     if (selectedReligion) {
         selectedReligionEn.value = { id: selectedReligion.id, name: selectedReligion.name };
     } else {
-        selectedReligionEn.value = {id: '', name: ''};
+        selectedReligionEn.value = { id: '', name: '' };
     }
 });
 
@@ -148,19 +231,19 @@ const disabilityStatusEn = [
 ];
 
 
-const selectedDisabilityStatusEn = ref({id: '', name: ''});
+const selectedDisabilityStatusEn = ref({ id: '', name: '' });
 const selectedDisabilityStatus = disabilityStatusEn.find(disabilityStatus => disabilityStatus.name === form.disability_status_en);
-    if (selectedDisabilityStatus) {
-        selectedDisabilityStatusEn.value = { id: selectedDisabilityStatus.id, name: selectedDisabilityStatus.name };
-    } else {
-        selectedDisabilityStatusEn.value = {id: '', name: ''};
-    }
+if (selectedDisabilityStatus) {
+    selectedDisabilityStatusEn.value = { id: selectedDisabilityStatus.id, name: selectedDisabilityStatus.name };
+} else {
+    selectedDisabilityStatusEn.value = { id: '', name: '' };
+}
 watch(() => form.disability_status_en, (newDisabilityStatusEn, oldDisabilityStatusEn) => {
     const selectedDisabilityStatus = disabilityStatusEn.find(disabilityStatus => disabilityStatus.name === newDisabilityStatusEn);
     if (selectedDisabilityStatus) {
         selectedDisabilityStatusEn.value = { id: selectedDisabilityStatus.id, name: selectedDisabilityStatus.name };
     } else {
-        selectedDisabilityStatusEn.value = {id: '', name: ''};
+        selectedDisabilityStatusEn.value = { id: '', name: '' };
     }
 });
 
@@ -338,7 +421,7 @@ const updateStudent = () => {
 
                 <!-- component -->
 
-         
+
                 <div class="w-full my-4">
                     <!-- Dynamic progress bar -->
                     <div class="w-full mx-auto">
@@ -354,17 +437,16 @@ const updateStudent = () => {
                                         <template v-if="index == currentStep">
                                             <div
                                                 class="bg-white h-6 w-6 rounded-full shadow border flex items-center justify-center relative">
-                                                <div
-                                                class="h-3 w-3 rounded-full" 
-                                                :class="{ 'bg-indigo-700': !stepswitherrors.includes(index.toString()), 'bg-red-600 text-white': stepswitherrors.includes(index.toString()) }"> 
-                                            </div>
+                                                <div class="h-3 w-3 rounded-full"
+                                                    :class="{ 'bg-indigo-700': !stepswitherrors.includes(index.toString()), 'bg-red-600 text-white': stepswitherrors.includes(index.toString()) }">
+                                                </div>
                                             </div>
                                         </template>
 
                                         <!-- Checkmark icon for completed steps -->
                                         <template v-else-if="index < currentStep">
                                             <div @click="goToStep(index)"
-                                                class="h-6 w-6 rounded-full shadow flex items-center justify-center cursor-pointer" 
+                                                class="h-6 w-6 rounded-full shadow flex items-center justify-center cursor-pointer"
                                                 :class="{ 'bg-indigo-700': !stepswitherrors.includes(index.toString()), 'bg-red-600 text-white': stepswitherrors.includes(index.toString()) }">
                                                 <svg xmlns="http://www.w3.org/2000/svg"
                                                     class="icon icon-tabler icon-tabler-check" width="18" height="18"
@@ -379,8 +461,9 @@ const updateStudent = () => {
                                         <!-- Number for the future steps -->
                                         <template v-else>
                                             <div @click="goToStep(index)"
-                                                class="flex justify-center items-center font-medium cursor-pointer rounded-full" 
-                                                :class="{'bg-red-600 text-white': stepswitherrors.includes(index.toString()) }">{{ index
+                                                class="flex justify-center items-center font-medium cursor-pointer rounded-full"
+                                                :class="{ 'bg-red-600 text-white': stepswitherrors.includes(index.toString()) }">
+                                                {{ index
                                                 }}</div>
                                         </template>
                                     </div>
@@ -398,41 +481,30 @@ const updateStudent = () => {
                 <div v-if="step == 1" class="flex flex-col gap-5 px-1">
                     <h3 class="mb-3">Step 1: Roll and IDs</h3>
                     <!-- Use the Text Input component for each form field -->
-                    <!-- <div class="w-full flex gap-2">
-                        <div v-if="classroom.grade" class="w-full">
-                            <InputLabel for="grade" value="Class">
+                    <div class="w-full flex gap-2">
+                        <div class="w-full">
+                            <InputLabel for="session" value="Session">
+                                <template #required>*</template>
                             </InputLabel>
-                            <TextInput id="grade" v-model="classroom.grade.name" required class="mt-1 block w-full"
-                                type="text" name="grade" disabled />
+                            <SelectInput :options="grade < 11 ? singleYearSessions : twoYearSessions"
+                                inputName="session" :fieldName="'name'" :valueField="'id'" :selectedOption="selectedSession"
+                                @option-selected="handleSessionSelected" class="mt-1 capitalize" />
                         </div>
 
-                        <div v-if="classroom.section" class="w-full">
-                            <InputLabel for="section" value="Section">
+                        <div class="w-full">
+                            <InputLabel for="classroom_id" value="Class">
+                                <template #required>*</template>
                             </InputLabel>
-                            <TextInput id="section" v-model="classroom.section.name" required class="mt-1 block w-full"
-                                type="text" name="section" disabled />
+
+                            <SelectInput :options="classrooms" inputName="classroom_id" :fieldName="'name'"
+                                :valueField="'id'" :selectedOption="selectedClassroom"
+                                @option-selected="handleClassroomSelected" class="mt-1 capitalize" />
+                            <InputError :message="form.errors.classroom_id" class="text-red-500" />
                         </div>
-
-                        <div v-if="classroom.group" class="w-full">
-                            <InputLabel for="group" value="Group">
-                            </InputLabel>
-                            <TextInput id="group" v-model="classroom.group.name" required class="mt-1 block w-full"
-                                type="text" name="group" disabled />
-                        </div>
-                    </div> -->
-
-
-                    
-                    <div class="col-span-6 sm:col-span-4">
-                        <InputLabel for="classroom_id" value="Class">
-                            <template #required>*</template>
-                        </InputLabel>
-                        <!-- {{ selectedGenderEn }} -->
-                        <SelectInput :options="classrooms" inputName="classroom_id" :fieldName="'name'" :valueField="'id'" :selectedOption="selectedClassroom"
-                            @option-selected="handleClassroomSelected" class="capitalize" />
-                        <InputError :message="form.errors.classroom_id" class="text-red-500" />
                     </div>
-                    
+
+
+
                     <!-- <div class="grid grid-cols-8 gap-2"> -->
                     <div class="col-span-6 sm:col-span-4">
                         <InputLabel for="roll_no" value="Roll No">
@@ -651,8 +723,8 @@ const updateStudent = () => {
                             <template #required>*</template>
                         </InputLabel>
                         <!-- {{ selectedGenderEn }} -->
-                        <SelectInput :options="gendersEn" inputName="gender_en" :fieldName="'name'" :valueField="'id'" :selectedOption="selectedGenderEn"
-                            @option-selected="handleGenderSelected" class="capitalize" />
+                        <SelectInput :options="gendersEn" inputName="gender_en" :fieldName="'name'" :valueField="'id'"
+                            :selectedOption="selectedGenderEn" @option-selected="handleGenderSelected" class="capitalize" />
                         <InputError :message="form.errors.gender_en" class="text-red-500" />
                     </div>
 
@@ -660,8 +732,9 @@ const updateStudent = () => {
                         <InputLabel for="religion_en" value="Religion">
                             <template #required>*</template>
                         </InputLabel>
-                        <SelectInput :options="religionsEn" inputName="religion_en" :fieldName="'name'" :valueField="'id'" :selectedOption="selectedReligionEn"
-                            @option-selected="handleReligionSelected" class="capitalize" />
+                        <SelectInput :options="religionsEn" inputName="religion_en" :fieldName="'name'" :valueField="'id'"
+                            :selectedOption="selectedReligionEn" @option-selected="handleReligionSelected"
+                            class="capitalize" />
                         <InputError :message="form.errors.religion_en" class="text-red-500" />
                     </div>
 
@@ -669,8 +742,9 @@ const updateStudent = () => {
                         <InputLabel for="disability_status_en" value="Disability Status">
                             <!-- <template #required>*</template> -->
                         </InputLabel>
-                        <SelectInput :options="disabilityStatusEn" inputName="disability_status_en" :fieldName="'name'" :selectedOption="selectedDisabilityStatusEn"
-                            :valueField="'id'" @option-selected="handleDisabilityStatusSelected" class="capitalize" />
+                        <SelectInput :options="disabilityStatusEn" inputName="disability_status_en" :fieldName="'name'"
+                            :selectedOption="selectedDisabilityStatusEn" :valueField="'id'"
+                            @option-selected="handleDisabilityStatusSelected" class="capitalize" />
                         <InputError :message="form.errors.disability_status_en" class="text-red-500" />
                     </div>
 
@@ -684,7 +758,7 @@ const updateStudent = () => {
                         <div class="w-[240px] h-[300px] border shadow">
                             <img v-if="photoPreview" :src="photoPreview" alt="Photo Preview"
                                 class="object-cover w-[240px] h-[300px]" />
-                                <img v-else :src="'/storage/' + student.photo" alt="Photo Preview"
+                            <img v-else :src="'/storage/' + student.photo" alt="Photo Preview"
                                 class="object-cover w-[240px] h-[300px]" />
                         </div>
                     </div>

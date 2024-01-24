@@ -24,9 +24,9 @@ return new class extends Migration
             $table->timestamps();
             $table->integer('status')->default(1);
                         
-            $table->foreign('building_id')->references('id')->on('buildings');
-            $table->foreign('created_by')->references('id')->on('users');
-            $table->foreign('updated_by')->references('id')->on('users');
+            $table->foreign('building_id')->references('id')->on('buildings')->onDelete('cascade');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
         });
     }
 

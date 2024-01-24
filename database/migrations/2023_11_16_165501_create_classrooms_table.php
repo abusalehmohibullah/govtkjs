@@ -25,13 +25,13 @@ return new class extends Migration
             $table->timestamps();
             $table->integer('status')->default(1);
                         
-            $table->foreign('building_id')->references('id')->on('buildings');
-            $table->foreign('room_id')->references('id')->on('rooms');
-            $table->foreign('grade_id')->references('id')->on('grades');
-            $table->foreign('section_id')->references('id')->on('sections');
-            $table->foreign('group_id')->references('id')->on('groups');
-            $table->foreign('created_by')->references('id')->on('users');
-            $table->foreign('updated_by')->references('id')->on('users');
+            $table->foreign('building_id')->references('id')->on('buildings')->onDelete('set null');
+            $table->foreign('room_id')->references('id')->on('rooms')->onDelete('set null');
+            $table->foreign('grade_id')->references('id')->on('grades')->onDelete('set null');
+            $table->foreign('section_id')->references('id')->on('sections')->onDelete('set null');
+            $table->foreign('group_id')->references('id')->on('groups')->onDelete('set null');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null'); 
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');   
         });
     }
 

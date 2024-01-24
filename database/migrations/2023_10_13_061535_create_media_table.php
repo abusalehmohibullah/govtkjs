@@ -22,8 +22,8 @@ return new class extends Migration
 
             $table->foreign('album_id')->references('id')->on('albums')->onDelete('cascade');
                 
-            $table->foreign('created_by')->references('id')->on('users');
-            $table->foreign('updated_by')->references('id')->on('users');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
         });
     }
 

@@ -56,16 +56,16 @@ const logout = () => {
 
                 </div>
             </div>
-            <form class="hidden sm:flex items-center justify-center">
+            <!-- <form class="hidden sm:flex items-center justify-center">
                 <div class="input-group input-group-navbar">
                     <input type="text" class="form-control" placeholder="Search…" aria-label="Search">
                     <button class="btn" type="button">
                         <i class="align-middle" data-feather="search"></i>
                     </button>
                 </div>
-            </form>
+            </form> -->
 
-            <div class="flex justify-end sm:items-center sm:ml-auto ml-auto w-full">
+            <div class="flex justify-end items-center sm:items-center sm:ml-auto ml-auto w-full">
                 <div class="ml-3 relative">
                     <!-- Teams Dropdown -->
                     <Dropdown v-if="$page.props.jetstream.hasTeamFeatures" align="right" width="60" position="absolute z-50 mt-2 rounded-md">

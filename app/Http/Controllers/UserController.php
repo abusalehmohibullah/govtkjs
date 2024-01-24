@@ -149,7 +149,14 @@ class UserController extends Controller
             ->with('flash.banner', 'Roles and permissions updated successfully.');
     }
 
+    public function destroy(User $user)
+    {
+        // Delete the user
+        $user->delete();
 
+        // Redirect to the user index page with a success message
+        return redirect()->route('admin.users.index')->with('flash.banner', 'User deleted successfully!');
+    }
 
 
 

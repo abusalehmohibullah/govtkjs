@@ -15,6 +15,7 @@ return new class extends Migration
 
             $table->string('student_id')->primary(); // Custom student ID (e.g., 240001)
             $table->string('unique_id')->nullable()->unique();
+            $table->string('session'); // Current roll number (changes every year)
             $table->string('roll_no')->nullable(); // Current roll number (changes every year)
             $table->string('registration_no')->nullable(); // Registration number
 
@@ -52,8 +53,8 @@ return new class extends Migration
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
 
-            $table->foreign('created_by')->references('id')->on('users');
-            $table->foreign('updated_by')->references('id')->on('users');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
 
         });
     }

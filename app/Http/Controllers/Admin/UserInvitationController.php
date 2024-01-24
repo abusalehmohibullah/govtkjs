@@ -25,13 +25,20 @@ class UserInvitationController extends Controller
 
     public function index()
     {
-        $users = UserInvitation::with('roles', 'roles.permissions', 'permissions')->paginate(10);
+
+        $users = UserInvitation::with('roles', 'roles.permissions', 'permissions')->latest('created_at')->paginate(10);
         // dd($users);
         // Initialize empty arrays for extras and restrictions
         $extras = [];
         $restrictions = [];
 
         foreach ($users as $user) {
+            // Check if the invitation is pending and the expiration time has passed
+            if ($user->status === 'pending' && now()->gt($user->expires_at)) {
+                // Update the status to 'expired'
+                $user->update(['status' => 'expired']);
+            }
+            
             foreach ($user->permissions as $permission) {
                 $foundInRoles = false;
 
@@ -79,7 +86,6 @@ class UserInvitationController extends Controller
             DB::beginTransaction();
             $request->validate([
                 'email' => 'required|email',
-                'designation' => 'nullable',
             ]);
 
             $invitation = UserInvitation::where('email', $request->email)->first();
@@ -106,7 +112,6 @@ class UserInvitationController extends Controller
             // Create a new invitation
             $newInvitation = UserInvitation::create([
                 'email' => $request->email,
-                'designation' => $request->designation,
                 'token' => $token,
                 'invited_by' => auth()->id(),
                 'status' => 'pending',
@@ -194,38 +199,39 @@ class UserInvitationController extends Controller
 
     public function edit(UserInvitation $userInvitation)
     {
-        // Get the user's roles and permissions
-        $userRoles = $userInvitation->roles()->with('permissions')->get();
+        if ($userInvitation->status != 'accepted') {
+            // Get the user's roles and permissions
+            $userRoles = $userInvitation->roles()->with('permissions')->get();
 
-        // Extract user's permissions into a flat array
-        $userPermissions = $userRoles->flatMap(function ($userRole) {
-            return $userRole->permissions;
-        })->pluck('id')->toArray();
+            // Extract user's permissions into a flat array
+            $userPermissions = $userRoles->flatMap(function ($userRole) {
+                return $userRole->permissions;
+            })->pluck('id')->toArray();
 
-        // Get permissions associated with the user in model_has_permissions
-        $modelHasPermissions = $userInvitation->permissions->pluck('id')->toArray();
+            // Get permissions associated with the user in model_has_permissions
+            $modelHasPermissions = $userInvitation->permissions->pluck('id')->toArray();
 
-        // Exclude direct permissions that exist in user's roles
-        $userPermissions = array_diff($userPermissions, $modelHasPermissions);
+            // Exclude direct permissions that exist in user's roles
+            $userPermissions = array_diff($userPermissions, $modelHasPermissions);
 
-        // Get all permissions from the roles
-        $allPermissions = $userRoles->flatMap(function ($userRole) {
-            return $userRole->permissions;
-        })->pluck('id')->toArray();
+            // Get all permissions from the roles
+            $allPermissions = $userRoles->flatMap(function ($userRole) {
+                return $userRole->permissions;
+            })->pluck('id')->toArray();
 
-        // Include direct permissions if they don't exist in user's roles
-        $userPermissions = array_merge($userPermissions, array_diff($modelHasPermissions, $allPermissions));
+            // Include direct permissions if they don't exist in user's roles
+            $userPermissions = array_merge($userPermissions, array_diff($modelHasPermissions, $allPermissions));
 
-        // Get user's roles for reference
-        $roles = Role::with('permissions')->get();
+            // Get user's roles for reference
+            $roles = Role::with('permissions')->get();
 
-        return Inertia::render('Admin/UserInvitations/Edit', [
-            'user' => $userInvitation,
-            'userRoles' => $userRoles,
-            'roles' => $roles,
-            'userPermissions' => $userPermissions,
-            'designation' => ['name' => $userInvitation->designation],
-        ]);
+            return Inertia::render('Admin/UserInvitations/Edit', [
+                'user' => $userInvitation,
+                'userRoles' => $userRoles,
+                'roles' => $roles,
+                'userPermissions' => $userPermissions,
+            ]);
+        }
     }
 
     public function update(Request $request, UserInvitation $userInvitation)
@@ -235,14 +241,15 @@ class UserInvitationController extends Controller
 
             $request->validate([
                 'email' => 'required|email',
-                'designation' => 'nullable',
-
             ]);
+
+            // Set expiration time (adjust the hours as needed)
+            $expiresAt = Carbon::now()->addHours(48); // Example: expiration after 48 hours
 
             $userInvitation->update([
                 'email' => $request->email,
-                'designation' => $request->designation,
-                // Add other fields as needed
+                'status' => 'pending',
+                'expires_at' => $expiresAt,
             ]);
 
             // Existing user check
@@ -300,6 +307,7 @@ class UserInvitationController extends Controller
             // Send invitation email
             Mail::to($request->email)->send(new UserInvitationEmail($userInvitation));
 
+
             // Commit the transaction if everything is successful
             DB::commit();
 
@@ -326,6 +334,27 @@ class UserInvitationController extends Controller
 
     public function destroy(UserInvitation $userInvitation)
     {
-        //
+        if ($userInvitation->status != 'accepted') {
+            // Delete the userInvitation
+            $userInvitation->delete();
+
+            // Redirect to the userInvitation index page with a success message
+            return redirect()->route('admin.user-invitations.index')->with('flash.banner', 'Invitation deleted successfully!');
+        }
+    }
+
+
+    public function resend(UserInvitation $userInvitation)
+    {
+        // Set expiration time (adjust the hours as needed)
+        $expiresAt = Carbon::now()->addHours(48); // Example: expiration after 48 hours
+
+        $userInvitation->update([
+            'status' => 'pending',
+            'expires_at' => $expiresAt,
+        ]);
+        // Send invitation email
+        Mail::to($userInvitation->email)->send(new UserInvitationEmail($userInvitation));
+        return redirect()->route('admin.user-invitations.index')->with('flash.banner', 'Invitation resent successfully.')->with('flash.bannerStyle', 'success');
     }
 }

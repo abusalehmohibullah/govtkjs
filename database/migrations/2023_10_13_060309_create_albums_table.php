@@ -21,8 +21,8 @@ return new class extends Migration
             $table->timestamps();
             $table->unsignedTinyInteger('status')->default(1);
                 
-            $table->foreign('created_by')->references('id')->on('users');
-            $table->foreign('updated_by')->references('id')->on('users');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
         });
     }
 

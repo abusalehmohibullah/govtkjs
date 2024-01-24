@@ -10,7 +10,7 @@ import PrimaryPaginatorButton from '@/Components/PrimaryPaginatorButton.vue';
 import SecondaryPaginatorButton from '@/Components/SecondaryPaginatorButton.vue';
 import PrimaryIconButton from '@/Components/PrimaryIconButton.vue';
 import DangerIconButton from '@/Components/DangerIconButton.vue';
-// import DeleteUserForm from '@/Pages/Admin/Users/Partials/DeleteUserForm.vue';
+import DeleteUserForm from '@/Pages/Users/Partials/DeleteUserForm.vue';
 
 
 const props = defineProps({
@@ -33,6 +33,7 @@ const toggleModal = (user) => {
         <template #thead>
             <tr>
                 <th class="py-2 px-4 border-b bg-slate-200">#</th>
+                <th class="py-2 px-4 border-b bg-slate-200">Photo</th>
                 <th class="py-2 px-4 border-b bg-slate-200">User</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Role</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Extra Ability</th>
@@ -45,6 +46,14 @@ const toggleModal = (user) => {
             <tr v-if="users.data.length > 0" v-for="(user, index) in users.data" :key="index" class="hover:bg-blue-100"
                 :class="user.status === 0 ? 'bg-slate-100' : ''">
                 <td class="py-2 px-4 border-b text-center">{{ (users.current_page - 1) * users.per_page + index + 1 }}</td>
+                <td class="py-2 px-4 border-b flex items-center justify-center">
+                    <div v-if="user.profile_photo_url != ''"><img :src="user.profile_photo_url" class="d-block h-24 w-20" alt="..."></div>
+                    <div v-else class="h-24 w-20 flex justify-center items-center flex-col">
+                        <div>No</div>
+                        <div>Photo</div>
+                        <div>Found</div>
+                    </div>
+                </td>
                 <td class="py-2 px-4 border-b">
                     <div>{{ user.name }}</div>
                     <div>{{ user.email }}</div>
@@ -80,16 +89,6 @@ const toggleModal = (user) => {
 
                 <td class="py-2 px-4 border-b">
                     <div class="flex justify-center">
-                        <div class="form-check form-switch relative">
-                            <input class="form-check-input checked:bg-auto checked:bg-right" type="checkbox" role="switch"
-                                :id="'switch-' + (index + 1)">
-
-                            <!-- <label class="form-check-label" for="flexSwitchCheckDefault">SHOW</label> -->
-                            <div class="absolute top-[14px] left-0">
-                                <label class="form-check-label text-[8px] select-none"
-                                    :for="'switch-' + (index + 1)"><small>SHOWED</small></label>
-                            </div>
-                        </div>
                         <Link :href="route('admin.users.edit', user.id)">
                         <PrimaryIconButton>
                             <i class="fas fa-pen"></i>

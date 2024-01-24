@@ -1,6 +1,6 @@
 @component('mail::message')
 
-{{ __('You have been invited to join') . config(' app.name'). ($invitation->designation ? __(' as :designation!', ['designation' => $invitation->designation]) : '') }}
+{{ __('You have been invited to join to the School Management System of Goverment Rajoir Gopalganj KJS Pilot Model Institution and College.') }}
 
 
 {{ __('You may accept this invitation by clicking the button below:') }}

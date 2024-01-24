@@ -21,6 +21,7 @@ const { classroom } = defineProps(['classroom']);
 const form = useForm({
     classroom_id: classroom.id,
     grade: classroom.grade.name,
+    session: '',
     roll_no: '',
     registration_no: '',
     unique_id: '',
@@ -50,20 +51,97 @@ const form = useForm({
     photo: null,
 });
 
+
+const currentYear = new Date().getFullYear();
+
+// Generate sessions with single years
+const singleYearSessions = Array.from(
+    { length: 5 },
+    (_, index) => ({ id: index + 1, name: (currentYear - 2 + index).toString() })
+);
+
+// Generate sessions with two-year combinations
+const twoYearSessions = Array.from(
+    { length: 5 },
+    (_, index) => ({
+        id: index, // Adjust the starting index based on the previous array length
+        name: `${currentYear - 3 + index}-${(currentYear - 2 + index).toString().slice(-2)}`,
+    })
+);
+
+
+const selectedSession = ref({ id: '', name: '' });
+
+if (classroom.grade.name < 11) {
+    const selectedSessionOption = singleYearSessions.find(session => session.name == currentYear);
+    if (selectedSessionOption) {
+        form.session = selectedSessionOption.name; 
+        selectedSession.value = { id: selectedSessionOption.id, name: selectedSessionOption.name };
+    } else {
+        selectedSession.value = { id: '', name: '' };
+    }
+} else {
+    const selectedSessionOption = twoYearSessions.find(session => session.name == `${currentYear}-${(currentYear + 1).toString().slice(-2)}`);
+    if (selectedSessionOption) {
+        form.session = selectedSessionOption.name; 
+        selectedSession.value = { id: selectedSessionOption.id, name: selectedSessionOption.name };
+    } else {
+        selectedSession.value = { id: '', name: '' };
+    }
+
+}
+
+
+watch(() => form.session, (newSession, oldSession) => {
+    if (classroom.grade.name < 11) {
+        const selectedSessionOption = singleYearSessions.find(session => session.name == newSession);
+        if (selectedSessionOption) {
+            selectedSession.value = { id: selectedSessionOption.id, name: selectedSessionOption.name };
+        } else {
+            selectedSession.value = { id: '', name: '' };
+        }
+    } else {
+        const selectedSessionOption = twoYearSessions.find(session => session.name == newSession);
+        if (selectedSessionOption) {
+            selectedSession.value = { id: selectedSessionOption.id, name: selectedSessionOption.name };
+        } else {
+            selectedSession.value = { id: '', name: '' };
+        }
+
+    }
+});
+
+const handleSessionSelected = (selectedLabel) => {
+    const selectedId = parseInt(selectedLabel); // Convert selected label to integer
+
+    if (classroom.grade.name < 11) {
+        const selectedSessionOption = singleYearSessions.find(session => session.id == selectedId);
+        if (selectedSessionOption) {
+            form.session = selectedSessionOption.name;
+        }
+    } else {
+        const selectedSessionOption = twoYearSessions.find(session => session.id == selectedId);
+        if (selectedSessionOption) {
+            form.session = selectedSessionOption.name; 
+        }
+    }
+
+};
+
 const gendersEn = [
     { id: 1, name: 'Male' },
     { id: 2, name: 'Female' },
     { id: 3, name: 'Others' }
 ];
 
-const selectedGenderEn = ref({id: '', name: ''});
+const selectedGenderEn = ref({ id: '', name: '' });
 
 watch(() => form.gender_en, (newGenderEn, oldGenderEn) => {
     const selectedGender = gendersEn.find(gender => gender.name === newGenderEn);
     if (selectedGender) {
         selectedGenderEn.value = { id: selectedGender.id, name: selectedGender.name };
     } else {
-        selectedGenderEn.value = {id: '', name: ''};
+        selectedGenderEn.value = { id: '', name: '' };
     }
 });
 
@@ -84,14 +162,14 @@ const religionsEn = [
 ];
 
 
-const selectedReligionEn = ref({id: '', name: ''});
+const selectedReligionEn = ref({ id: '', name: '' });
 
 watch(() => form.religion_en, (newReligionEn, oldReligionEn) => {
     const selectedReligion = religionsEn.find(religion => religion.name === newReligionEn);
     if (selectedReligion) {
         selectedReligionEn.value = { id: selectedReligion.id, name: selectedReligion.name };
     } else {
-        selectedReligionEn.value = {id: '', name: ''};
+        selectedReligionEn.value = { id: '', name: '' };
     }
 });
 
@@ -114,14 +192,14 @@ const disabilityStatusEn = [
 ];
 
 
-const selectedDisabilityStatusEn = ref({id: '', name: ''});
+const selectedDisabilityStatusEn = ref({ id: '', name: '' });
 
 watch(() => form.disability_status_en, (newDisabilityStatusEn, oldDisabilityStatusEn) => {
     const selectedDisabilityStatus = disabilityStatusEn.find(disabilityStatus => disabilityStatus.name === newDisabilityStatusEn);
     if (selectedDisabilityStatus) {
         selectedDisabilityStatusEn.value = { id: selectedDisabilityStatus.id, name: selectedDisabilityStatus.name };
     } else {
-        selectedDisabilityStatusEn.value = {id: '', name: ''};
+        selectedDisabilityStatusEn.value = { id: '', name: '' };
     }
 });
 
@@ -169,8 +247,6 @@ const handleReligionSelected = (selectedLabel) => {
         form.religion_bn = selectedBnReligion.name; // Set Bengali religion name
     }
 
-    console.log(form.religion_bn);
-    console.log(form.religion_en);
 };
 
 const handleDisabilityStatusSelected = (selectedLabel) => {
@@ -299,7 +375,7 @@ const createStudent = () => {
 
                 <!-- component -->
 
-         
+
                 <div class="w-full my-4">
                     <!-- Dynamic progress bar -->
                     <div class="w-full mx-auto">
@@ -315,17 +391,16 @@ const createStudent = () => {
                                         <template v-if="index == currentStep">
                                             <div
                                                 class="bg-white h-6 w-6 rounded-full shadow border flex items-center justify-center relative">
-                                                <div
-                                                class="h-3 w-3 rounded-full" 
-                                                :class="{ 'bg-indigo-700': !stepswitherrors.includes(index.toString()), 'bg-red-600 text-white': stepswitherrors.includes(index.toString()) }"> 
-                                            </div>
+                                                <div class="h-3 w-3 rounded-full"
+                                                    :class="{ 'bg-indigo-700': !stepswitherrors.includes(index.toString()), 'bg-red-600 text-white': stepswitherrors.includes(index.toString()) }">
+                                                </div>
                                             </div>
                                         </template>
 
                                         <!-- Checkmark icon for completed steps -->
                                         <template v-else-if="index < currentStep">
                                             <div @click="goToStep(index)"
-                                                class="h-6 w-6 rounded-full shadow flex items-center justify-center cursor-pointer" 
+                                                class="h-6 w-6 rounded-full shadow flex items-center justify-center cursor-pointer"
                                                 :class="{ 'bg-indigo-700': !stepswitherrors.includes(index.toString()), 'bg-red-600 text-white': stepswitherrors.includes(index.toString()) }">
                                                 <svg xmlns="http://www.w3.org/2000/svg"
                                                     class="icon icon-tabler icon-tabler-check" width="18" height="18"
@@ -340,8 +415,9 @@ const createStudent = () => {
                                         <!-- Number for the future steps -->
                                         <template v-else>
                                             <div @click="goToStep(index)"
-                                                class="flex justify-center items-center font-medium cursor-pointer rounded-full" 
-                                                :class="{'bg-red-600 text-white': stepswitherrors.includes(index.toString()) }">{{ index
+                                                class="flex justify-center items-center font-medium cursor-pointer rounded-full"
+                                                :class="{ 'bg-red-600 text-white': stepswitherrors.includes(index.toString()) }">
+                                                {{ index
                                                 }}</div>
                                         </template>
                                     </div>
@@ -360,6 +436,15 @@ const createStudent = () => {
                     <h3 class="mb-3">Step 1: Roll and IDs</h3>
                     <!-- Use the Text Input component for each form field -->
                     <div class="w-full flex gap-2">
+                        <div class="w-full">
+                            <InputLabel for="session" value="Session">
+                                <template #required>*</template>
+                            </InputLabel>
+                            <SelectInput :options="classroom.grade.name < 11 ? singleYearSessions : twoYearSessions"
+                                inputName="session" :fieldName="'name'" :valueField="'id'" :selectedOption="selectedSession"
+                                @option-selected="handleSessionSelected" class="mt-1 capitalize" />
+                        </div>
+
                         <div v-if="classroom.grade" class="w-full">
                             <InputLabel for="grade" value="Class">
                             </InputLabel>
@@ -601,8 +686,8 @@ const createStudent = () => {
                             <template #required>*</template>
                         </InputLabel>
                         <!-- {{ selectedGenderEn }} -->
-                        <SelectInput :options="gendersEn" inputName="gender_en" :fieldName="'name'" :valueField="'id'" :selectedOption="selectedGenderEn"
-                            @option-selected="handleGenderSelected" class="capitalize" />
+                        <SelectInput :options="gendersEn" inputName="gender_en" :fieldName="'name'" :valueField="'id'"
+                            :selectedOption="selectedGenderEn" @option-selected="handleGenderSelected" class="capitalize" />
                         <InputError :message="form.errors.gender_en" class="text-red-500" />
                     </div>
 
@@ -610,8 +695,9 @@ const createStudent = () => {
                         <InputLabel for="religion_en" value="Religion">
                             <template #required>*</template>
                         </InputLabel>
-                        <SelectInput :options="religionsEn" inputName="religion_en" :fieldName="'name'" :valueField="'id'" :selectedOption="selectedReligionEn"
-                            @option-selected="handleReligionSelected" class="capitalize" />
+                        <SelectInput :options="religionsEn" inputName="religion_en" :fieldName="'name'" :valueField="'id'"
+                            :selectedOption="selectedReligionEn" @option-selected="handleReligionSelected"
+                            class="capitalize" />
                         <InputError :message="form.errors.religion_en" class="text-red-500" />
                     </div>
 
@@ -619,8 +705,9 @@ const createStudent = () => {
                         <InputLabel for="disability_status_en" value="Disability Status">
                             <!-- <template #required>*</template> -->
                         </InputLabel>
-                        <SelectInput :options="disabilityStatusEn" inputName="disability_status_en" :fieldName="'name'" :selectedOption="selectedDisabilityStatusEn"
-                            :valueField="'id'" @option-selected="handleDisabilityStatusSelected" class="capitalize" />
+                        <SelectInput :options="disabilityStatusEn" inputName="disability_status_en" :fieldName="'name'"
+                            :selectedOption="selectedDisabilityStatusEn" :valueField="'id'"
+                            @option-selected="handleDisabilityStatusSelected" class="capitalize" />
                         <InputError :message="form.errors.disability_status_en" class="text-red-500" />
                     </div>
 
@@ -634,8 +721,8 @@ const createStudent = () => {
                         <div class="w-[240px] h-[300px] border shadow">
                             <img v-if="photoPreview" :src="photoPreview" alt="Photo Preview"
                                 class="object-cover w-[240px] h-[300px]" />
-                                <img v-else :src="'/assets/images/profile-preview.jpg'" alt="Photo Preview"
-                            class="object-contain w-[240px] h-[300px]" />
+                            <img v-else :src="'/assets/images/profile-preview.jpg'" alt="Photo Preview"
+                                class="object-contain w-[240px] h-[300px]" />
                         </div>
                     </div>
                     <div class="col-span-6 sm:col-span-5">

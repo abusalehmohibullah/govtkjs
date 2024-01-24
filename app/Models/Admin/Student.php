@@ -11,11 +11,13 @@ class Student extends Model
     use HasFactory;
 
     protected $primaryKey = 'student_id';
+    protected $keyType = 'string';
     
     protected $fillable = [
         // 'student_id' => 'required|unique:students',
         'unique_id',
         'roll_no',
+        'session',
         'registration_no',
         'student_name_en',
         'student_name_bn',

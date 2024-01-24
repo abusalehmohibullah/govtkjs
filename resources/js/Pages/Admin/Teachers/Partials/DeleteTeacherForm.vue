@@ -61,6 +61,13 @@ const deleteTeacher = async () => {
             Are you sure you want to delete this class?
 
             <div class="bg-red-100 w-full mt-2 rounded line-clamp-3 box-content">
+                <div v-if="teacher.user.profile_photo_url != ''"><img :src="teacher.user.profile_photo_url" class="d-block ml-2 mt-2 h-24 w-20" alt="...">
+                </div>
+                <div v-else class="h-24 w-20 flex justify-center items-center flex-col">
+                    <div>No</div>
+                    <div>Photo</div>
+                    <div>Found</div>
+                </div>
                 <span class="m-2 line-clamp-3 box-content">
                     {{ props.teacher.user.name }}
                 </span>

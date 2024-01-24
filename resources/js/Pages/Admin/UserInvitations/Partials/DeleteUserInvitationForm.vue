@@ -8,7 +8,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import DangerIconButton from '@/Components/DangerIconButton.vue';
 
 const props = defineProps({
-    grade: Array,
+    user: Array,
     show: {
         type: Boolean,
         default: false,
@@ -21,18 +21,18 @@ const close = () => {
 };
 
 
-const confirmingGradeDeletion = ref(false);
+const confirmingUserDeletion = ref(false);
 const form = useForm({});
 
 watch(() => {
-    confirmingGradeDeletion.value = props.show;
+    confirmingUserDeletion.value = props.show;
 });
 
-const deleteGrade = async () => {
+const deleteUser = async () => {
     try {
-        // Send a DELETE request to delete the grade
-        form.delete(route('admin.grades.destroy', props.grade.id), {
-            errorBag: 'deleteGrade',
+        // Send a DELETE request to delete the user
+        form.delete(route('admin.user-invitations.destroy', props.user.id), {
+            errorBag: 'deleteUser',
         });
 
         setTimeout(() => {
@@ -41,7 +41,7 @@ const deleteGrade = async () => {
 
     } catch (error) {
         // Handle any errors that occur during the deletion
-        console.error('Error deleting grade:', error);
+        console.error('Error deleting user:', error);
     }
 };
 
@@ -50,19 +50,19 @@ const deleteGrade = async () => {
 
 
 <template>
-    <!-- Delete Grade Confirmation Modal -->
-    <ConfirmationModal :show="confirmingGradeDeletion" :max-width="maxWidth" :closeable="closeable" @close="close">
+    <!-- Delete User Confirmation Modal -->
+    <ConfirmationModal :show="confirmingUserDeletion" :max-width="maxWidth" :closeable="closeable" @close="close">
 
         <template #title>
             Delete Class
         </template>
 
         <template #content>
-            Are you sure you want to delete this class?
+            Are you sure you want to delete this Invitation?
 
             <div class="bg-red-100 w-full mt-2 rounded line-clamp-3 box-content">
                 <span class="m-2 line-clamp-3 box-content">
-                    {{ props.grade.name }}
+                    {{ props.user.email }}
                 </span>
             </div>
         </template>
@@ -79,7 +79,7 @@ const deleteGrade = async () => {
                 </SecondaryButton>
 
                 <DangerButton class="ml-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing"
-                    @click="deleteGrade">
+                    @click="deleteUser">
                     Delete
                 </DangerButton>
             </div>

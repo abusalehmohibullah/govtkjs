@@ -16,4 +16,5 @@ class InvitedUserPermission extends Model
     
     public $timestamps = false;
 
+
 }

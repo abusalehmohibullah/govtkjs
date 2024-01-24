@@ -214,8 +214,6 @@ class ClassroomController extends Controller
 
     public function destroy(Classroom $classroom)
     {
-        // Delete the attachment file if it exists
-
         // Delete the classroom
         $classroom->delete();
 

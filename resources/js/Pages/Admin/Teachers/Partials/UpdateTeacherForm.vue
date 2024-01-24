@@ -152,7 +152,7 @@ const updateTeacher = () => {
         <!-- Use the Form component to wrap your form -->
         <FormSection @submitted="updateTeacher">
             <template #title>
-                Add Teachers
+                Edit Teachers
             </template>
 
             <template #description>

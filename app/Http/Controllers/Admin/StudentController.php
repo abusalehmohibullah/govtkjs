@@ -30,13 +30,15 @@ class StudentController extends Controller
             }
         } else if ($request->has('selected_classroom')) {
             // Retrieve students list based on selected classroom
-            $selectedClassroom = $request->input('selected_classroom');
-            $students = Student::where('classroom_id', $selectedClassroom)
+            $classrooms = Classroom::with(['grade', 'section', 'group'])->orderBy('name')->where('status', 1)->get();
+            $selectedClassroom = Classroom::with(['grade', 'section', 'group'])->where('id', $request->input('selected_classroom'))->first();
+            $students = Student::where('classroom_id', $selectedClassroom->id)
                 ->orderBy('roll_no')
                 ->with(['createdBy', 'updatedBy'])
                 ->paginate(10);
 
             return Inertia::render('Admin/Students/Index', [
+                'classrooms' => $classrooms,
                 'students' => $students,
                 'selected_classroom' => $selectedClassroom,
             ]);
@@ -69,8 +71,9 @@ class StudentController extends Controller
         // Define validation rules
         $validationRules = [
             // 'student_id' => 'required|unique:students',
-            // 'roll_no' => 'required',
+            'session' => 'required',
             'unique_id' => 'nullable',
+            'roll_no' => 'nullable',
             'registration_no' => 'nullable',
             'student_name_en' => 'required',
             'student_name_bn' => 'required',
@@ -103,7 +106,7 @@ class StudentController extends Controller
         $customMessages = [
             // 'unique_id.required' => 'Please provide a student ID.',
             // 'unique_id.unique' => 'This unique ID is already in use.',
-            // 'roll_no.required' => 'Please provide a roll no.',
+            'session.required' => 'Please select a session.',
             'student_name_en.required' => 'Please provide the student name in English.',
             'student_name_bn.required' => 'Please provide the student name in Bengali.',
             'father_name_en.required' => 'Please provide the father name in English.',
@@ -138,10 +141,9 @@ class StudentController extends Controller
         ];
 
 
-
         // Validate the incoming request data
         $validatedData = $request->validate($validationRules, $customMessages);
-        $studentID =  $this->generateStudentID($request->grade);
+        $studentID =  $this->generateStudentID($request->grade, $request->input('session'));
         // dd($studentID);
         // Create a new model and populate it with validated data
         $student = new Student;
@@ -218,10 +220,7 @@ class StudentController extends Controller
      */
     public function edit(Request $request, Student $student)
     {
-        // dd($student);
-        // $selectedClassroom = $request->input('selected_classroom');
-        // $classroom = Classroom::where('id', $selectedClassroom)
-        //     ->with(['grade', 'section', 'group'])->first();
+
         $classrooms = Classroom::where('status', 1)->orderBy('name')->get();
 
         // dd($classrooms);
@@ -240,8 +239,9 @@ class StudentController extends Controller
         // Define validation rules
         $validationRules = [
             // 'student_id' => 'required|unique:students',
-            // 'roll_no' => 'required',
+            'session' => 'required',
             'unique_id' => 'nullable',
+            'roll_no' => 'nullable',
             'registration_no' => 'nullable',
             'student_name_en' => 'required',
             'student_name_bn' => 'required',
@@ -274,7 +274,7 @@ class StudentController extends Controller
         $customMessages = [
             // 'unique_id.required' => 'Please provide a student ID.',
             // 'unique_id.unique' => 'This unique ID is already in use.',
-            // 'roll_no.required' => 'Please provide a roll no.',
+            'session.required' => 'Please select a session.',
             'student_name_en.required' => 'Please provide the student name in English.',
             'student_name_bn.required' => 'Please provide the student name in Bengali.',
             'father_name_en.required' => 'Please provide the father name in English.',
@@ -311,14 +311,13 @@ class StudentController extends Controller
 
         // Validate the incoming request data
         $validatedData = $request->validate($validationRules, $customMessages);
-
         if ($request->classroom_id != $student->classroom_id) {
             $oldClass = Classroom::where('id', $student->classroom_id)
-                ->with(['grade'])->first();
+            ->with(['grade'])->first();
             $newClass = Classroom::where('id', $request->classroom_id)
                 ->with(['grade'])->first();
             if ($oldClass->grade->name != $newClass->grade->name) {
-                $studentID =  $this->generateStudentID($newClass->grade->name);
+                $studentID =  $this->generateStudentID($newClass->grade->name, $request->input('session'));
                 $student->student_id = $studentID;
             }
         }
@@ -326,7 +325,9 @@ class StudentController extends Controller
         // Create a new model and populate it with validated data
         // $student = new Student;
         $oldPhoto = $student->photo;
+
         $student->update($validatedData);
+
         $student->photo = $oldPhoto;
         $student->updated_by = auth()->id();
 
@@ -402,25 +403,49 @@ class StudentController extends Controller
         return redirect()->route('admin.students.index', ['selected_classroom' => $student->classroom_id])->with('flash.banner', 'Student deleted successfully!');
     }
 
-    private function generateStudentID($grade)
+    private function generateStudentID($grade, $session)
     {
         // Determine the starting year based on the grade
-        $currentYear = date('y');
-        $startYear = $currentYear - ($grade - 6); // Assuming the first class is grade 6
+        if ($grade < 11) {
+            $lastTwoDigits = substr($session, -2);
 
-        // Get the last assigned ID for the given starting year
-        $lastID = Student::where('student_id', 'like', "$startYear%")
-            ->orderBy('student_id', 'desc')
-            ->value('student_id');
+            $startYear = $lastTwoDigits - ($grade - 6); // Assuming the first class is grade 6
 
-        // Increment the last ID or start with 0001 if no ID found for the year
-        if ($lastID) {
-            $sequentialPart = intval(substr($lastID, -4)) + 1;
-            $sequentialPart = str_pad($sequentialPart, 4, '0', STR_PAD_LEFT);
+            // Get the last assigned ID for the given starting year
+            $lastID = Student::where('student_id', 'like', "S$startYear%")
+                ->orderBy('student_id', 'desc')
+                ->value('student_id');
+
+            // Increment the last ID or start with 0001 if no ID found for the year
+            if ($lastID) {
+                $sequentialPart = intval(substr($lastID, -4)) + 1;
+                $sequentialPart = str_pad($sequentialPart, 4, '0', STR_PAD_LEFT);
+            } else {
+                $sequentialPart = '0001';
+            }
+
+            return "S$startYear$sequentialPart"; // Construct the new student ID
+
         } else {
-            $sequentialPart = '0001';
+            $lastTwoDigits = substr($session, -2) - 1;
+
+            $startYear = $lastTwoDigits - ($grade - 11); // Assuming the first class is grade 6
+
+            // Get the last assigned ID for the given starting year
+            $lastID = Student::where('student_id', 'like', "C$startYear%")
+                ->orderBy('student_id', 'desc')
+                ->value('student_id');
+                // Increment the last ID or start with 0001 if no ID found for the year
+                if ($lastID) {
+                    $sequentialPart = intval(substr($lastID, -4)) + 1;
+                    $sequentialPart = str_pad($sequentialPart, 4, '0', STR_PAD_LEFT);
+            } else {
+                $sequentialPart = '0001';
+            }
+
+            return "C$startYear$sequentialPart"; // Construct the new student ID
         }
 
-        return "$startYear$sequentialPart"; // Construct the new student ID
+        
     }
 }
