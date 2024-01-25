@@ -89,8 +89,8 @@ if (props.selectedOption && props.selectedOption[props.fieldName] !== '') {
             <div v-for="(option, index) in localOptions" :key="index" @click="handleOptionClick(option)">
                 <div class="option border-gray-700 focus:border-indigo-500 focus:ring-indigo-500 hover:bg-indigo-200 hover:text-indigo-900 rounded-md shadow-sm"
                     :class="{ 'bg-indigo-100': isSelected(option) }">
-                    <input type="radio" class="radio" :id="option.id" :name="inputName" :value="option[valueField]" />
-                    <label :for="option.id">{{ option[fieldName] }}</label>
+                    <input type="radio" class="radio" :id="inputName + '-' +option.id" :name="inputName" :value="option[valueField]" />
+                    <label :for="inputName + '-' +option.id">{{ option[fieldName] }}</label>
                 </div>
             </div>
         </div>

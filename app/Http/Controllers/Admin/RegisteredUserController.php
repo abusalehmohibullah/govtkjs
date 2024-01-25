@@ -69,11 +69,10 @@ class RegisteredUserController extends Controller
     ): RegisterResponse {
         event(new Registered($user = $creator->create($request->all(), $token)));
 
-        $emailVerifiedAt = Carbon::now();
-        $user->update(['email_verified_at' => $emailVerifiedAt]);
-        
         $this->guard->login($user);
         
+        $user->markEmailAsVerified();
+
         // Find and delete the invitation record based on the email
         $invitation = UserInvitation::with(['roles', 'permissions'])->where('email', $request->input('email'))->first();
 
@@ -83,7 +82,7 @@ class RegisteredUserController extends Controller
 
         $user->assignRole($invitationRoles);
         $user->givePermissionTo($invitationPermissions);
-        
+
         $invitation->update(['status' => 'accepted']);
 
         return app(RegisterResponse::class);

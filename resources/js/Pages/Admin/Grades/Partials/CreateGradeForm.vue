@@ -70,7 +70,7 @@ const createGrade = () => {
                         <template #required>*</template>
                     </InputLabel>
                     <TextInput id="name" v-model="form.name" required class="mt-1 block w-full"
-                        :class="{ 'border-red-500 focus:border-red-500': form.errors.name }" type="number" name="name" />
+                        :class="{ 'border-red-500 focus:border-red-500': form.errors.name }" type="text" name="name" />
                     <InputError :message="form.errors.name" class="text-red-500" />
                 </div>
 

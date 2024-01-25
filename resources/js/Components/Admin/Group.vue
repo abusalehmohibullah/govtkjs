@@ -68,9 +68,9 @@ onMounted(() => {
             <!-- Selected Items: -->
             <div class="flex flex-wrap gap-2">
                 <div v-if="selectedItems.length > 0" v-for="selectedItem in selectedItems" :key="selectedItem"
-                    class="bg-indigo-700 text-white rounded-full px-2 py-1 capitalize flex gap-2">
+                    class="bg-indigo-700 text-white whitespace-nowrap rounded-full px-2 py-1 capitalize flex gap-2">
                     {{ getItemName(selectedItem) }}
-                    <label :for="'item-' + selectedItem">
+                    <label :for="'group-' + selectedItem">
                         <i class="bi bi-x-lg hover:font-extrabold cursor-pointer text-gray-300 hover:text-white"></i>
                     </label>
                 </div>
@@ -79,16 +79,16 @@ onMounted(() => {
         </div>
         <div>
             <!-- <hr class="m-0 p-0"> -->
-            <div class="flex gap-5 mt-2">
-                <label class="capitalize flex items-center gap-1 cursor-pointer">
+            <div class="flex flex-wrap gap-5 mt-2">
+                <label class="capitalize flex items-center gap-1 cursor-pointer whitespace-nowrap">
                     <input type="checkbox" :checked="selectedItems.length === allItemIds.length" @change="toggleSelectAll"
                         class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 cursor-pointer">
                     Select All
                 </label>
                 <div v-for="item in data" :key="item.id" class="py-1">
-                    <label class="flex items-center gap-1">
-                        <input type="checkbox" :id="'item-' + item.id" :checked="selectedItems.includes(item.id)" @change="toggleSelection(item)"
-                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
+                    <label class="flex items-center gap-1 cursor-pointer whitespace-nowrap">
+                        <input type="checkbox" :id="'group-' + item.id" :checked="selectedItems.includes(item.id)" @change="toggleSelection(item)"
+                            class="rounded cursor-pointer border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
                         {{ item.name }}
                     </label>
                 </div>

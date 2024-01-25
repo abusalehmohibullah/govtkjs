@@ -74,10 +74,10 @@ const share = (notice) => {
     <!-- Notice Board Frame -->
     <div class="border-8 sm:border-[15px] border-[#7c3511] drop-shadow-md my-5">
         <div class="border-4 border-[#4d2410] p-4 shadow-inner">
-            <h1 class="font-semibold mb-4 text-center">Notice Board</h1>
+            <h1 class="text-2xl md:text-md font-semibold mb-4 text-center">Notice Board</h1>
             <Link :href="route('notices.index')" class="absolute top-4 right-3">
             <SecondaryButton>
-                All Notices
+                See all
             </SecondaryButton>
             </Link>
             <!-- Notice items -->

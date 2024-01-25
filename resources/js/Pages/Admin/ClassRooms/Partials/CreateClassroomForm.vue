@@ -36,7 +36,7 @@ watch(() => form.building_id, (newValue, oldValue) => {
     // Update the rooms based on the new building selection
     const selectedBuilding = props.buildings.find(building => building.id == newValue);
     rooms.value = selectedBuilding ? selectedBuilding.rooms : [];
-
+    console.log(rooms.value);
     roomsList.value = rooms.value.map(({ id, name, room_no }) => ({
         id,
         name: `${room_no} (${name})`
@@ -45,7 +45,6 @@ watch(() => form.building_id, (newValue, oldValue) => {
 });
 
 const handleRoomChange = (selectedLabel) => {
-    console.log('Room changed:', selectedLabel);
     form.room_id = selectedLabel;
 };
 
@@ -68,12 +67,10 @@ watch(() => form.grade_id, (newValue, oldValue) => {
 });
 
 const handleSectionChange = (selectedLabel) => {
-    console.log('Section changed:', selectedLabel);
     form.section_id = selectedLabel;
 };
 
 const handleGroupChange = (selectedLabel) => {
-    console.log('Group changed:', selectedLabel);
     form.group_id = selectedLabel;
 };
 
@@ -108,7 +105,7 @@ const createClassroom = () => {
                     <InputLabel for="building" value="Building Name">
                         <template #required>*</template>
                     </InputLabel>
-                    <SelectInput :options="buildings" inputName="building" :fieldName="'name'" :valueField="'id'"
+                    <SelectInput :options="buildings" inputName="building_id" :fieldName="'name'" :valueField="'id'"
                         v-model="form.building_id" @option-selected="handleBuildingChange" class="capitalize" />
                     <InputError :message="form.errors.building_id" class="text-red-500" />
                 </div>
@@ -119,7 +116,7 @@ const createClassroom = () => {
                         <template #required>*</template>
                     </InputLabel>
                     <!-- <dd>{{ reactiveOptions }}</dd> -->
-                    <SelectInput :options="roomsList" inputName="room" :fieldName="'name'" :valueField="'id'"
+                    <SelectInput :options="roomsList" inputName="room_id" :fieldName="'name'" :valueField="'id'"
                         v-model="form.room_id" @option-selected="handleRoomChange" class="capitalize" />
                     <InputError :message="form.errors.room_id" class="text-red-500" />
                 </div>
@@ -130,7 +127,7 @@ const createClassroom = () => {
                     <InputLabel for="grade" value="Grade Name">
                         <template #required>*</template>
                     </InputLabel>
-                    <SelectInput :options="grades" inputName="grade" :fieldName="'name'" :valueField="'id'"
+                    <SelectInput :options="grades" inputName="grade_id" :fieldName="'name'" :valueField="'id'"
                         v-model="form.grade_id" @option-selected="handleGradeChange" class="capitalize" />
                     <InputError :message="form.errors.grade_id" class="text-red-500" />
                 </div>
@@ -141,7 +138,7 @@ const createClassroom = () => {
                         <template #required>*</template>
                     </InputLabel>
                     <!-- <dd>{{ reactiveOptions }}</dd> -->
-                    <SelectInput :options="sections" inputName="section" :fieldName="'name'" :valueField="'id'"
+                    <SelectInput :options="sections" inputName="section_id" :fieldName="'name'" :valueField="'id'"
                         v-model="form.section_id" @option-selected="handleSectionChange" class="capitalize" />
                     <InputError :message="form.errors.section_id" class="text-red-500" />
                 </div>
@@ -152,7 +149,7 @@ const createClassroom = () => {
                         <template #required>*</template>
                     </InputLabel>
                     <!-- <dd>{{ reactiveOptions }}</dd> -->
-                    <SelectInput :options="groups" inputName="group" :fieldName="'name'" :valueField="'id'"
+                    <SelectInput :options="groups" inputName="group_id" :fieldName="'name'" :valueField="'id'"
                         v-model="form.group_id" @option-selected="handleGroupChange" class="capitalize" />
                     <InputError :message="form.errors.group_id" class="text-red-500" />
                 </div>

@@ -132,7 +132,7 @@ const updateClassroom = () => {
                     <InputLabel for="building" value="Building Name">
                         <template #required>*</template>
                     </InputLabel>
-                    <SelectInput :options="buildings" inputName="building" :fieldName="'name'" :valueField="'id'"
+                    <SelectInput :options="buildings" inputName="building_id" :fieldName="'name'" :valueField="'id'"
                         v-model="form.building_id" :selectedOption="selectedBuilding"
                         @option-selected="handleBuildingChange" class="capitalize" />
                     <InputError :message="form.errors.building_id" class="text-red-500" />
@@ -144,7 +144,7 @@ const updateClassroom = () => {
                         <template #required>*</template>
                     </InputLabel>
                     <!-- <dd>{{ reactiveOptions }}</dd> -->
-                    <SelectInput :options="roomsList" inputName="room" :fieldName="'name'" :valueField="'id'"
+                    <SelectInput :options="roomsList" inputName="room_id" :fieldName="'name'" :valueField="'id'"
                         v-model="form.room_id" :selectedOption="selectedRoom" @option-selected="handleRoomChange"
                         class="capitalize" />
                     <InputError :message="form.errors.room_id" class="text-red-500" />
@@ -156,7 +156,7 @@ const updateClassroom = () => {
                     <InputLabel for="grade" value="Grade Name">
                         <template #required>*</template>
                     </InputLabel>
-                    <SelectInput :options="grades" inputName="grade" :fieldName="'name'" :valueField="'id'"
+                    <SelectInput :options="grades" inputName="grade_id" :fieldName="'name'" :valueField="'id'"
                         v-model="form.grade_id" :selectedOption="selectedGrade" @option-selected="handleGradeChange"
                         class="capitalize" />
                     <InputError :message="form.errors.grade_id" class="text-red-500" />
@@ -168,7 +168,7 @@ const updateClassroom = () => {
                         <template #required>*</template>
                     </InputLabel>
                     <!-- <dd>{{ reactiveOptions }}</dd> -->
-                    <SelectInput :options="sections" inputName="section" :fieldName="'name'" :valueField="'id'"
+                    <SelectInput :options="sections" inputName="section_id" :fieldName="'name'" :valueField="'id'"
                         v-model="form.section_id" :selectedOption="selectedSection" @option-selected="handleSectionChange"
                         class="capitalize" />
                     <InputError :message="form.errors.section_id" class="text-red-500" />
@@ -180,7 +180,7 @@ const updateClassroom = () => {
                         <template #required>*</template>
                     </InputLabel>
                     <!-- <dd>{{ reactiveOptions }}</dd> -->
-                    <SelectInput :options="groups" inputName="group" :fieldName="'name'" :valueField="'id'"
+                    <SelectInput :options="groups" inputName="group_id" :fieldName="'name'" :valueField="'id'"
                         v-model="form.group_id" :selectedOption="selectedGroup" @option-selected="handleGroupChange"
                         class="capitalize" />
                     <InputError :message="form.errors.group_id" class="text-red-500" />

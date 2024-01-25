@@ -170,7 +170,7 @@ const hasRolesAndPermissions = computed(() => page.props)
                 width="100%" content-classes="relative z-50 bg-white">
                 <template #trigger>
                     <span class="flex sidebar-item"
-                        :class="(route().current('admin.buildings.*')) || (route().current('admin.rooms.*')) || (route().current('admin.sections.*')) || (route().current('admin.grades.*')) || (route().current('admin.subjects.*')) || (route().current('admin.groups.*')) ? 'active' : ''">
+                        :class="(route().current('admin.branches.*')) || (route().current('admin.buildings.*')) || (route().current('admin.rooms.*')) || (route().current('admin.sections.*')) || (route().current('admin.grades.*')) || (route().current('admin.subjects.*')) || (route().current('admin.groups.*')) || (route().current('admin.classrooms.*')) ? 'active' : ''">
                         <button
                             class="inline-flex justify-between items-center sidebar-link w-full px-1 py-2 border border-transparent text-sm leading-4 font-medium hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150">
                             <div class="inline-flex items-center">
