@@ -11,6 +11,7 @@ import CreatedUpdatedBy from '@/Components/Admin/CreatedUpdatedBy.vue';
 import ToggleStatus from '@/Components/Admin/ToggleStatus.vue';
 import PrimaryPaginatorButton from '@/Components/PrimaryPaginatorButton.vue';
 import SecondaryPaginatorButton from '@/Components/SecondaryPaginatorButton.vue';
+import SecondaryIconButton from '@/Components/SecondaryIconButton.vue';
 import PrimaryIconButton from '@/Components/PrimaryIconButton.vue';
 import DangerIconButton from '@/Components/DangerIconButton.vue';
 import DeleteStudentForm from '@/Pages/Admin/Students/Partials/DeleteStudentForm.vue';
@@ -106,15 +107,15 @@ const handleClassroomSelected = async (selectedLabel) => {
                 <td class="py-2 px-4 border-b text-center">{{ student.registration_no }}</td>
                 <td class="py-2 px-4 border-b">
                     <div>{{ student.student_name_en }}</div>
-                    <div>{{ student.student_name_bn }}</div>
+                    <div class="font-bengali">{{ student.student_name_bn }}</div>
                 </td>
                 <td class="py-2 px-4 border-b">
                     <div>{{ student.father_name_en }}</div>
-                    <div>{{ student.father_name_bn }}</div>
+                    <div class="font-bengali">{{ student.father_name_bn }}</div>
                 </td>
                 <td class="py-2 px-4 border-b">
                     <div>{{ student.mother_name_en }}</div>
-                    <div>{{ student.mother_name_bn }}</div>
+                    <div class="font-bengali">{{ student.mother_name_bn }}</div>
                 </td>
                 <td class="py-2 px-4 border-b flex items-center justify-center">
                     <div v-if="student.photo != ''"><img :src="'/storage/' + student.photo" class="d-block h-24 w-20"
@@ -133,6 +134,13 @@ const handleClassroomSelected = async (selectedLabel) => {
                         <!-- <ToggleStatus :toggle="student" :toggleType="`students`" /> -->
 
                         <Link
+                            :href="route('admin.students.show', { student: student.student_id, selected_classroom: selected_classroom.id })">
+                        <SecondaryIconButton>
+                            <i class="fas fa-eye"></i>
+                        </SecondaryIconButton>
+                        </Link>
+
+                        <Link class="ml-1"
                             :href="route('admin.students.edit', { student: student.student_id, selected_classroom: selected_classroom.id })">
                         <PrimaryIconButton>
                             <i class="fas fa-pen"></i>
@@ -195,4 +203,8 @@ const handleClassroomSelected = async (selectedLabel) => {
 </template>
 
 
-
+<style>
+.font-bengali {
+    font-family: 'Noto Serif Bengali', serif;
+}
+</style>

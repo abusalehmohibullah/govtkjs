@@ -212,7 +212,11 @@ class StudentController extends Controller
      */
     public function show(Request $request, Student $student)
     {
-        //
+        $classroom = Classroom::where('id', $student->classroom_id)->with(['grade', 'section', 'group'])->first();
+        return Inertia::render('Admin/Students/Show', [
+            'classroom' => $classroom,
+            'student' => $student,
+        ]);
     }
 
     /**
@@ -313,7 +317,7 @@ class StudentController extends Controller
         $validatedData = $request->validate($validationRules, $customMessages);
         if ($request->classroom_id != $student->classroom_id) {
             $oldClass = Classroom::where('id', $student->classroom_id)
-            ->with(['grade'])->first();
+                ->with(['grade'])->first();
             $newClass = Classroom::where('id', $request->classroom_id)
                 ->with(['grade'])->first();
             if ($oldClass->grade->name != $newClass->grade->name) {
@@ -435,17 +439,15 @@ class StudentController extends Controller
             $lastID = Student::where('student_id', 'like', "C$startYear%")
                 ->orderBy('student_id', 'desc')
                 ->value('student_id');
-                // Increment the last ID or start with 0001 if no ID found for the year
-                if ($lastID) {
-                    $sequentialPart = intval(substr($lastID, -4)) + 1;
-                    $sequentialPart = str_pad($sequentialPart, 4, '0', STR_PAD_LEFT);
+            // Increment the last ID or start with 0001 if no ID found for the year
+            if ($lastID) {
+                $sequentialPart = intval(substr($lastID, -4)) + 1;
+                $sequentialPart = str_pad($sequentialPart, 4, '0', STR_PAD_LEFT);
             } else {
                 $sequentialPart = '0001';
             }
 
             return "C$startYear$sequentialPart"; // Construct the new student ID
         }
-
-        
     }
 }
