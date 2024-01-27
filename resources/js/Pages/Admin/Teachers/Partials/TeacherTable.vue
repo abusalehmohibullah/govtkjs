@@ -54,7 +54,7 @@ const toggleModal = (teacher) => {
                 }}</td>
                 <td class="py-2 px-4 border-b text-center">{{ teacher.unique_id }}</td>
                 <td class="py-2 px-4 border-b flex items-center justify-center">
-                    <div v-if="teacher.user.profile_photo_url != ''"><img :src="teacher.user.profile_photo_url" class="d-block h-24 w-20" alt="..."></div>
+                    <div v-if="teacher.user.profile_photo_url != ''"><img :src="teacher.user.profile_photo_url" class="d-block h-24 w-20 object-cover" alt="..."></div>
                     <div v-else class="h-24 w-20 flex justify-center items-center flex-col">
                         <div>No</div>
                         <div>Photo</div>
