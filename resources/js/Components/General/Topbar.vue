@@ -20,6 +20,11 @@ watchEffect(async () => {
     show.value = true;
 });
 
+// Define the closeOffcanvas function
+const handleNavLinkClick = () => {
+    document.body.style.overflow = 'auto';
+};
+
 
 // const showingNavigationDropdown = ref(false);
 
@@ -99,62 +104,62 @@ const logout = () => {
 
                                 <!-- Navigation Links -->
                                 <div class="space-x-8 sm:-my-px sm:flex">
-                                    <NavLink :href="route('home')" :active="route().current('/')" data-bs-dismiss="offcanvas" aria-label="Close">
+                                    <NavLink :href="route('home')" :active="route().current('/')"  @click="handleNavLinkClick">
                                         Home
                                     </NavLink>
                                 </div>
                                 <!-- <div class="space-x-8 sm:-my-px sm:flex">
-                                    <NavLink :href="route('dashboard')" :active="route().current('/')" data-bs-dismiss="offcanvas" aria-label="Close">
+                                    <NavLink :href="route('dashboard')" :active="route().current('/')"  @click="handleNavLinkClick">
                                         About Us
                                     </NavLink>
                                 </div> -->
                                 <div class="space-x-8 sm:-my-px sm:flex">
-                                    <NavLink :href="route('admission')" :active="route().current('/admission')" data-bs-dismiss="offcanvas" aria-label="Close">
+                                    <NavLink :href="route('admission')" :active="route().current('/admission')"  @click="handleNavLinkClick">
                                         Admission
                                     </NavLink>
                                 </div>
                                 <!-- <div class="space-x-8 sm:-my-px sm:flex">
-                                    <NavLink :href="route('dashboard')" :active="route().current('/')" data-bs-dismiss="offcanvas" aria-label="Close">
+                                    <NavLink :href="route('dashboard')" :active="route().current('/')"  @click="handleNavLinkClick">
                                         Students
                                     </NavLink>
                                 </div> -->
                                 <div class="space-x-8 sm:-my-px sm:flex">
-                                    <NavLink :href="route('teachers')" :active="route().current('/teachers')" data-bs-dismiss="offcanvas" aria-label="Close">
+                                    <NavLink :href="route('teachers')" :active="route().current('/teachers')"  @click="handleNavLinkClick">
                                         Teachers
                                     </NavLink>
                                 </div>
                                 <div class="space-x-8 sm:-my-px sm:flex">
-                                    <NavLink :href="route('albums')" :active="route().current('/albums')" data-bs-dismiss="offcanvas" aria-label="Close">
+                                    <NavLink :href="route('albums')" :active="route().current('/albums')"  @click="handleNavLinkClick">
                                         Albums
                                     </NavLink>
                                 </div>
                                 <!-- <div class="space-x-8 sm:-my-px sm:flex">
-                                    <NavLink :href="route('dashboard')" :active="route().current('/')" data-bs-dismiss="offcanvas" aria-label="Close">
+                                    <NavLink :href="route('dashboard')" :active="route().current('/')"  @click="handleNavLinkClick">
                                         Scouting
                                     </NavLink>
                                 </div> -->
                                 <!-- <div class="space-x-8 sm:-my-px sm:flex">
-                                    <NavLink :href="route('dashboard')" :active="route().current('/')" data-bs-dismiss="offcanvas" aria-label="Close">
+                                    <NavLink :href="route('dashboard')" :active="route().current('/')"  @click="handleNavLinkClick">
                                         Exams
                                     </NavLink>
                                 </div> -->
                                 <div class="space-x-8 sm:-my-px sm:flex">
-                                    <NavLink :href="route('notices.index')" :active="route().current('/notices')" data-bs-dismiss="offcanvas" aria-label="Close">
+                                    <NavLink :href="route('notices.index')" :active="route().current('/notices')"  @click="handleNavLinkClick">
                                         Notices
                                     </NavLink>
                                 </div>
                                 <div class="space-x-8 sm:-my-px sm:flex">
-                                    <NavLink :href="route('career')" :active="route().current('/career')" data-bs-dismiss="offcanvas" aria-label="Close">
+                                    <NavLink :href="route('career')" :active="route().current('/career')"  @click="handleNavLinkClick">
                                         Career
                                     </NavLink>
                                 </div>
                                 <div class="space-x-8 sm:-my-px sm:flex">
-                                    <NavLink :href="route('contact')" :active="route().current('/contact')" data-bs-dismiss="offcanvas" aria-label="Close">
+                                    <NavLink :href="route('contact')" :active="route().current('/contact')"  @click="handleNavLinkClick">
                                         Contact
                                     </NavLink>
                                 </div>
                                 <div class="space-x-8 sm:-my-px sm:flex justify-center items-center">
-                                    <Link :href="route('login')" :active="route().current('/')" data-bs-dismiss="offcanvas" aria-label="Close">
+                                    <Link :href="route('login')" :active="route().current('/')"  @click="handleNavLinkClick">
                                     <PrimaryButton>Login</PrimaryButton>
                                     </Link>
                                 </div>

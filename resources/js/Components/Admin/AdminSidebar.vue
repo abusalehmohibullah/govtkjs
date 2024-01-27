@@ -356,11 +356,29 @@ const hasRolesAndPermissions = computed(() => page.props)
                 <span class="align-middle">Teachers</span>
             </SideNavLink>
 
+            <!-- calendars -->
+            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('clerk')
+                || hasRolesAndPermissions.hasPermissions.includes('manage_calendars'))
+                &&
+                !(hasRolesAndPermissions.hasRoles.includes('clerk')
+                    && hasRolesAndPermissions.hasPermissions.includes('manage_calendars'))"
+                :href="route('admin.calendars.index')" :active="route().current('admin.calendars.*')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-calendar align-middle me-2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span class="align-middle">Calendars</span>
+            </SideNavLink>
+
             <!-- attendances -->
-            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('teacher')
                 || hasRolesAndPermissions.hasPermissions.includes('manage_attendances'))
                 &&
-                !(hasRolesAndPermissions.hasRoles.includes('operator')
+                !(hasRolesAndPermissions.hasRoles.includes('teacher')
                     && hasRolesAndPermissions.hasPermissions.includes('manage_attendances'))"
                 :href="route('admin.attendances.index')" :active="route().current('admin.attendances.*')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"

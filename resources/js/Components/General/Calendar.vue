@@ -3,6 +3,8 @@
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue';
 
+const { events } = defineProps(['events']);
+
 const currentDay = computed(() => new Date().getDate());
 const currentMonth = ref('');
 const currentYear = ref('');
@@ -13,8 +15,6 @@ const monthNames = ref([
 ]);
 
 const showMonthList = ref(false);
-
-
 
 const getDaysInMonth = (year, month) => {
     return new Date(year, month + 1, 0).getDate();
@@ -30,22 +30,18 @@ const generateCalendar = (month, year) => {
     const firstDayOfMonth = new Date(year, month, 1);
     const daysInMonth = getDaysInMonth(year, month);
 
-    // Determine the day of the week on which the month starts (0 = Sunday, 1 = Monday, etc.)
     const startDayOfWeek = firstDayOfMonth.getDay();
 
-    // Push empty placeholders for the days before the start of the month
     for (let i = 0; i < startDayOfWeek; i++) {
         calendarDays.push('');
     }
 
-    // Push the days of the month
     for (let i = 1; i <= daysInMonth; i++) {
         calendarDays.push(i);
     }
 
     return calendarDays;
 };
-
 
 const calendarDays = ref(generateCalendar());
 
@@ -59,9 +55,9 @@ const prevMonth = () => {
     if (currentMonthIndex > 0) {
         selectMonth(currentMonthIndex - 1);
     } else {
-        selectMonth(11); // Go to December if currently in January
+        selectMonth(11);
         currentYear.value--;
-        currentMonth.value = 'December'; // Update the current month to December
+        currentMonth.value = 'December';
     }
 };
 
@@ -70,16 +66,20 @@ const nextMonth = () => {
     if (currentMonthIndex < 11) {
         selectMonth(currentMonthIndex + 1);
     } else {
-        selectMonth(0); // Go to January if currently in December
+        selectMonth(0);
         currentYear.value++;
-        currentMonth.value = 'January'; // Update the current month to January
+        currentMonth.value = 'January';
     }
 };
-
 
 const toggleMonthList = () => {
     showMonthList.value = !showMonthList.value;
 };
+
+const filteredEvents = computed(() => {
+    const selectedMonthIndex = monthNames.value.indexOf(currentMonth.value);
+    return events.filter(event => new Date(event.start_date).getMonth() === selectedMonthIndex && new Date(event.start_date).getFullYear() === parseInt(currentYear.value));
+});
 
 onMounted(() => {
     const currDate = new Date();
@@ -87,12 +87,69 @@ onMounted(() => {
     currentYear.value = currDate.getFullYear();
 });
 
-// Watch for changes in currentMonth and currentYear
 watch([currentMonth, currentYear], () => {
     calendarDays.value = generateCalendar(monthNames.value.indexOf(currentMonth.value), currentYear.value);
 });
 
+const findEventsByDay = (day) => {
+
+    if (new Date(currentYear.value, monthNames.value.indexOf(currentMonth.value), day).getDay() === 5 || // Friday
+        new Date(currentYear.value, monthNames.value.indexOf(currentMonth.value), day).getDay() === 6) { // Saturday
+        return 'red'; // Return the style for Fridays and Saturdays
+    }
+
+    const matchingEvents = filteredEvents.value.filter((event) => {
+        const startDate = new Date(event.start_date).getDate();
+        const endDate = event.end_date ? new Date(event.end_date).getDate() : startDate;
+
+        return day === startDate || (day >= startDate && day <= endDate);
+    });
+
+
+
+    // Check if there are multiple values
+// Check if there are multiple values
+if (matchingEvents.length > 1) {
+    console.log(`Multiple events found for day ${day}`);
+
+    // Check if any of the events is a single-day event
+    const singleDayEvent = matchingEvents.find((event) => {
+        return new Date(event.start_date).getDate() === day && !event.end_date;
+    });
+
+    if (singleDayEvent) {
+        console.log(`Single-day event found for day ${day}:`, singleDayEvent);
+        return [singleDayEvent.color];
+    } else {
+        // Check if any event is a public holiday or vacation
+        const holidayOrVacation = matchingEvents.find((event) => {
+            return event.type === 'Public_Holidays' || event.type === 'Vacation';
+        });
+
+        if (holidayOrVacation) {
+            console.log(`Public holiday or vacation found for day ${day}:`, holidayOrVacation);
+            return [holidayOrVacation.color];
+        } else {
+            // Return the event with shorter duration
+            const shortestEvent = matchingEvents.reduce((min, event) => {
+                return new Date(event.end_date).getDate() - new Date(event.start_date).getDate() < new Date(min.end_date).getDate() - new Date(min.start_date).getDate() ? event : min;
+            });
+            console.log(`Shortest event found for day ${day}:`, shortestEvent);
+            return [shortestEvent.color];
+        }
+    }
+}
+
+
+    return matchingEvents.map((event) => event.color);
+};
+
+
+
+
+
 </script>
+
 
 <template>
     <div class="calendar bg-white relative overflow-hidden p-3 rounded h-full">
@@ -114,20 +171,23 @@ watch([currentMonth, currentYear], () => {
                 <span id="year">{{ currentYear }}</span>
             </div>
         </div>
-        
+
         <div class="calendar-body">
-            <div class="calendar-week-day">
-                <div v-for="day in weekDays" :key="day">{{ day }}</div>
+            <div class="calendar-week-day text-black">
+                <div class="m-[1px]" v-for="day in weekDays" :key="day"
+                    :class="{ 'text-red-600': day == weekDays[5] || day == weekDays[6] }">{{ day }}</div>
             </div>
             <div class="calendar-days">
-                <div v-for="day in calendarDays" :key="day" class="calendar-day-hover"
-                    :class="{ 'current-day': day === currentDay }">
+                <div v-for="day in calendarDays" :key="day" class="calendar-day-hover" :class="{
+                    'border': day === currentDay,
+                    'border-2': day === currentDay,
+                    'border-gray-400': day === currentDay,
+                    'font-semibold': findEventsByDay(day),
+                }" :style="{ color: findEventsByDay(day) }">
                     {{ day }}
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
                 </div>
+
+
             </div>
         </div>
         <div class="month-list" v-if="showMonthList">
@@ -152,7 +212,7 @@ watch([currentMonth, currentYear], () => {
     --light-hover: #edf0f5;
     --light-text: #151426;
 
-    --blue: #0000ff;
+    --blue: #a4c7f2;
     --white: #fff;
 
     --shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
@@ -211,7 +271,6 @@ watch([currentMonth, currentYear], () => {
 .calendar-week-day div {
     display: grid;
     place-items: center;
-    color: var(--bg-second);
 }
 
 .calendar-days {

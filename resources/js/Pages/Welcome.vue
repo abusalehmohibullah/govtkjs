@@ -28,6 +28,7 @@ defineProps({
     faqs: Object,
     scrolls: Object,
     albums: Object,
+    events: Object,
 });
 
 const notice = ref(null);
@@ -95,7 +96,7 @@ onMounted(() => {
                 </div>
                 <div class="sm:w-1/3 mt-4 sm:mt-0">
                     <div ref="notice" class="h-full">
-                        <Calendar/>
+                        <Calendar :events="events"/>
                     </div>
                 </div>
             </div>

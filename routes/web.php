@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\AttendanceController;
+use App\Http\Controllers\Admin\CalendarController;
 
 use App\Models\Admin\BasicInfo;
 use App\Models\Admin\Notice;
@@ -39,6 +40,7 @@ use App\Models\Admin\Group;
 use App\Models\Admin\Classroom;
 use App\Models\Admin\Student;
 use App\Models\Admin\Teacher;
+use App\Models\Admin\Calendar;
 use Illuminate\Support\Facades\Artisan;
 /*
 |--------------------------------------------------------------------------
@@ -93,6 +95,10 @@ Route::get('/', function () {
         ->take(10)             // Limit the result to the first 10 albums
         ->get();
 
+    $events = Calendar::where('status', 1)
+        ->whereYear('start_date', now()->year) // Filter by status = 1
+        ->orderBy('start_date') // Order by
+        ->get();
 
     $sliders = Slider::where('status', 1)
         ->orderBy('priority') // Order by priority
@@ -119,6 +125,7 @@ Route::get('/', function () {
         'notices' => $notices,
         'sliders' => $sliders,
         'albums' => $albums,
+        'events' => $events,
     ]);
 })->name('home');
 
@@ -401,24 +408,31 @@ Route::prefix('admin')->middleware([
         Route::put('teachers/{teacher}/status', [TeacherController::class, 'status'])->name('admin.teachers.status');
     });
 
-    Route::middleware(['restriction:operator,manage_attendances'])->group(function () {
+    Route::middleware(['restriction:teacher,manage_attendances'])->group(function () {
         Route::resource('attendances', AttendanceController::class, [
             'names' => 'admin.attendances',
         ]);
         Route::put('attendances/{attendance}/status', [AttendanceController::class, 'status'])->name('admin.attendances.status');
     });
 
+    Route::middleware(['restriction:clerk,manage_calendars'])->group(function () {
+        Route::resource('calendars', CalendarController::class, [
+            'names' => 'admin.calendars',
+        ]);
+        Route::put('calendars/{calendar}/status', [CalendarController::class, 'status'])->name('admin.calendars.status');
+    });
+
     Route::get('/id-cards/{id_card}', function ($id_card) {
         // Assuming 'student_id' is the column in the Student model for student identifier
         $student = Student::where('student_id', $id_card)->first();
-    
+
         if (!$student) {
             // Handle the case when the student is not found
             abort(404, 'Student not found');
         }
-    
+
         $classroom = Classroom::where('id', $student->classroom_id)->with(['grade', 'section', 'group'])->first();
-    
+
         return Inertia::render('Admin/Layouts/IdCard', [
             'classroom' => $classroom,
             'student' => $student,
