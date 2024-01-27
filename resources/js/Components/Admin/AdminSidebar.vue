@@ -356,7 +356,23 @@ const hasRolesAndPermissions = computed(() => page.props)
                 <span class="align-middle">Teachers</span>
             </SideNavLink>
 
-            
+            <!-- attendances -->
+            <SideNavLink v-if="(hasRolesAndPermissions.hasRoles.includes('operator')
+                || hasRolesAndPermissions.hasPermissions.includes('manage_attendances'))
+                &&
+                !(hasRolesAndPermissions.hasRoles.includes('operator')
+                    && hasRolesAndPermissions.hasPermissions.includes('manage_attendances'))"
+                :href="route('admin.attendances.index')" :active="route().current('admin.attendances.*')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-check-square align-middle me-2">
+                    <polyline points="9 11 12 14 22 4"></polyline>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                </svg>
+                <span class="align-middle">Attendances</span>
+            </SideNavLink>
+
+
             <Dropdown v-if="((hasRolesAndPermissions.hasRoles.includes('operator')
                 || hasRolesAndPermissions.hasPermissions.includes('manage_users'))
                 &&
@@ -366,7 +382,8 @@ const hasRolesAndPermissions = computed(() => page.props)
                     || hasRolesAndPermissions.hasPermissions.includes('manage_invitations'))
                     &&
                     !(hasRolesAndPermissions.hasRoles.includes('operator')
-                        && hasRolesAndPermissions.hasPermissions.includes('manage_invitations')))" align="right" width="100%" content-classes="relative z-50 bg-white">
+                        && hasRolesAndPermissions.hasPermissions.includes('manage_invitations')))" align="right"
+                width="100%" content-classes="relative z-50 bg-white">
                 <template #trigger>
                     <span class="flex sidebar-item"
                         :class="(route().current('admin.users.*')) || (route().current('admin.user-invitations.*')) ? 'active' : ''">
@@ -411,7 +428,8 @@ const hasRolesAndPermissions = computed(() => page.props)
                             || hasRolesAndPermissions.hasPermissions.includes('manage_invitations'))
                             &&
                             !(hasRolesAndPermissions.hasRoles.includes('operator')
-                                && hasRolesAndPermissions.hasPermissions.includes('manage_invitations'))" :href="route('admin.user-invitations.index')"
+                                && hasRolesAndPermissions.hasPermissions.includes('manage_invitations'))"
+                            :href="route('admin.user-invitations.index')"
                             :active="route().current('admin.user-invitations.*')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -421,8 +439,8 @@ const hasRolesAndPermissions = computed(() => page.props)
                             <span class="align-middle">Invite Users</span>
                         </SideNavLink>
                     </div>
-                </template>
-            </Dropdown>
+            </template>
+        </Dropdown>
     </ul>
 </div></template>
 

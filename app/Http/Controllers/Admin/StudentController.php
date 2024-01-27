@@ -422,10 +422,10 @@ class StudentController extends Controller
 
             // Increment the last ID or start with 0001 if no ID found for the year
             if ($lastID) {
-                $sequentialPart = intval(substr($lastID, -4)) + 1;
-                $sequentialPart = str_pad($sequentialPart, 4, '0', STR_PAD_LEFT);
+                $sequentialPart = intval(substr($lastID, -3)) + 1;
+                $sequentialPart = str_pad($sequentialPart, 3, '0', STR_PAD_LEFT);
             } else {
-                $sequentialPart = '0001';
+                $sequentialPart = '001';
             }
 
             return "S$startYear$sequentialPart"; // Construct the new student ID
@@ -441,10 +441,10 @@ class StudentController extends Controller
                 ->value('student_id');
             // Increment the last ID or start with 0001 if no ID found for the year
             if ($lastID) {
-                $sequentialPart = intval(substr($lastID, -4)) + 1;
-                $sequentialPart = str_pad($sequentialPart, 4, '0', STR_PAD_LEFT);
+                $sequentialPart = intval(substr($lastID, -3)) + 1;
+                $sequentialPart = str_pad($sequentialPart, 3, '0', STR_PAD_LEFT);
             } else {
-                $sequentialPart = '0001';
+                $sequentialPart = '001';
             }
 
             return "C$startYear$sequentialPart"; // Construct the new student ID

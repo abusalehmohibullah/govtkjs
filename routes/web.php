@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TeacherController;
+use App\Http\Controllers\Admin\AttendanceController;
 
 use App\Models\Admin\BasicInfo;
 use App\Models\Admin\Notice;
@@ -36,6 +37,7 @@ use App\Models\Admin\Grade;
 use App\Models\Admin\Subject;
 use App\Models\Admin\Group;
 use App\Models\Admin\Classroom;
+use App\Models\Admin\Student;
 use App\Models\Admin\Teacher;
 use Illuminate\Support\Facades\Artisan;
 /*
@@ -398,6 +400,30 @@ Route::prefix('admin')->middleware([
         ]);
         Route::put('teachers/{teacher}/status', [TeacherController::class, 'status'])->name('admin.teachers.status');
     });
+
+    Route::middleware(['restriction:operator,manage_attendances'])->group(function () {
+        Route::resource('attendances', AttendanceController::class, [
+            'names' => 'admin.attendances',
+        ]);
+        Route::put('attendances/{attendance}/status', [AttendanceController::class, 'status'])->name('admin.attendances.status');
+    });
+
+    Route::get('/id-cards/{id_card}', function ($id_card) {
+        // Assuming 'student_id' is the column in the Student model for student identifier
+        $student = Student::where('student_id', $id_card)->first();
+    
+        if (!$student) {
+            // Handle the case when the student is not found
+            abort(404, 'Student not found');
+        }
+    
+        $classroom = Classroom::where('id', $student->classroom_id)->with(['grade', 'section', 'group'])->first();
+    
+        return Inertia::render('Admin/Layouts/IdCard', [
+            'classroom' => $classroom,
+            'student' => $student,
+        ]);
+    })->name('id-cards.show');
 });
 
 

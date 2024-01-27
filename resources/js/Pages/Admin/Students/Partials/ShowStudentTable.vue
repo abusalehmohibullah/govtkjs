@@ -1,23 +1,22 @@
   
 <script setup>
 
-import { useForm } from '@inertiajs/vue3';
 import { ref, reactive, computed, watch, onMounted } from 'vue';
 
+import QrcodeVue from 'qrcode.vue';
+
 import Table from '@/Components/Table.vue';
-import ActionMessage from '@/Components/ActionMessage.vue';
-import TextInput from '@/Components/TextInput.vue';
-import TextArea from '@/Components/TextArea.vue';
-import FileInput from '@/Components/FileInput.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import InputError from '@/Components/InputError.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import DateInput from '@/Components/DateInput.vue';
-import SelectInput from '@/Components/SelectInput.vue';
 
 const { student, classroom } = defineProps(['student', 'classroom']);
 
+// Define a reactive variable for QR code data
+const qrCodeData = ref(student.student_id); // Replace with your actual data
+
+// Define options for the QR code (customize as needed)
+const qrCodeOptions = ref({
+    size: 200,
+    color: '#000000',
+});
 
 </script>
 
@@ -53,6 +52,10 @@ const { student, classroom } = defineProps(['student', 'classroom']);
                         </tr>
                     </template>
                 </Table>
+            </div>
+
+            <div>
+                <qrcode-vue :value="qrCodeData" :options="qrCodeOptions" />
             </div>
         </div>
         <Table class="md:text-base w-full">
