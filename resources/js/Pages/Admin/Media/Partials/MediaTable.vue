@@ -33,7 +33,7 @@ const toggleModal = (media) => {
                 class="child-container mb-2">
                 <div class="d-flex align-items-center w-full">
                     <div class="show-first-child card w-full">
-                        <div class="w-full rounded bg-white border shadow-sm position-relative">
+                        <div class="w-full rounded bg-slate-200 border shadow-sm position-relative">
                             <div class="w-full ratio ratio-4x3 overflow-hidden">
                                 <img :src="'/storage/' + media.path" class="object-cover"/>
                             </div>

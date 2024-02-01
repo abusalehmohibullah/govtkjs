@@ -32,6 +32,30 @@ const updateMedia = () => {
         preserveScroll: true,
     });
 };
+
+
+const photoPreview = ref(null);
+
+const previewPhoto = (event) => {
+    const file = event.target.files[0];
+
+    if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+            photoPreview.value = e.target.result;
+        };
+
+        reader.readAsDataURL(file);
+
+        // Set the file to the form property
+        form.photo = file;
+    } else {
+        // Clear the preview and reset the form property
+        photoPreview.value = null;
+        form.photo = null;
+    }
+};
 </script>
 
 
@@ -52,7 +76,8 @@ const updateMedia = () => {
 
                 <div class="col-span-6 sm:col-span-4">
                     <InputLabel for="album_id" value="Album" />
-                    <SelectInput :options="albums" :selectedOption="album" inputName="album_id" :inputValue="album" :fieldName="'title'" :valueField="'id'" @option-selected="handleOptionSelected" />
+                    <SelectInput :options="albums" :selectedOption="album" inputName="album_id" :inputValue="album"
+                        :fieldName="'title'" :valueField="'id'" @option-selected="handleOptionSelected" />
 
                     <InputError :message="form.errors.album_id" class="text-red-500" />
                 </div>
@@ -72,14 +97,21 @@ const updateMedia = () => {
                     </InputLabel>
                     <FileInput @input="form.path = $event.target.files[0]" id="path" v-model="form.path"
                         class="form-control mt-1 block" :class="{ 'border-red-500 focus:border-red-500': form.errors.path }"
-                        type="file" />
+                        type="file" accept="image/*" @change="previewPhoto" />
                     <progress v-if="form.progress" :value="form.progress.percentage" max="100" class="absolute h-[2px]">
                         {{ form.progress.percentage }}%
                     </progress>
                     <InputError :message="form.errors.path" class="text-red-500" />
                 </div>
 
-
+                <div class="w-full flex justify-center items-center">
+                    <div class="w-full aspect-video border shadow">
+                        <img v-if="photoPreview" :src="photoPreview" alt="Photo Preview"
+                            class="object-contain w-full aspect-video" />
+                        <img v-else :src="'/storage/' + media.path" alt="Photo Preview"
+                            class="object-contain w-full aspect-video" />
+                    </div>
+                </div>
             </template>
 
             <template #actions>

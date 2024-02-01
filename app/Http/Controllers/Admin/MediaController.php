@@ -41,33 +41,31 @@ class MediaController extends Controller
         // Define validation rules
         $validationRules = [
             'caption' => 'required',
-            'path' => 'required|mimes:pdf,doc,docx,jpg,jpeg,png'
+            'paths.*' => 'required|mimes:pdf,doc,docx,jpg,jpeg,png'
             // 'path' => 'required|mimes:pdf,doc,docx,jpg,jpeg,png|max:1024', // 1MB (1024 KB) limit
         ];
 
         // Custom error messages for validation
         $customMessages = [
             'caption.required' => 'Please provide a caption.',
-            'path.required' => 'Please provide an image.',
-            'path.mimes' => 'Invalid file format. Only pdf, doc, docx, jpg, jpeg, png files are allowed.',
+            'paths.*.required' => 'Please provide an image.',
+            'paths.*.mimes' => 'Invalid file format. Only pdf, doc, docx, jpg, jpeg, png files are allowed.',
             // 'path.max' => 'The path must not be larger than 1MB.',
         ];
 
         // Validate the incoming request data
         $validatedData = $request->validate($validationRules, $customMessages);
 
-        // Create a new model and populate it with validated data
-        $media = new Media;
-        $media->fill($validatedData);
+        $caption = $request->input('caption');
 
-        $media->album_id = $album->id;
-        $media->created_by = auth()->id();
+        foreach ($request->file('paths') as $path) {
+            $media = new Media([
+                'caption' => $caption,
+                'album_id' => $album->id,
+                'created_by' => auth()->id(),
+            ]);
 
-        try {
-            if ($request->hasFile('path')) {
-                // Get the uploaded file from the request
-                $path = $request->file('path');
-
+            try {
                 // Validate the file size and type
                 if ($path->isValid()) {
                     // Generate a unique name for the file based on the slug and the file extension
@@ -125,18 +123,17 @@ class MediaController extends Controller
                 } else {
                     return redirect()->back()->withInput()->with('flash.banner', 'Failed to upload Media.');
                 }
-            }
 
-            // Save the model
-            if ($media->save()) {
-                return redirect()->route('admin.albums.media.index', $album->id)->with('flash.banner', 'Media created successfully!');
-            } else {
-                return redirect()->back()->withInput()->with('flash.banner', 'Failed to create Media.');
+                // Save the model
+                if (!$media->save()) {
+                    return redirect()->back()->withInput()->with('flash.banner', 'Failed to create Media.');
+                }
+            } catch (\Exception $e) {
+                // Handle the error
+                return redirect()->back()->withInput()->with('flash.banner', $e->getMessage());
             }
-        } catch (\Exception $e) {
-            // Handle the error
-            return redirect()->back()->withInput()->with('flash.banner', $e->getMessage());
         }
+        return redirect()->route('admin.albums.media.index', $album->id)->with('flash.banner', 'Media created successfully!');
     }
 
     public function show($id)
