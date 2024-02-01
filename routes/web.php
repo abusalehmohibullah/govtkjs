@@ -512,3 +512,21 @@ Route::prefix('admin')->middleware([
 //         return 'Error: ' . $e->getMessage();
 //     }
 // });
+
+// Route::get('/maintenance-mode/on', function () {
+//     try {
+//         \Artisan::call('down');
+//         return 'Site is now in maintenance mode.';
+//     } catch (\Exception $e) {
+//         return 'Error putting site in maintenance mode: ' . $e->getMessage();
+//     }
+// });
+
+// Route::get('/maintenance-mode/off', function () {
+//     try {
+//         \Artisan::call('up');
+//         return 'Site is now live.';
+//     } catch (\Exception $e) {
+//         return 'Error taking site out of maintenance mode: ' . $e->getMessage();
+//     }
+// });

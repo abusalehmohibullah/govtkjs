@@ -10,6 +10,8 @@ use Inertia\Inertia;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Imagick\Driver;
 
 class MediaController extends Controller
 {
@@ -36,11 +38,11 @@ class MediaController extends Controller
 
     public function store(Request $request, Album $album)
     {
-        // dd($request);
         // Define validation rules
         $validationRules = [
             'caption' => 'required',
-            'path' => 'required|mimes:pdf,doc,docx,jpg,jpeg,png|max:1024', // 1MB (1024 KB) limit
+            'path' => 'required|mimes:pdf,doc,docx,jpg,jpeg,png'
+            // 'path' => 'required|mimes:pdf,doc,docx,jpg,jpeg,png|max:1024', // 1MB (1024 KB) limit
         ];
 
         // Custom error messages for validation
@@ -48,9 +50,8 @@ class MediaController extends Controller
             'caption.required' => 'Please provide a caption.',
             'path.required' => 'Please provide an image.',
             'path.mimes' => 'Invalid file format. Only pdf, doc, docx, jpg, jpeg, png files are allowed.',
-            'path.max' => 'The path must not be larger than 1MB.',
+            // 'path.max' => 'The path must not be larger than 1MB.',
         ];
-
 
         // Validate the incoming request data
         $validatedData = $request->validate($validationRules, $customMessages);
@@ -62,41 +63,69 @@ class MediaController extends Controller
         $media->album_id = $album->id;
         $media->created_by = auth()->id();
 
-        // dd($media);
-
         try {
             if ($request->hasFile('path')) {
-                // dd('gotcha');
                 // Get the uploaded file from the request
                 $path = $request->file('path');
 
                 // Validate the file size and type
                 if ($path->isValid()) {
-                    $slug = Str::slug($validatedData['caption']);
                     // Generate a unique name for the file based on the slug and the file extension
-                    $fileName = $slug . '.' . $path->getClientOriginalExtension();
+                    $slug = Str::slug($validatedData['caption']);
+                    $ext = '.jpeg';
+                    $fileName = $slug . $ext;
 
-                    // Store the file in the storage directory with the generated name
-                    $filePath = $path->storeAs('media', $fileName, 'public');
+                    $manager = new ImageManager(new Driver());
+                    $image = $manager->read($path);
+
+                    // Resize the image (adjust dimensions as needed)
+                    $image->scale(1920, 1080);
+                    // Initialize the quality variable
+                    $quality = 80; // Initial quality value
+
+                    // Loop until the image size is below 300KB
+                    while (true) {
+                        // Encode the image with the current quality
+                        $encodedImage = $image->toJpeg($quality);
+
+                        // Get the image size in bytes
+                        $imageSize = strlen($encodedImage->__toString());
+
+                        // Break the loop if the image size is below 300KB
+                        if ($imageSize < 300 * 1024) {
+                            break;
+                        }
+
+                        // Reduce the quality for the next iteration
+                        $quality -= 5; // Adjust the decrement value based on your preference
+
+                        // Ensure the quality does not go below 10 (or adjust as needed)
+                        $quality = max($quality, 20);
+                    }
+
+
+                    $filePath = 'media/' . $fileName;
+
                     // Check if the slug already exists in the database
                     if (Media::where('path', $filePath)->exists()) {
                         // If the slug already exists for a different item,
                         // modify the slug to make it unique by appending a count
                         $count = 1;
                         while (Media::where('path', $filePath)->exists()) {
-                            $fileName = $slug . '-' . $count . '.' . $path->getClientOriginalExtension();
-                            // Store the file in the storage directory with the generated name
-                            $filePath = $path->storeAs('media', $fileName, 'public');
+                            $fileName = $slug . '-' . $count . $ext;
+                            $filePath = 'media/' . $fileName;
                             $count++;
                         }
                     }
+
+                    // Store the file in the storage directory with the generated name
+                    $encodedImage->save('storage/media/' . $fileName);
                     // Save the file path in the database
                     $media->path = $filePath;
                 } else {
                     return redirect()->back()->withInput()->with('flash.banner', 'Failed to upload Media.');
                 }
             }
-
 
             // Save the model
             if ($media->save()) {
@@ -130,16 +159,12 @@ class MediaController extends Controller
 
     public function update(Request $request, Album $album, Media $medium)
     {
-        // dd($request);
-
-        // Find the media by ID
-        // $media = Media::findOrFail($id);
-
         // Define validation rules
         $validationRules = [
             'album_id' => 'required',
             'caption' => 'required',
-            'path' => 'nullable|mimes:pdf,doc,docx,jpg,jpeg,png|max:1024', // 1MB (1024 KB) limit
+            'path' => 'nullable|mimes:pdf,doc,docx,jpg,jpeg,png',
+            // 'path' => 'nullable|mimes:pdf,doc,docx,jpg,jpeg,png|max:1024', // 1MB (1024 KB) limit
         ];
 
         // Custom error messages for validation
@@ -147,54 +172,119 @@ class MediaController extends Controller
             'album_id.required' => 'Please select an album.',
             'caption.required' => 'Please provide a caption.',
             'path.mimes' => 'Invalid file format. Only pdf, doc, docx, jpg, jpeg, png files are allowed.',
-            'path.max' => 'The path must not be larger than 1MB.',
+            // 'path.max' => 'The path must not be larger than 1MB.',
         ];
 
         // Validate the incoming request data
         $validatedData = $request->validate($validationRules, $customMessages);
 
+        $oldCaption = $medium->caption;
         $oldPath = $medium->path;
 
-        // dd($validatedData);
         // Update the media with the validated data
         $medium->update($validatedData);
-        $medium->path = $oldPath;
+
         $medium->updated_by = auth()->id();
-        // dd($medium);
 
         try {
             if ($request->hasFile('path')) {
-                // dd('gotcha');
+
+                if ($oldPath) {
+                    Storage::disk('public')->delete($oldPath);
+                }
                 // Get the uploaded file from the request
                 $path = $request->file('path');
 
                 // Validate the file size and type
                 if ($path->isValid()) {
+                    // Generate a unique name for the file
                     $slug = Str::slug($validatedData['caption']);
-                    // Generate a unique name for the file based on the slug and the file extension
-                    $fileName = $slug . '.' . $path->getClientOriginalExtension();
+                    $ext = '.jpeg';
+                    $fileName = $slug . $ext;
 
-                    // Store the file in the storage directory with the generated name
-                    $filePath = $path->storeAs('media', $fileName, 'public');
+                    $manager = new ImageManager(new Driver());
+                    $image = $manager->read($path);
+
+                    // Resize the image (adjust dimensions as needed)
+                    $image->scale(1920, 1080);
+                    // Initialize the quality variable
+                    $quality = 80; // Initial quality value
+
+                    // Loop until the image size is below 300KB
+                    while (true) {
+                        // Encode the image with the current quality
+                        $encodedImage = $image->toJpeg($quality);
+
+                        // Get the image size in bytes
+                        $imageSize = strlen($encodedImage->__toString());
+
+                        // Break the loop if the image size is below 300KB
+                        if ($imageSize < 300 * 1024) {
+                            break;
+                        }
+
+                        // Reduce the quality for the next iteration
+                        $quality -= 5; // Adjust the decrement value based on your preference
+
+                        // Ensure the quality does not go below 10 (or adjust as needed)
+                        $quality = max($quality, 20);
+                    }
+
+
+                    $filePath = 'media/' . $fileName;
+
                     // Check if the slug already exists in the database
-                    if (Media::where('path', $filePath)->exists()) {
+                    if (Media::where('path', $filePath)->exists() && $filePath != $oldPath) {
                         // If the slug already exists for a different item,
                         // modify the slug to make it unique by appending a count
                         $count = 1;
-                        while (Media::where('path', $filePath)->exists()) {
-                            $fileName = $slug . '-' . $count . '.' . $path->getClientOriginalExtension();
-                            // Store the file in the storage directory with the generated name
-                            $filePath = $path->storeAs('media', $fileName, 'public');
+                        while (Media::where('path', $filePath)->exists() && $filePath != $oldPath) {
+                            $fileName = $slug . '-' . $count . $ext;
+                            $filePath = 'media/' . $fileName;
                             $count++;
                         }
                     }
+
+                    // Store the file in the storage directory with the generated name
+                    $encodedImage->save('storage/media/' . $fileName);
                     // Save the file path in the database
                     $medium->path = $filePath;
                 } else {
                     return redirect()->back()->withInput()->with('flash.banner', 'Failed to upload Media.');
                 }
-            }
+            } elseif ($oldCaption != $medium->caption) {
+                // Generate a unique name for the file
+                $slug = Str::slug($validatedData['caption']);
+                $ext = '.jpeg';
+                // New file name
+                $newFileName = $slug . $ext;
 
+                // New file path
+                $newPath = 'media/' . $newFileName;
+                // Check if the slug already exists in the database
+                if (Media::where('path', $newPath)->exists() && $newPath != $oldPath) {
+                    // If the slug already exists for a different item,
+                    // modify the slug to make it unique by appending a count
+                    $count = 1;
+                    while (Media::where('path', $newPath)->exists() && $newPath != $oldPath) {
+                        $newFileName = $slug . '-' . $count . $ext;
+                        $newPath = 'media/' . $newFileName;
+                        $count++;
+                    }
+                }
+
+                $medium->path = $newPath;
+                // Old file path with 'storage/' prefix
+                $oldPathWithPrefix = 'public/' . $oldPath;
+
+                // New file path with 'storage/' prefix
+                $newPathWithPrefix = 'public/' . $newPath;
+
+                // Rename the file
+                Storage::move($oldPathWithPrefix, $newPathWithPrefix);
+            } else {
+                $medium->path = $oldPath;
+            }
 
             // Save the model
             if ($medium->save()) {

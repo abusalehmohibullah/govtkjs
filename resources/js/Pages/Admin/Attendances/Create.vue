@@ -3,9 +3,9 @@
 
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
-import CreateStudentForm from '@/Pages/Admin/Students/Partials/CreateStudentForm.vue';
+import CreateAttendanceForm from '@/Pages/Admin/Attendances/Partials/CreateAttendanceForm.vue';
 
-const { classroom } = defineProps(['classroom']);
+const { students } = defineProps(['students']);
 
 </script>
 
@@ -13,7 +13,7 @@ const { classroom } = defineProps(['classroom']);
     <AdminLayout title="Basic Info">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Create Student
+                Create Attendance
             </h2>
         </template>
 
@@ -21,7 +21,7 @@ const { classroom } = defineProps(['classroom']);
 
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <!-- Use the Form component to wrap your form -->
-                <CreateStudentForm :classroom="classroom" />
+                <CreateAttendanceForm :students="students" />
             </div>
 
 

@@ -7,7 +7,8 @@ use App\Models\Admin\Calendar;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
-
+use Illuminate\Validation\Rule;
+        
 class CalendarController extends Controller
 {
     /**
@@ -49,13 +50,16 @@ class CalendarController extends Controller
             'start_date' => 'required',
             'end_date' => 'nullable',
             'color' => 'nullable',
+            'description' => 'nullable',
+            'class_off' => ['required', Rule::in(['0', '1'])],
         ];
 
         // Custom error messages for validation
         $customMessages = [
             'type.required' => 'Please select a type.',
             'title.required' => 'Please provide a title.',
-            'start_date.required' => 'Please provide a starting date.',
+            'start_date.required' => 'Please provide a starting date.',            
+            'class_off.required' => 'Please select an option.',
         ];
 
 
@@ -93,24 +97,89 @@ class CalendarController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Calendar $calendar)
     {
-        //
+
+        // Pass the paginated data to the Inertia view
+        return Inertia::render('Admin/Calendars/Edit', [
+            'calendar' => $calendar,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Calendar $calendar)
     {
-        //
+        // dd($request);
+        // Define validation rules
+        $validationRules = [
+            'title' => 'required',
+            'type' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'nullable',
+            'color' => 'nullable',
+            'description' => 'nullable',
+            'class_off' => ['required', Rule::in(['0', '1'])],
+        ];
+
+        // Custom error messages for validation
+        $customMessages = [
+            'type.required' => 'Please select a type.',
+            'title.required' => 'Please provide a title.',
+            'start_date.required' => 'Please provide a starting date.',
+            'class_off.required' => 'Please select an option.',
+        ];
+
+
+        // Validate the incoming request data
+        $validatedData = $request->validate($validationRules, $customMessages);
+
+        // Create a new model and populate it with validated data
+        $calendar->update($validatedData);
+        $calendar->updated_by = auth()->id();
+
+
+        try {
+            // Save the model
+            if ($calendar->save()) {
+                return redirect()->route('admin.calendars.index')->with('flash.banner', 'Event updated successfully!');
+            } else {
+                return redirect()->back()->withInput()->with('flash.banner', 'Failed to update Event.')->with('flash.bannerStyle', 'danger');
+            }
+        } catch (\Exception $e) {
+            // Handle the error
+            return redirect()->back()->withInput()->with('flash.banner', $e->getMessage())->with('flash.bannerStyle', 'danger');
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Calendar $calendar)
     {
-        //
+         // Delete the notice
+         $calendar->delete();
+
+         // Redirect to the notice index page with a success message
+         return redirect()->route('admin.calendars.index')->with('flash.banner', 'Event deleted successfully!');
+    }
+
+    public function status(Request $request, Calendar $calendar)
+    {
+        if ($request->input('status') === 1) {
+            $calendar->status = 0;
+            $message = 'Event is hidden now!';
+        } else {
+            $calendar->status = 1;
+            $message = 'Event is visible to all!';
+        }
+        $calendar->updated_by = auth()->id();
+
+        if ($calendar->save()) {
+            return redirect()->route('admin.calendars.index')->with('flash.banner', $message);
+        } else {
+            return redirect()->back()->with('flash.banner', 'Failed to update Visibility.');
+        }
     }
 }

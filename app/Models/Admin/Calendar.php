@@ -17,6 +17,7 @@ class Calendar extends Model
         'end_date',
         'description',
         'color',
+        'class_off',
     ]; 
     
     public function createdBy()

@@ -13,6 +13,8 @@ import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SelectInput from '@/Components/SelectInput.vue';
 import DateInput from '@/Components/DateInput.vue';
+import Radio from '@/Components/Radio.vue';
+
 const form = useForm({
     type: '',
     title: '',
@@ -20,6 +22,7 @@ const form = useForm({
     end_date: '',
     description: '',
     color: '',
+    class_off: '',
 });
 
 
@@ -84,14 +87,36 @@ const createCalendar = () => {
 
             <template #form>
                 <!-- Use the Text Input component for each form field -->
-
-                <div class="col-span-6 sm:col-span-4">
-                    <InputLabel for="type" value="Type of event">
-                        <template #required>*</template>
-                    </InputLabel>
-                    <SelectInput :options="types" inputName="type" :fieldName="'name'" :valueField="'id'"
-                        @option-selected="handleTypeSelected" />
-                    <InputError :message="form.errors.type_id" class="text-red-500" />
+                <div class="flex">
+                    <div class="col-span-6 sm:col-span-4 flex-grow">
+                        <InputLabel for="type" value="Type of event">
+                            <template #required>*</template>
+                        </InputLabel>
+                        <SelectInput :options="types" inputName="type" :fieldName="'name'" :valueField="'id'"
+                            @option-selected="handleTypeSelected" />
+                        <InputError :message="form.errors.type_id" class="text-red-500" />
+                    </div>
+                    <div class="col-span-5 sm:col-span-3 md:col-span-5 xl:col-span-3 ml-3">
+                        <InputLabel for="class_off" value="Class off?" class="whitespace-nowrap">
+                            <template #required>*</template>
+                        </InputLabel>
+                        <div class="flex flex-row">
+                            <div class="form-check form-check-inline py-3">
+                                <Radio id="inlineRadio1" v-model:checked="form.class_off" required
+                                    class="mt-1 block form-check-input cursor-pointer"
+                                    :class="{ 'border-red-500 focus:border-red-500': form.errors.class_off }" type="radio"
+                                    name="class_off" value="1" />
+                                <InputLabel class="form-check-label cursor-pointer" for="inlineRadio1" value="Yes" />
+                            </div>
+                            <div class="form-check form-check-inline py-3">
+                                <Radio id="inlineRadio2" v-model:checked="form.class_off" required
+                                    class="mt-1 block form-check-input cursor-pointer"
+                                    :class="{ 'border-red-500 focus:border-red-500': form.errors.class_off }" type="radio"
+                                    name="class_off" value="0" />
+                                <InputLabel class="form-check-label cursor-pointer" for="inlineRadio2" value="No" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-span-6 sm:col-span-4">
                     <InputLabel for="title" value="Title">
@@ -130,6 +155,7 @@ const createCalendar = () => {
                         name="description" />
                     <InputError :message="form.errors.description" class="text-red-500" />
                 </div>
+
             </template>
 
             <template #actions>

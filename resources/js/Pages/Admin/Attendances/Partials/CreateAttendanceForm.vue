@@ -16,346 +16,48 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import DateInput from '@/Components/DateInput.vue';
 import SelectInput from '@/Components/SelectInput.vue';
 
-const { classroom } = defineProps(['classroom']);
+const { students } = defineProps(['students']);
 
 const form = useForm({
-    classroom_id: classroom.id,
-    grade: classroom.grade.name,
-    session: '',
-    roll_no: '',
-    registration_no: '',
-    unique_id: '',
-    brid: '',
-    date_of_birth: '',
-    student_name_en: '',
-    student_name_bn: '',
-    father_name_en: '',
-    father_name_bn: '',
-    mother_name_en: '',
-    mother_name_bn: '',
-    guardian_name_en: '',
-    guardian_name_bn: '',
-    address_en: '',
-    address_bn: '',
-    gender_en: '',
-    gender_bn: '',
-    religion_en: '',
-    religion_bn: '',
-    disability_status_en: '',
-    disability_status_bn: '',
-    email: '',
-    student_mobile_no: '',
-    father_mobile_no: '',
-    mother_mobile_no: '',
-    guardian_mobile_no: '',
-    photo: null,
+    // classroom_id: classroom.id,
+    // grade: classroom.grade.name,
+    // session: '',
+    // roll_no: '',
+    // registration_no: '',
+    // unique_id: '',
+    // brid: '',
+    // date_of_birth: '',
+    // student_name_en: '',
+    // student_name_bn: '',
+    // father_name_en: '',
+    // father_name_bn: '',
+    // mother_name_en: '',
+    // mother_name_bn: '',
+    // guardian_name_en: '',
+    // guardian_name_bn: '',
+    // address_en: '',
+    // address_bn: '',
+    // gender_en: '',
+    // gender_bn: '',
+    // religion_en: '',
+    // religion_bn: '',
+    // disability_status_en: '',
+    // disability_status_bn: '',
+    // email: '',
+    // student_mobile_no: '',
+    // father_mobile_no: '',
+    // mother_mobile_no: '',
+    // guardian_mobile_no: '',
+    // photo: null,
 });
 
-
-const currentYear = new Date().getFullYear();
-
-// Generate sessions with single years
-const singleYearSessions = Array.from(
-    { length: 5 },
-    (_, index) => ({ id: index + 1, name: (currentYear - 2 + index).toString() })
-);
-
-// Generate sessions with two-year combinations
-const twoYearSessions = Array.from(
-    { length: 5 },
-    (_, index) => ({
-        id: index, // Adjust the starting index based on the previous array length
-        name: `${currentYear - 3 + index}-${(currentYear - 2 + index).toString().slice(-2)}`,
-    })
-);
-
-
-const selectedSession = ref({ id: '', name: '' });
-
-if (classroom.grade.name < 11) {
-    const selectedSessionOption = singleYearSessions.find(session => session.name == currentYear);
-    if (selectedSessionOption) {
-        form.session = selectedSessionOption.name; 
-        selectedSession.value = { id: selectedSessionOption.id, name: selectedSessionOption.name };
-    } else {
-        selectedSession.value = { id: '', name: '' };
-    }
-} else {
-    const selectedSessionOption = twoYearSessions.find(session => session.name == `${currentYear}-${(currentYear + 1).toString().slice(-2)}`);
-    if (selectedSessionOption) {
-        form.session = selectedSessionOption.name; 
-        selectedSession.value = { id: selectedSessionOption.id, name: selectedSessionOption.name };
-    } else {
-        selectedSession.value = { id: '', name: '' };
-    }
-
-}
-
-
-watch(() => form.session, (newSession, oldSession) => {
-    if (classroom.grade.name < 11) {
-        const selectedSessionOption = singleYearSessions.find(session => session.name == newSession);
-        if (selectedSessionOption) {
-            selectedSession.value = { id: selectedSessionOption.id, name: selectedSessionOption.name };
-        } else {
-            selectedSession.value = { id: '', name: '' };
-        }
-    } else {
-        const selectedSessionOption = twoYearSessions.find(session => session.name == newSession);
-        if (selectedSessionOption) {
-            selectedSession.value = { id: selectedSessionOption.id, name: selectedSessionOption.name };
-        } else {
-            selectedSession.value = { id: '', name: '' };
-        }
-
-    }
-});
-
-const handleSessionSelected = (selectedLabel) => {
-    const selectedId = parseInt(selectedLabel); // Convert selected label to integer
-
-    if (classroom.grade.name < 11) {
-        const selectedSessionOption = singleYearSessions.find(session => session.id == selectedId);
-        if (selectedSessionOption) {
-            form.session = selectedSessionOption.name;
-        }
-    } else {
-        const selectedSessionOption = twoYearSessions.find(session => session.id == selectedId);
-        if (selectedSessionOption) {
-            form.session = selectedSessionOption.name; 
-        }
-    }
-
-};
-
-const gendersEn = [
-    { id: 1, name: 'Male' },
-    { id: 2, name: 'Female' },
-    { id: 3, name: 'Others' }
-];
-
-const selectedGenderEn = ref({ id: '', name: '' });
-
-watch(() => form.gender_en, (newGenderEn, oldGenderEn) => {
-    const selectedGender = gendersEn.find(gender => gender.name === newGenderEn);
-    if (selectedGender) {
-        selectedGenderEn.value = { id: selectedGender.id, name: selectedGender.name };
-    } else {
-        selectedGenderEn.value = { id: '', name: '' };
-    }
-});
-
-
-
-const gendersBn = [
-    { id: 1, name: 'বালক' },
-    { id: 2, name: 'বালিকা' },
-    { id: 3, name: 'অন্যান্য' }
-];
-
-const religionsEn = [
-    { id: 1, name: 'Islam' },
-    { id: 2, name: 'Hinduism' },
-    { id: 3, name: 'Buddhism' },
-    { id: 4, name: 'Christianity' },
-    { id: 5, name: 'Others' }
-];
-
-
-const selectedReligionEn = ref({ id: '', name: '' });
-
-watch(() => form.religion_en, (newReligionEn, oldReligionEn) => {
-    const selectedReligion = religionsEn.find(religion => religion.name === newReligionEn);
-    if (selectedReligion) {
-        selectedReligionEn.value = { id: selectedReligion.id, name: selectedReligion.name };
-    } else {
-        selectedReligionEn.value = { id: '', name: '' };
-    }
-});
-
-const religionsBn = [
-    { id: 1, name: 'ইসলাম' },
-    { id: 2, name: 'হিন্দু' },
-    { id: 3, name: 'বৌদ্ধ' },
-    { id: 4, name: 'খ্রিষ্টান' },
-    { id: 5, name: 'অন্যান্য' }
-];
-
-const disabilityStatusEn = [
-    { id: 0, name: 'None' },
-    { id: 1, name: 'Physical' },
-    { id: 2, name: 'Visual' },
-    { id: 3, name: 'Hearing' },
-    { id: 4, name: 'Verbal' },
-    { id: 5, name: 'Intellectual' },
-    { id: 6, name: 'Others' }
-];
-
-
-const selectedDisabilityStatusEn = ref({ id: '', name: '' });
-
-watch(() => form.disability_status_en, (newDisabilityStatusEn, oldDisabilityStatusEn) => {
-    const selectedDisabilityStatus = disabilityStatusEn.find(disabilityStatus => disabilityStatus.name === newDisabilityStatusEn);
-    if (selectedDisabilityStatus) {
-        selectedDisabilityStatusEn.value = { id: selectedDisabilityStatus.id, name: selectedDisabilityStatus.name };
-    } else {
-        selectedDisabilityStatusEn.value = { id: '', name: '' };
-    }
-});
-
-
-const disabilityStatusBn = [
-    { id: 0, name: 'প্রযোজ্য নয়' },
-    { id: 1, name: 'শারীরিক প্রতিবন্ধী' },
-    { id: 2, name: 'দৃষ্টি প্রতিবন্ধী' },
-    { id: 3, name: 'শ্রবণ প্রতিবন্ধী' },
-    { id: 4, name: 'বাক প্রতিবন্ধী' },
-    { id: 5, name: 'বুদ্ধি প্রতিবন্ধী' },
-    { id: 6, name: 'অন্যান্য' }
-];
-
-
-const handleGenderSelected = (selectedLabel) => {
-    const selectedId = parseInt(selectedLabel); // Convert selected label to integer
-
-    // Find the gender by ID in English
-    const selectedEnGender = gendersEn.find(gender => gender.id === selectedId);
-    if (selectedEnGender) {
-        form.gender_en = selectedEnGender.name; // Set English gender name
-    }
-
-    // Find the gender by ID in Bengali
-    const selectedBnGender = gendersBn.find(gender => gender.id === selectedId);
-    if (selectedBnGender) {
-        form.gender_bn = selectedBnGender.name; // Set Bengali gender name
-    }
-
-};
-
-const handleReligionSelected = (selectedLabel) => {
-    const selectedId = parseInt(selectedLabel); // Convert selected label to integer
-
-    // Find the religion by ID in English
-    const selectedEnReligion = religionsEn.find(religion => religion.id === selectedId);
-    if (selectedEnReligion) {
-        form.religion_en = selectedEnReligion.name; // Set English religion name
-    }
-
-    // Find the religion by ID in Bengali
-    const selectedBnReligion = religionsBn.find(religion => religion.id === selectedId);
-    if (selectedBnReligion) {
-        form.religion_bn = selectedBnReligion.name; // Set Bengali religion name
-    }
-
-};
-
-const handleDisabilityStatusSelected = (selectedLabel) => {
-    const selectedId = parseInt(selectedLabel); // Convert selected label to integer
-
-    // Find the disabilityStatus by ID in English
-    const selectedEnDisabilityStatus = disabilityStatusEn.find(disabilityStatus => disabilityStatus.id === selectedId);
-    if (selectedEnDisabilityStatus) {
-        form.disability_status_en = selectedEnDisabilityStatus.name; // Set English disabilityStatus name
-    }
-
-    // Find the disabilityStatus by ID in Bengali
-    const selectedBnDisabilityStatus = disabilityStatusBn.find(disabilityStatus => disabilityStatus.id === selectedId);
-    if (selectedBnDisabilityStatus) {
-        form.disability_status_bn = selectedBnDisabilityStatus.name; // Set Bengali disabilityStatus name
-    }
-
-    console.log(form.disability_status_en);
-    console.log(form.disability_status_bn);
-};
-
-
-
-const photoPreview = ref(null);
-
-const previewPhoto = (event) => {
-    const file = event.target.files[0];
-
-    if (file && file.type.startsWith('image/')) {
-        const reader = new FileReader();
-
-        reader.onload = (e) => {
-            photoPreview.value = e.target.result;
-        };
-
-        reader.readAsDataURL(file);
-
-        // Set the file to the form property
-        form.photo = file;
-    } else {
-        // Clear the preview and reset the form property
-        photoPreview.value = null;
-        form.photo = null;
-    }
-};
-
-let step = 1; // Initial step
-const currentStep = ref(1);
-const totalSteps = 5;
-const nextStep = () => {
-    // Move to the next step
-    step++;
-    currentStep.value++;
-};
-
-const prevStep = () => {
-    // Move to the prev step
-    step--;
-    currentStep.value--;
-};
-
-const goToStep = (index) => {
-    // Move to the prev step
-    step = index;
-    currentStep.value = index;
-};
-
-
-const stepsFields = {
-    1: ['roll_no', 'registration_no', 'unique_id', 'brid', 'date_of_birth'],
-    2: ['student_name_en', 'father_name_en', 'mother_name_en', 'address_en', 'guardian_name_en'],
-    3: ['student_name_bn', 'father_name_bn', 'mother_name_bn', 'address_bn', 'guardian_name_bn'],
-    4: ['gender_bn', 'religion_bn', 'disability_status_bn', 'student_mobile_no', 'father_mobile_no', 'mother_mobile_no', 'guardian_mobile_no'],
-    5: ['photo'],
-    // Define fields for other steps
-    // ...
-};
-const stepswitherrors = ref([]);
-watch(() => form.errors, (newErrors, oldErrors) => {
-    // console.log('Form errors changed:', newErrors);
-    stepswitherrors.value = [];
-    // Function to check if a step has errors
-    const hasErrorsInStep = (step) => {
-        const fieldsInStep = stepsFields[step];
-        return fieldsInStep.some(field => newErrors[field]);
-    };
-
-    // Iterate through steps and check for errors
-    for (const step in stepsFields) {
-        if (hasErrorsInStep(step)) {
-            stepswitherrors.value.push(step);
-            goToStep(stepswitherrors.value[0]);
-            console.log(stepswitherrors.value);
-            // Do something when a step has errors
-        }
-    }
-
-});
 
 const createStudent = () => {
     form.post(route('admin.students.store'), {
         errorBag: 'createStudent',
         preserveScroll: true,
     });
-    return console.log('f');
-
 };
-
-
 
 </script>
 

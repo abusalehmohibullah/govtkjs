@@ -26,7 +26,7 @@ const { students, selected_classroom, classrooms } = defineProps(['students', 's
                     Lorem ipsumuasi eniumquam error aspernatsuscipit.
                 </template>
                 <template #aside>
-                    <Link :href="route('admin.students.create', { selected_classroom: selected_classroom})">
+                    <Link :href="route('admin.students.create', { selected_classroom: selected_classroom.id})">
                     <PrimaryButton>
                         Create
                     </PrimaryButton>

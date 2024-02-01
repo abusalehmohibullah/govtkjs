@@ -40,7 +40,7 @@ const { classrooms } = defineProps(['classrooms']);
 
                 <div
                     class="grid grid-cols-3 grid-rows-1 gap-2 sm:grid-cols-4 sm:grid-rows-1 sm:gap-4 2xl:grid-cols-5 parent-container">
-                    <Link :href="route('admin.attendances.index', { selected_classroom: classroom.id})" v-if="classrooms.length > 0" v-for="(classroom, index) in classrooms" :key="index"
+                    <Link :href="route('admin.students.index', { selected_classroom: classroom.id})" v-if="classrooms.length > 0" v-for="(classroom, index) in classrooms" :key="index"
                         class="child-container mb-2 rounded-md">
                         <div class="d-flex align-items-center w-full rounded-md">
                             <div class="show-first-child card w-full">

@@ -46,7 +46,9 @@ const formatDate = (dateString) => {
                 <th class="py-2 px-4 border-b bg-slate-200">#</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Event Type</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Event Name</th>
+                <th class="py-2 px-4 border-b bg-slate-200">Details</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Event Date</th>
+                <th class="py-2 px-4 border-b bg-slate-200">Class off?</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Created/Edited</th>
                 <th class="py-2 px-4 border-b bg-slate-200">Action</th>
             </tr>
@@ -56,17 +58,25 @@ const formatDate = (dateString) => {
 
             <tr v-if="calendars.data.length > 0" v-for="(calendar, index) in calendars.data" :key="index"
                 class="hover:bg-blue-100" :class="calendar.status === 0 ? 'bg-gray-200 opacity-70' : ''">
-                <td class="py-2 px-4 border-b text-center">{{ (calendars.current_page - 1) * calendars.per_page + index + 1 }}</td>
+                <td class="py-2 px-4 border-b text-center">{{ (calendars.current_page - 1) * calendars.per_page + index + 1
+                }}</td>
                 <td class="py-2 px-4 border-b text-center">{{ calendar.type }}</td>
                 <td class="py-2 px-4 border-b text-center">{{ calendar.title }}</td>
-                <td class="py-2 px-4 border-b text-center">{{ formatDate(calendar.start_date) }}<span v-if="calendar.end_date"> - {{ formatDate(calendar.end_date) }}</span></td>
+                <td class="py-2 px-4 border-b text-center">{{ calendar.description }}</td>
+                <td class="py-2 px-4 border-b text-center">{{ formatDate(calendar.start_date) }}<span
+                        v-if="calendar.end_date"> - {{ formatDate(calendar.end_date) }}</span></td>
+                <td class="py-2 px-4 border-b text-center">
+                    <div class="rounded-2xl px-4 text-white" :class="calendar.class_off === 1 ? 'bg-blue-700' : 'bg-gray-500'">
+                        {{ calendar.class_off === 1 ? 'Yes' : 'No' }}
+                    </div>
+                </td>
                 <td class="py-2 px-4 border-b text-center">
                     <CreatedUpdatedBy :createdUpdatedBy="calendar" />
                 </td>
                 <td class="py-2 px-4 border-b">
                     <div class="flex justify-center">
 
-<ToggleStatus :toggle="calendar" :toggleType="`calendars`"/>
+                        <ToggleStatus :toggle="calendar" :toggleType="`calendars`" />
                         <Link :href="route('admin.calendars.edit', calendar.id)">
                         <PrimaryIconButton>
                             <i class="fas fa-pen"></i>

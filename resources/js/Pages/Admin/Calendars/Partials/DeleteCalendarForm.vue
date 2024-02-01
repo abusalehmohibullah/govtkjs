@@ -62,7 +62,7 @@ const deleteCalendar = async () => {
 
             <div class="bg-red-100 w-full mt-2 rounded line-clamp-3 box-content">
                 <span class="m-2 line-clamp-3 box-content">
-                    {{ props.calendar.name }}
+                    {{ props.calendar.title }}
                 </span>
             </div>
         </template>

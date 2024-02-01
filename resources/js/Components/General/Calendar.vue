@@ -1,5 +1,3 @@
-
-  
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue';
 
@@ -39,7 +37,6 @@ const generateCalendar = (month, year) => {
     for (let i = 1; i <= daysInMonth; i++) {
         calendarDays.push(i);
     }
-
     return calendarDays;
 };
 
@@ -76,11 +73,6 @@ const toggleMonthList = () => {
     showMonthList.value = !showMonthList.value;
 };
 
-const filteredEvents = computed(() => {
-    const selectedMonthIndex = monthNames.value.indexOf(currentMonth.value);
-    return events.filter(event => new Date(event.start_date).getMonth() === selectedMonthIndex && new Date(event.start_date).getFullYear() === parseInt(currentYear.value));
-});
-
 onMounted(() => {
     const currDate = new Date();
     currentMonth.value = monthNames.value[currDate.getMonth()];
@@ -90,6 +82,33 @@ onMounted(() => {
 watch([currentMonth, currentYear], () => {
     calendarDays.value = generateCalendar(monthNames.value.indexOf(currentMonth.value), currentYear.value);
 });
+
+
+const filteredEvents = computed(() => {
+    const selectedMonthIndex = monthNames.value.indexOf(currentMonth.value);
+    return events.filter(event => new Date(event.start_date).getMonth() === selectedMonthIndex && new Date(event.start_date).getFullYear() === parseInt(currentYear.value));
+});
+
+const eventDetails = ref(null);
+
+let oldParameter;
+const showEventDetails = (day) => {
+    console.log(oldParameter);
+    if (oldParameter == day) {
+        closeEventDetails();
+    } else {
+        oldParameter = day;
+        eventDetails.value = filteredEvents.value.filter((event) => {
+            const startDate = new Date(event.start_date).getDate();
+            const endDate = event.end_date ? new Date(event.end_date).getDate() : startDate;
+            return day === startDate || (day >= startDate && day <= endDate);
+        });
+    }
+}
+const closeEventDetails = () => {
+    eventDetails.value = null;
+    oldParameter = null;
+}
 
 const findEventsByDay = (day) => {
 
@@ -101,46 +120,41 @@ const findEventsByDay = (day) => {
     const matchingEvents = filteredEvents.value.filter((event) => {
         const startDate = new Date(event.start_date).getDate();
         const endDate = event.end_date ? new Date(event.end_date).getDate() : startDate;
-
         return day === startDate || (day >= startDate && day <= endDate);
     });
 
-
+    if (matchingEvents.length == 0) {
+        return 'black';
+    }
 
     // Check if there are multiple values
-// Check if there are multiple values
-if (matchingEvents.length > 1) {
-    console.log(`Multiple events found for day ${day}`);
+    // Check if there are multiple values
+    if (matchingEvents.length > 1) {
 
-    // Check if any of the events is a single-day event
-    const singleDayEvent = matchingEvents.find((event) => {
-        return new Date(event.start_date).getDate() === day && !event.end_date;
-    });
-
-    if (singleDayEvent) {
-        console.log(`Single-day event found for day ${day}:`, singleDayEvent);
-        return [singleDayEvent.color];
-    } else {
-        // Check if any event is a public holiday or vacation
-        const holidayOrVacation = matchingEvents.find((event) => {
-            return event.type === 'Public_Holidays' || event.type === 'Vacation';
+        // Check if any of the events is a single-day event
+        const singleDayEvent = matchingEvents.find((event) => {
+            return new Date(event.start_date).getDate() === day && !event.end_date;
         });
 
-        if (holidayOrVacation) {
-            console.log(`Public holiday or vacation found for day ${day}:`, holidayOrVacation);
-            return [holidayOrVacation.color];
+        if (singleDayEvent) {
+            return [singleDayEvent.color];
         } else {
-            // Return the event with shorter duration
-            const shortestEvent = matchingEvents.reduce((min, event) => {
-                return new Date(event.end_date).getDate() - new Date(event.start_date).getDate() < new Date(min.end_date).getDate() - new Date(min.start_date).getDate() ? event : min;
+            // Check if any event is a public holiday or vacation
+            const holidayOrVacation = matchingEvents.find((event) => {
+                return event.type === 'Public_Holidays' || event.type === 'Vacation';
             });
-            console.log(`Shortest event found for day ${day}:`, shortestEvent);
-            return [shortestEvent.color];
+
+            if (holidayOrVacation) {
+                return [holidayOrVacation.color];
+            } else {
+                // Return the event with shorter duration
+                const shortestEvent = matchingEvents.reduce((min, event) => {
+                    return new Date(event.end_date).getDate() - new Date(event.start_date).getDate() < new Date(min.end_date).getDate() - new Date(min.start_date).getDate() ? event : min;
+                });
+                return [shortestEvent.color];
+            }
         }
     }
-}
-
-
     return matchingEvents.map((event) => event.color);
 };
 
@@ -178,20 +192,28 @@ if (matchingEvents.length > 1) {
                     :class="{ 'text-red-600': day == weekDays[5] || day == weekDays[6] }">{{ day }}</div>
             </div>
             <div class="calendar-days">
-                <div v-for="day in calendarDays" :key="day" class="calendar-day-hover" :class="{
-                    'border': day === currentDay,
-                    'border-2': day === currentDay,
-                    'border-gray-400': day === currentDay,
-                    'font-semibold': findEventsByDay(day),
-                }" :style="{ color: findEventsByDay(day) }">
+                <div v-for="day in calendarDays" :key="day" class="calendar-day-hover relative" @click="showEventDetails(day)"
+                    :class="{
+                        'border': day === currentDay,
+                        'border-2': day === currentDay,
+                        'border-gray-400': day === currentDay,
+                        'font-semibold': findEventsByDay(day)
+                    }" :style="{ color: findEventsByDay(day) }">
                     {{ day }}
+                    <!-- <div v-if="day" class="absolute bottom-0 left-0 w-full h-[2px]" :style="{  backgroundColor: findEventsByDay(day) }"></div> -->
                 </div>
-
-
             </div>
         </div>
-        <div class="month-list" v-if="showMonthList">
-            <div v-for="(month, index) in monthNames" :key="index" @click="selectMonth(index)">
+        <div v-if="eventDetails" class="absolute top-0 left-0 w-full bg-[#C6DCE4] p-2 font-black">
+            <button class="absolute top-1 right-1" @click="closeEventDetails"><i class="bi bi-x-lg"></i></button>
+            <div v-for="details in eventDetails" :key="details">
+                <div v-if="details.title" class="text-lg">{{ details.title }}</div>
+                <div v-if="details.description">{{ details.description }}</div>
+            </div>
+        </div>
+        <div class="month-list flex flex-wrap" :class="{ 'show': showMonthList }">
+            <div class="flex justify-center items-center text-xl font-semibold bg-white w-1/3 border cursor-pointer hover:border-slate-400"
+                v-for="(month, index) in monthNames" :key="index" @click="selectMonth(index)">
                 {{ month }}
             </div>
         </div>
@@ -199,64 +221,6 @@ if (matchingEvents.length > 1) {
 </template>
 
 <style>
-:root {
-    --dark-body: #4d4c5a;
-    --dark-main: #141529;
-    --dark-second: #79788c;
-    --dark-hover: #323048;
-    --dark-text: #f8fbff;
-
-    --light-body: #f3f8fe;
-    --light-main: #fdfdfd;
-    --light-second: #c3c2c8;
-    --light-hover: #edf0f5;
-    --light-text: #151426;
-
-    --blue: #a4c7f2;
-    --white: #fff;
-
-    --shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-
-    --font-family: cursive;
-}
-
-.dark {
-    --bg-body: var(--dark-body);
-    --bg-main: var(--dark-main);
-    --bg-second: var(--dark-second);
-    --color-hover: var(--dark-hover);
-    --color-txt: var(--dark-text);
-}
-
-.light {
-    --bg-body: var(--light-body);
-    --bg-main: var(--light-main);
-    --bg-second: var(--light-second);
-    --color-hover: var(--light-hover);
-    --color-txt: var(--light-text);
-}
-
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-}
-
-.current-day {
-    background-color: #2b9ff2;
-    /* Change this to the desired background color */
-    color: #000;
-    /* Change this to the desired text color */
-    /* border-radius: 50%; */
-    /* Add any other styles you want to apply to the current day */
-}
-
-.light .calendar {
-    box-shadow: var(--shadow);
-}
-
-
-
 .calendar-body {
     padding: 10px;
 }
@@ -277,10 +241,9 @@ if (matchingEvents.length > 1) {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 2px;
-    color: var(--color-txt);
 }
 
-.calendar-days div {
+.calendar-days>div {
     width: 100%;
     height: 50px;
     display: flex;
@@ -293,94 +256,10 @@ if (matchingEvents.length > 1) {
     /* border-radius: 50%; */
 }
 
-.calendar-days div span {
-    position: absolute;
-}
-
-.calendar-days div:hover span {
-    transition: width 0.2s ease-in-out, height 0.2s ease-in-out;
-}
-
-.calendar-days div span:nth-child(1),
-.calendar-days div span:nth-child(3) {
-    width: 2px;
-    height: 0;
-    background-color: var(--color-txt);
-}
-
-.calendar-days div:hover span:nth-child(1),
-.calendar-days div:hover span:nth-child(3) {
-    height: 100%;
-}
-
-.calendar-days div span:nth-child(1) {
-    bottom: 0;
-    left: 0;
-}
-
-.calendar-days div span:nth-child(3) {
-    top: 0;
-    right: 0;
-}
-
-.calendar-days div span:nth-child(2),
-.calendar-days div span:nth-child(4) {
-    width: 0;
-    height: 2px;
-    background-color: var(--color-txt);
-}
-
-.calendar-days div:hover span:nth-child(2),
-.calendar-days div:hover span:nth-child(4) {
-    width: 100%;
-}
-
-.calendar-days div span:nth-child(2) {
-    top: 0;
-    left: 0;
-}
-
-.calendar-days div span:nth-child(4) {
-    bottom: 0;
-    right: 0;
-}
-
-.calendar-days div:hover span:nth-child(2) {
-    transition-delay: 0.2s;
-}
-
-.calendar-days div:hover span:nth-child(3) {
-    transition-delay: 0.4s;
-}
-
-.calendar-days div:hover span:nth-child(4) {
-    transition-delay: 0.6s;
-}
-
-.calendar-days div.curr-date,
-.calendar-days div.curr-date:hover {
-    background-color: var(--blue);
-    color: var(--white);
-    border-radius: 50%;
-}
-
-.calendar-days div.curr-date span {
-    display: none;
-}
-
 .month-picker {
     padding: 5px 10px;
     border-radius: 10px;
     cursor: pointer;
-}
-
-.month-picker:hover {
-    background-color: var(--color-hover);
-}
-
-.month-picker {
-    display: flex;
-    align-items: center;
 }
 
 .month-change {
@@ -393,38 +272,12 @@ if (matchingEvents.length > 1) {
     cursor: pointer;
 }
 
-.month-change:hover {
-    background-color: var(--color-hover);
-}
-
-.calendar-footer {
-    padding: 10px;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-}
-
-.toggle {
-    display: flex;
-}
-
-.toggle span {
-    margin-right: 10px;
-    color: var(--color-txt);
-}
-
 .month-list {
     position: absolute;
     width: 100%;
     height: 100%;
     top: 0;
     left: 0;
-    background-color: var(--bg-main);
-    padding: 20px;
-    grid-template-columns: repeat(3, auto);
-    gap: 5px;
-    display: grid;
-    transform: scale(1.5);
     visibility: hidden;
     pointer-events: none;
 }
@@ -434,24 +287,6 @@ if (matchingEvents.length > 1) {
     visibility: visible;
     pointer-events: visible;
     transition: all 0.2s ease-in-out;
-}
-
-.month-list>div {
-    display: grid;
-    place-items: center;
-}
-
-.month-list>div>div {
-    width: 100%;
-    padding: 5px 20px;
-    border-radius: 10px;
-    text-align: center;
-    cursor: pointer;
-    color: var(--color-txt);
-}
-
-.month-list>div>div:hover {
-    background-color: var(--color-hover);
 }
 
 @keyframes to-top {

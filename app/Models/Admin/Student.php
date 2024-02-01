@@ -47,6 +47,11 @@ class Student extends Model
     ];
 
         
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class, 'student_id');
+    }
+
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');

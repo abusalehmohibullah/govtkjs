@@ -32,6 +32,7 @@ return new class extends Migration
             $table->date('end_date')->nullable();
             $table->text('description')->nullable();
             $table->string('color')->nullable();
+            $table->boolean('class_off')->default(false);
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
