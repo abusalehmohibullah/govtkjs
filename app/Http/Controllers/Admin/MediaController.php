@@ -18,7 +18,7 @@ class MediaController extends Controller
     public function index(Album $album)
     {
         // Get a query builder instance for the media associated with the album
-        $mediaFiles = Media::where('album_id', $album->id)->paginate(10);
+        $mediaFiles = Media::where('album_id', $album->id)->paginate(15);
 
         return Inertia::render('Admin/Media/Index', [
             'album' => $album,

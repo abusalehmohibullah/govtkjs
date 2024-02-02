@@ -27,6 +27,7 @@ const createMedia = () => {
 };
 
 const photoPreview = ref([]);
+let totalSize = 0; // Variable to store the total size
 
 const previewPhoto = (event) => {
     const newFiles = Array.from(event.target.files);
@@ -49,6 +50,10 @@ const previewPhoto = (event) => {
                         file: file,
                     });
                 }
+
+                // Update the total size
+                totalSize += file.size;
+                console.log("Total Size (MB):", convertBytesToMegabytes(totalSize)); // Log the total size in megabytes
             };
 
             reader.readAsDataURL(file);
@@ -61,10 +66,12 @@ const previewPhoto = (event) => {
     // Concatenate the new files with the existing ones in form.paths
     form.paths = [...form.paths, ...newFiles];
 
-    console.log(photoPreview);
 };
 
 const removePreview = (index) => {
+    // Subtract the size of the removed file from the total size
+    totalSize -= form.paths[index].size;
+
     // Remove the preview at the specified index
     photoPreview.value.splice(index, 1);
 
@@ -73,12 +80,23 @@ const removePreview = (index) => {
 
     // Reassign the updated form.paths to trigger the reactivity
     form.paths = [...form.paths];
+
+    console.log("Total Size (MB):", convertBytesToMegabytes(totalSize)); // Log the total size in megabytes
 };
 
 const clearAllPreview = () => {
+    // Reset the total size when clearing all previews
+    totalSize = 0;
+
     form.paths = [];
     photoPreview.value = [];
-}
+
+    console.log("Total Size (MB):", convertBytesToMegabytes(totalSize)); // Log the total size in megabytes
+};
+// Helper function to convert bytes to megabytes
+const convertBytesToMegabytes = (bytes) => {
+    return (bytes / (1024 * 1024)).toFixed(2);
+};
 
 </script>
 
@@ -120,22 +138,36 @@ const clearAllPreview = () => {
                         <template #required>*</template>
                     </InputLabel>
                     <FileInput @change="previewPhoto" id="paths" class="form-control mt-1 block"
-                        :class="{ 'border-red-500 focus:border-red-500': form.errors.paths }" type="file" accept="image/*" multiple />
+                        :class="{ 'border-red-500 focus:border-red-500': form.errors.paths }" type="file" accept="image/*"
+                        multiple />
                     <InputError :message="form.errors.paths" class="text-red-500" />
                 </div>
+                <div class="flex justify-between">
                 <div v-if="photoPreview.length > 0" class="flex">
-                    <div class="text-lg font-medium">Total Selected: <span class="text-green-600 font-bold">{{ photoPreview.length }}</span> </div>
-                    <button class="bg-red-600 rounded px-2 text-white ml-5" @click="clearAllPreview">Remove All</button>
+                    <div class="text-sm md:text-lg font-medium">Total Selected: <span class="text-green-600 font-bold">{{
+                        photoPreview.length }}</span> </div>
+                    <button type="button" class="bg-red-600 rounded px-2 text-white ml-2 md:ml-5 text-xs md:text-sm" @click="clearAllPreview">Remove All</button>
                 </div>
+
+                <div v-if="totalSize > 0" class="text-sm md:text-lg font-medium">
+                    Total file size:
+                    <span
+                        :class="{ 'text-red-700': convertBytesToMegabytes(totalSize) > 50, 'text-green-700': convertBytesToMegabytes(totalSize) <= 50 }">{{
+                            convertBytesToMegabytes(totalSize) }}MB</span>
+                </div>
+</div>
                 <!-- Preview system -->
+                <div v-if="convertBytesToMegabytes(totalSize) > 50"
+                    class="bg-red-100 text-lg font-semibold px-2 py-1 rounded text-red-700">Total file size must be less
+                    than 50MB!</div>
                 <div v-if="form.paths.length" class="w-full flex items-center flex-wrap">
                     <div v-for="(preview, index) in photoPreview" :key="index"
-                        class="relative w-1/3 aspect-video border shadow">
+                        class="relative w-1/2 md:w-1/3 aspect-video border shadow">
                         <img v-if="preview" :src="preview.src" alt="Photo Preview"
                             class="object-cover w-full aspect-video" />
                         <img v-else :src="'/assets/images/preview.png'" alt="Photo Preview"
                             class="object-contain w-full aspect-video" />
-                        <button @click="removePreview(index)"
+                        <button type="button" @click="removePreview(index)"
                             class="absolute top-0 right-0 px-2 py-1 bg-red-500 text-white"><i
                                 class="bi bi-x-lg"></i></button>
                     </div>
@@ -148,9 +180,10 @@ const clearAllPreview = () => {
                     {{ form.processing ? 'Creating...' : (form.recentlySuccessful ? 'Created!' : 'Failed') }}
                 </ActionMessage>
 
-                <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Create</PrimaryButton>
-            </template>
-        </FormSection>
-    </div>
-</template>
+                <PrimaryButton
+                :class="{ 'opacity-25': form.processing || convertBytesToMegabytes(totalSize) > 50 }"
+                :disabled="form.processing || convertBytesToMegabytes(totalSize) > 50">
+                Create</PrimaryButton>
+        </template>
+    </FormSection>
+</div></template>
