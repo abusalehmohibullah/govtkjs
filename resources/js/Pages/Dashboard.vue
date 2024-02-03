@@ -2,7 +2,7 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import Welcome from '@/Components/Welcome.vue';
 
-const { classroom } = defineProps(['classroom']);
+const { classrooms } = defineProps(['classrooms']);
 </script>
 
 <template>
@@ -14,6 +14,6 @@ const { classroom } = defineProps(['classroom']);
                 </h2>
             </div>
         </template>
-        <Welcome :classroom="classroom" />
+        <Welcome :classrooms="classrooms" />
     </AdminLayout>
 </template>

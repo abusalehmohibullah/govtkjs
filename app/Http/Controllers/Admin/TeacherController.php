@@ -19,7 +19,7 @@ class TeacherController extends Controller
     public function index()
     {
         // Retrieve paginated records from the teachers table
-        $teachers = Teacher::with(['user', 'subject', 'classroom', 'createdBy', 'updatedBy'])
+        $teachers = Teacher::with(['user', 'subject', 'classrooms', 'createdBy', 'updatedBy'])
             ->paginate(10);
 
         // Pass the paginated data to the Inertia view
@@ -58,7 +58,6 @@ class TeacherController extends Controller
             'designation' => 'required',
             'priority' => 'nullable',
             'subject_id' => 'nullable',
-            'classroom_id' => 'nullable',
         ];
 
         // Custom error messages for validation
@@ -82,6 +81,7 @@ class TeacherController extends Controller
         try {
             // Save the model
             if ($teacher->save()) {
+                $teacher->classrooms()->attach($request->input('selectedClassrooms', []));
                 return redirect()->route('admin.teachers.index')->with('flash.banner', 'Teacher created successfully!');
             } else {
                 return redirect()->back()->withInput()->with('flash.banner', 'Failed to create Teacher.')->with('flash.bannerStyle', 'danger');
@@ -108,6 +108,7 @@ class TeacherController extends Controller
         $users = User::orderBy('name')->get();
         $classrooms = Classroom::orderBy('name')->get();
         $subjects = Subject::orderBy('code')->get();
+        $selectedClassroom = $teacher->classrooms;
 
         // Show the form for create
         return Inertia::render('Admin/Teachers/Edit', [
@@ -115,6 +116,7 @@ class TeacherController extends Controller
             'classrooms' => $classrooms,
             'subjects' => $subjects,
             'teacher' => $teacher,
+            'selectedClassroom' => $selectedClassroom,
         ]);
     }
 
@@ -131,7 +133,6 @@ class TeacherController extends Controller
             'designation' => 'required',
             'priority' => 'nullable',
             'subject_id' => 'nullable',
-            'classroom_id' => 'nullable',
         ];
 
         // Custom error messages for validation
@@ -153,6 +154,7 @@ class TeacherController extends Controller
         try {
             // Save the model
             if ($teacher->save()) {
+                $teacher->classrooms()->sync($request->input('selectedClassrooms', []));
                 return redirect()->route('admin.teachers.index')->with('flash.banner', 'Teacher update successfully!');
             } else {
                 return redirect()->back()->withInput()->with('flash.banner', 'Failed to update Teacher.')->with('flash.bannerStyle', 'danger');

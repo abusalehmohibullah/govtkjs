@@ -118,7 +118,7 @@ const handleClassroomSelected = async (selectedLabel) => {
                     <div class="font-bengali">{{ student.mother_name_bn }}</div>
                 </td>
                 <td class="py-2 px-4 border-b flex items-center justify-center">
-                    <div v-if="student.photo != ''"><img :src="'/storage/' + student.photo" class="d-block h-24 w-20"
+                    <div v-if="student.photo"><img :src="'/storage/' + student.photo" class="d-block h-24 w-20"
                             alt="..."></div>
                     <div v-else class="h-24 w-20 flex justify-center items-center flex-col">
                         <div>No</div>

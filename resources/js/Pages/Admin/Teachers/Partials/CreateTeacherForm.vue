@@ -11,7 +11,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SelectInput from '@/Components/SelectInput.vue';
-
+import Classroom from '@/Components/Admin/Classroom.vue';
 const props = defineProps({
     users: Object,
     classrooms: Object,
@@ -25,7 +25,7 @@ const form = useForm({
     designation: '',
     priority: '',
     subject_id: '',
-    classroom_id: '',
+    selectedClassrooms: [],
 });
 
 
@@ -101,22 +101,10 @@ const handleSubjectSelected = (selectedLabel) => {
     // console.log('gg');
 };
 
-const selectedClassroom = ref({ id: '', name: '' });
-// console.log(selectedClassroom);
-
-watch(() => form.classroom_id, (newClassroom, oldClassroom) => {
-    const selectedClassroomOption = props.classrooms.find(classroom => classroom.id === newClassroom);
-    if (selectedClassroomOption) {
-        selectedClassroom.value = { id: selectedClassroomOption.id, name: selectedClassroomOption.name };
-    } else {
-        selectedClassroom.value = { id: '', name: '' };
-    }
-});
-const handleClassroomSelected = (selectedLabel) => {
-    form.classroom_id = selectedLabel;
-    // console.log('gg');
+const handleSelectedClassroomsUpdated = (newSelectedClassrooms) => {
+    // console.log('Selected classrooms Updated:', newSelectedClassrooms);
+    form.selectedClassrooms = newSelectedClassrooms;
 };
-
 const createTeacher = () => {
     form.post(route('admin.teachers.store'), {
         errorBag: 'createTeacher',
@@ -182,13 +170,7 @@ const createTeacher = () => {
                 </div>
 
                 <div class="col-span-6 sm:col-span-4">
-                    <InputLabel for="classroom" value="Classroom">
-                        <!-- <template #required>*</template> -->
-                    </InputLabel>
-                    <SelectInput :options="classrooms" inputName="classroom_id" :fieldName="'name'" :valueField="'id'"
-                        :selectedOption="selectedClassroom" @option-selected="handleClassroomSelected" />
-
-                    <InputError :message="form.errors.classroom_id" class="text-red-500" />
+                    <Classroom :data="classrooms" @selected-items-updated="handleSelectedClassroomsUpdated" />
                 </div>
 
             </template>

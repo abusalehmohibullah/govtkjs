@@ -5,7 +5,7 @@ import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 import UpdateTeacherForm from '@/Pages/Admin/Teachers/Partials/UpdateTeacherForm.vue';
 
-const {  users,  classrooms, subjects, teacher } = defineProps(['users', 'classrooms', 'subjects', 'teacher']);
+const {  users,  classrooms, subjects, teacher, selectedClassroom } = defineProps(['users', 'classrooms', 'subjects', 'teacher', 'selectedClassroom']);
 
 </script>
 
@@ -21,7 +21,7 @@ const {  users,  classrooms, subjects, teacher } = defineProps(['users', 'classr
 
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <!-- Use the Form component to wrap your form -->
-                <UpdateTeacherForm  :users="users" :classrooms="classrooms" :subjects="subjects" :teacher="teacher"/>
+                <UpdateTeacherForm  :users="users" :classrooms="classrooms" :subjects="subjects" :teacher="teacher" :selectedClassroom="selectedClassroom"/>
             </div>
 
 

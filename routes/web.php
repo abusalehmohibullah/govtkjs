@@ -90,9 +90,10 @@ Route::get('/', function () {
         ->orderBy('priority') // Order by priority
         ->get();
 
-    $albums = Album::with('media')
-        ->latest('created_at') // Order by created_at in descending order
-        ->take(10)             // Limit the result to the first 10 albums
+    $albums = Album::has('media')
+        ->with('media')
+        ->latest('created_at')
+        ->take(10)
         ->get();
 
     $events = Calendar::where('status', 1)
@@ -132,10 +133,11 @@ Route::get('/', function () {
 
 Route::get('/albums', function () {
 
-    $albums = Album::with('media')
-        ->latest('created_at') // Order by created_at in descending order
-        ->take(10)             // Limit the result to the first 10 albums
-        ->get();
+    $albums = Album::has('media')
+    ->with('media')
+    ->latest('created_at')
+    ->get();
+
 
     // Pass the fetched data to the Inertia view
     return Inertia::render('Albums', [
@@ -262,21 +264,21 @@ Route::prefix('admin')->middleware([
     // Dashboard
     Route::get('/dashboard', function () {
         $user = auth()->user();
-        $classroom = null;
+        $classrooms = null;
         if ($user) {
             $teacher = $user->teacher;
 
             if ($teacher) {
-                $classroom = $teacher->classroom;
-                if ($classroom) {
+                $classrooms = $teacher->classrooms;
+                if ($classrooms) {
                     // Eager load related models (Grade, Section, Group)
-                    $classroom = $classroom->load(['grade', 'section', 'group']);
+                    $classrooms = $classrooms->load(['grade', 'section', 'group']);
                 }
             }
         }
 
         return Inertia::render('Dashboard', [
-            'classroom' => $classroom,
+            'classrooms' => $classrooms,
             // 'message_2_content' => $message_2_content,
             // 'message_2_image' => $message_2_image,
         ]);

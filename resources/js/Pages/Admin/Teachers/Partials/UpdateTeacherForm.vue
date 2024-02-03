@@ -11,12 +11,13 @@ import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SelectInput from '@/Components/SelectInput.vue';
-
+import Classroom from '@/Components/Admin/Classroom.vue';
 const props = defineProps({
     users: Object,
     classrooms: Object,
     subjects: Object,
     teacher: Object,
+    selectedClassroom: Object,
 });
 
 const form = useForm({
@@ -26,7 +27,7 @@ const form = useForm({
     designation: props.teacher.designation,
     priority: props.teacher.priority,
     subject_id: props.teacher.subject_id,
-    classroom_id: props.teacher.classroom_id,
+    selectedClassrooms: [],
 });
 
 
@@ -117,25 +118,9 @@ const handleSubjectSelected = (selectedLabel) => {
     // console.log('gg');
 };
 
-const selectedClassroom = ref({ id: '', name: '' });
-const selectedClassroomOption = props.classrooms.find(classroom => classroom.id === form.classroom_id);
-    if (selectedClassroomOption) {
-        selectedClassroom.value = { id: selectedClassroomOption.id, name: selectedClassroomOption.name };
-    } else {
-        selectedClassroom.value = { id: '', name: '' };
-    }
-
-watch(() => form.classroom_id, (newClassroom, oldClassroom) => {
-    const selectedClassroomOption = props.classrooms.find(classroom => classroom.id === newClassroom);
-    if (selectedClassroomOption) {
-        selectedClassroom.value = { id: selectedClassroomOption.id, name: selectedClassroomOption.name };
-    } else {
-        selectedClassroom.value = { id: '', name: '' };
-    }
-});
-const handleClassroomSelected = (selectedLabel) => {
-    form.classroom_id = selectedLabel;
-    // console.log('gg');
+const handleSelectedClassroomsUpdated = (newSelectedClassrooms) => {
+    // console.log('Selected classrooms Updated:', newSelectedClassrooms);
+    form.selectedClassrooms = newSelectedClassrooms;
 };
 
 const updateTeacher = () => {
@@ -203,13 +188,7 @@ const updateTeacher = () => {
                 </div>
 
                 <div class="col-span-6 sm:col-span-4">
-                    <InputLabel for="classroom" value="Classroom">
-                        <!-- <template #required>*</template> -->
-                    </InputLabel>
-                    <SelectInput :options="classrooms" inputName="classroom_id" :fieldName="'name'" :valueField="'id'"
-                        :selectedOption="selectedClassroom" @option-selected="handleClassroomSelected" />
-
-                    <InputError :message="form.errors.classroom_id" class="text-red-500" />
+                    <Classroom :data="classrooms" :selectedData="selectedClassroom" @selected-items-updated="handleSelectedClassroomsUpdated" />
                 </div>
 
             </template>

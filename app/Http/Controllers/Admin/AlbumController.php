@@ -23,7 +23,7 @@ class AlbumController extends Controller
                 ->limit(1)
             ])
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate(20);
     
         // Pass the data to the Inertia view
         return Inertia::render('Admin/Albums/Index', [

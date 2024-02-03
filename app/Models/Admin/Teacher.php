@@ -31,9 +31,9 @@ class Teacher extends Model
         return $this->belongsTo(Subject::class, 'subject_id');
     }
 
-    public function classroom()
+    public function classrooms()
     {
-        return $this->belongsTo(Classroom::class, 'classroom_id');
+        return $this->belongsToMany(Classroom::class, 'teacher_has_classrooms', 'teacher_id', 'classroom_id');
     }
     
     public function createdBy()
