@@ -440,6 +440,23 @@ Route::prefix('admin')->middleware([
             'student' => $student,
         ]);
     })->name('id-cards.show');
+
+    Route::get('/testimonials/{testimonial}', function ($testimonial) {
+        // Assuming 'student_id' is the column in the Student model for student identifier
+        $student = Student::where('student_id', $testimonial)->first();
+
+        if (!$student) {
+            // Handle the case when the student is not found
+            abort(404, 'Student not found');
+        }
+
+        $classroom = Classroom::where('id', $student->classroom_id)->with(['grade', 'section', 'group'])->first();
+
+        return Inertia::render('Admin/Layouts/Testimonial', [
+            'classroom' => $classroom,
+            'student' => $student,
+        ]);
+    })->name('testimonials.show');
 });
 
 

@@ -2,7 +2,7 @@
 <script setup>
 
 import { useForm } from '@inertiajs/vue3';
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive, computed, watch, onMounted } from 'vue';
 
 import FormSection from '@/Components/FormSection.vue';
 import ActionMessage from '@/Components/ActionMessage.vue';
@@ -15,6 +15,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import DateInput from '@/Components/DateInput.vue';
 import SelectInput from '@/Components/SelectInput.vue';
+import SelectDistrict from '@/Components/Admin/SelectDistrict.vue';
 
 const { classroom } = defineProps(['classroom']);
 
@@ -35,8 +36,14 @@ const form = useForm({
     mother_name_bn: '',
     guardian_name_en: '',
     guardian_name_bn: '',
-    address_en: '',
-    address_bn: '',
+    village_en: '',
+    village_bn: '',
+    post_office_en: '',
+    post_office_bn: '',
+    upazila_en: "Rajoir",
+    upazila_bn: "রাজৈর",
+    district_en: "Madaripur",
+    district_bn: "মাদারীপুর",
     gender_en: '',
     gender_bn: '',
     religion_en: '',
@@ -51,6 +58,11 @@ const form = useForm({
     photo: null,
 });
 
+const selectedEnDistrict = form.district_en; 
+const selectedEnUpazila = form.upazila_en; 
+
+const selectedBnDistrict = form.district_bn; 
+const selectedBnUpazila = form.upazila_bn; 
 
 const currentYear = new Date().getFullYear();
 
@@ -75,7 +87,7 @@ const selectedSession = ref({ id: '', name: '' });
 if (classroom.grade.name < 11) {
     const selectedSessionOption = singleYearSessions.find(session => session.name == currentYear);
     if (selectedSessionOption) {
-        form.session = selectedSessionOption.name; 
+        form.session = selectedSessionOption.name;
         selectedSession.value = { id: selectedSessionOption.id, name: selectedSessionOption.name };
     } else {
         selectedSession.value = { id: '', name: '' };
@@ -83,7 +95,7 @@ if (classroom.grade.name < 11) {
 } else {
     const selectedSessionOption = twoYearSessions.find(session => session.name == `${currentYear}-${(currentYear + 1).toString().slice(-2)}`);
     if (selectedSessionOption) {
-        form.session = selectedSessionOption.name; 
+        form.session = selectedSessionOption.name;
         selectedSession.value = { id: selectedSessionOption.id, name: selectedSessionOption.name };
     } else {
         selectedSession.value = { id: '', name: '' };
@@ -122,7 +134,7 @@ const handleSessionSelected = (selectedLabel) => {
     } else {
         const selectedSessionOption = twoYearSessions.find(session => session.id == selectedId);
         if (selectedSessionOption) {
-            form.session = selectedSessionOption.name; 
+            form.session = selectedSessionOption.name;
         }
     }
 
@@ -232,6 +244,7 @@ const handleGenderSelected = (selectedLabel) => {
 
 };
 
+
 const handleReligionSelected = (selectedLabel) => {
     const selectedId = parseInt(selectedLabel); // Convert selected label to integer
 
@@ -269,6 +282,25 @@ const handleDisabilityStatusSelected = (selectedLabel) => {
 };
 
 
+const handleDistrictSelected = (district) => {
+    form.district_en = district.en; // Set English
+    form.district_bn = district.bn; // Set Bengali
+    console.log(district);
+};
+
+const handleUpazilaSelected = (upazila) => {
+    form.upazila_en = upazila.en; // Set English
+    form.upazila_bn = upazila.bn; // Set Bengali
+    console.log(upazila);
+};
+
+
+
+// onMounted(() => {
+//     console.log(district);
+//   console.log(upazila);
+
+// });
 
 const photoPreview = ref(null);
 
@@ -552,14 +584,27 @@ const createStudent = () => {
                         <InputError :message="form.errors.mother_name_en" class="text-red-500" />
                     </div>
 
+                    <SelectDistrict :lang="'en'" :fieldName="'name'" :valueField="'id'" :selectedEnDistrict="selectedEnDistrict" :selectedEnUpazila="selectedEnUpazila" 
+                        @district-selected="handleDistrictSelected" @upazila-selected="handleUpazilaSelected" />
+
                     <div class="col-span-6 sm:col-span-4">
-                        <InputLabel for="address_en" value="Address (English)">
+                        <InputLabel for="post_office_en" value="Post Office (English)">
                             <!-- <template #required>*</template> -->
                         </InputLabel>
-                        <TextArea id="address_en" v-model="form.address_en" class="mt-1 block w-full"
-                            :class="{ 'border-red-500 focus:border-red-500': form.errors.address_en }" type="text"
-                            name="address_en" />
-                        <InputError :message="form.errors.address_en" class="text-red-500" />
+                        <TextInput id="post_office_en" v-model="form.post_office_en" required class="mt-1 block w-full"
+                            :class="{ 'border-red-500 focus:border-red-500': form.errors.post_office_en }" type="text"
+                            name="post_office_en" />
+                        <InputError :message="form.errors.post_office_en" class="text-red-500" />
+                    </div>
+
+                    <div class="col-span-6 sm:col-span-4">
+                        <InputLabel for="village_en" value="Village (English)">
+                            <!-- <template #required>*</template> -->
+                        </InputLabel>
+                        <TextInput id="village_en" v-model="form.village_en" required class="mt-1 block w-full"
+                            :class="{ 'border-red-500 focus:border-red-500': form.errors.village_en }" type="text"
+                            name="village_en" />
+                        <InputError :message="form.errors.village_en" class="text-red-500" />
                     </div>
 
                     <div class="col-span-6 sm:col-span-4">
@@ -607,14 +652,28 @@ const createStudent = () => {
                         <InputError :message="form.errors.mother_name_bn" class="text-red-500" />
                     </div>
 
+                    
+                    <SelectDistrict :lang="'bn'" :fieldName="'name'" :valueField="'id'" :selectedBnDistrict="selectedBnDistrict" :selectedBnUpazila="selectedBnUpazila" 
+                        @district-selected="handleDistrictSelected" @upazila-selected="handleUpazilaSelected" />
+
                     <div class="col-span-6 sm:col-span-4">
-                        <InputLabel for="address_bn" value="Address (বাংলা)">
+                        <InputLabel for="post_office_bn" value="Post Office (বাংলা)">
                             <!-- <template #required>*</template> -->
                         </InputLabel>
-                        <TextArea id="address_bn" v-model="form.address_bn" class="mt-1 block w-full"
-                            :class="{ 'border-red-500 focus:border-red-500': form.errors.address_bn }" type="text"
-                            name="address_bn" />
-                        <InputError :message="form.errors.address_bn" class="text-red-500" />
+                        <TextInput id="post_office_bn" v-model="form.post_office_bn" required class="mt-1 block w-full"
+                            :class="{ 'border-red-500 focus:border-red-500': form.errors.post_office_bn }" type="text"
+                            name="post_office_bn" />
+                        <InputError :message="form.errors.post_office_bn" class="text-red-500" />
+                    </div>
+
+                    <div class="col-span-6 sm:col-span-4">
+                        <InputLabel for="village_bn" value="Village (বাংলা)">
+                            <!-- <template #required>*</template> -->
+                        </InputLabel>
+                        <TextInput id="village_bn" v-model="form.village_bn" required class="mt-1 block w-full"
+                            :class="{ 'border-red-500 focus:border-red-500': form.errors.village_bn }" type="text"
+                            name="village_bn" />
+                        <InputError :message="form.errors.village_bn" class="text-red-500" />
                     </div>
 
                     <div class="col-span-6 sm:col-span-4">

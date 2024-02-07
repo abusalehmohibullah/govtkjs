@@ -31,7 +31,7 @@
           <!-- End of v-if directive -->
         </div>
 
-        <!-- <div class="child-container mb-2 animate-on-scroll" data-animation="fadeInUp">
+        <div class="child-container mb-2 animate-on-scroll" data-animation="fadeInUp">
           <div class="d-flex align-items-center position-relative w-full">
 
             <div class="show-first-child card m-2 w-full hover-deep position-relative">
@@ -56,7 +56,7 @@
               </div>
             </div>
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
   </div>

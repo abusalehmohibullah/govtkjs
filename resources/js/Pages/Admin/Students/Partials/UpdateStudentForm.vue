@@ -15,6 +15,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import DateInput from '@/Components/DateInput.vue';
 import SelectInput from '@/Components/SelectInput.vue';
+import SelectDistrict from '@/Components/Admin/SelectDistrict.vue';
 
 const { student, classrooms } = defineProps(['student', 'classrooms']);
 
@@ -35,8 +36,14 @@ const form = useForm({
     mother_name_bn: student.mother_name_bn,
     guardian_name_en: student.guardian_name_en,
     guardian_name_bn: student.guardian_name_bn,
-    address_en: student.address_en,
-    address_bn: student.address_bn,
+    village_en: student.village_en,
+    village_bn: student.village_bn,
+    post_office_en: student.post_office_en,
+    post_office_bn: student.post_office_bn,
+    upazila_en: student.upazila_en,
+    upazila_bn: student.upazila_bn,
+    district_en: student.district_en,
+    district_bn: student.district_bn,
     gender_en: student.gender_en,
     gender_bn: student.gender_bn,
     religion_en: student.religion_en,
@@ -51,7 +58,11 @@ const form = useForm({
     photo: '',
 });
 
+const selectedEnDistrict = form.district_en; 
+const selectedEnUpazila = form.upazila_en; 
 
+const selectedBnDistrict = form.district_bn; 
+const selectedBnUpazila = form.upazila_bn; 
 
 const selectedClassroom = ref({ id: '', name: '' });
 const selectedClass = classrooms.find(classroom => classroom.id === form.classroom_id);
@@ -316,6 +327,19 @@ const handleDisabilityStatusSelected = (selectedLabel) => {
 
 
 
+const handleDistrictSelected = (district) => {
+    form.district_en = district.en; // Set English
+    form.district_bn = district.bn; // Set Bengali
+    console.log(district);
+};
+
+const handleUpazilaSelected = (upazila) => {
+    form.upazila_en = upazila.en; // Set English
+    form.upazila_bn = upazila.bn; // Set Bengali
+    console.log(upazila);
+};
+
+
 const photoPreview = ref(null);
 
 const previewPhoto = (event) => {
@@ -486,8 +510,8 @@ const updateStudent = () => {
                             <InputLabel for="session" value="Session">
                                 <template #required>*</template>
                             </InputLabel>
-                            <SelectInput :options="grade < 11 ? singleYearSessions : twoYearSessions"
-                                inputName="session" :fieldName="'name'" :valueField="'id'" :selectedOption="selectedSession"
+                            <SelectInput :options="grade < 11 ? singleYearSessions : twoYearSessions" inputName="session"
+                                :fieldName="'name'" :valueField="'id'" :selectedOption="selectedSession"
                                 @option-selected="handleSessionSelected" class="mt-1 capitalize" />
                         </div>
 
@@ -589,14 +613,27 @@ const updateStudent = () => {
                         <InputError :message="form.errors.mother_name_en" class="text-red-500" />
                     </div>
 
+                    <SelectDistrict :lang="'en'" :fieldName="'name'" :valueField="'id'" :selectedEnDistrict="selectedEnDistrict" :selectedEnUpazila="selectedEnUpazila" 
+                        @district-selected="handleDistrictSelected" @upazila-selected="handleUpazilaSelected" />
+
                     <div class="col-span-6 sm:col-span-4">
-                        <InputLabel for="address_en" value="Address (English)">
+                        <InputLabel for="post_office_en" value="Post Office (English)">
                             <!-- <template #required>*</template> -->
                         </InputLabel>
-                        <TextArea id="address_en" v-model="form.address_en" class="mt-1 block w-full"
-                            :class="{ 'border-red-500 focus:border-red-500': form.errors.address_en }" type="text"
-                            name="address_en" />
-                        <InputError :message="form.errors.address_en" class="text-red-500" />
+                        <TextInput id="post_office_en" v-model="form.post_office_en" required class="mt-1 block w-full"
+                            :class="{ 'border-red-500 focus:border-red-500': form.errors.post_office_en }" type="text"
+                            name="post_office_en" />
+                        <InputError :message="form.errors.post_office_en" class="text-red-500" />
+                    </div>
+
+                    <div class="col-span-6 sm:col-span-4">
+                        <InputLabel for="village_en" value="Village (English)">
+                            <!-- <template #required>*</template> -->
+                        </InputLabel>
+                        <TextInput id="village_en" v-model="form.village_en" required class="mt-1 block w-full"
+                            :class="{ 'border-red-500 focus:border-red-500': form.errors.village_en }" type="text"
+                            name="village_en" />
+                        <InputError :message="form.errors.village_en" class="text-red-500" />
                     </div>
 
                     <div class="col-span-6 sm:col-span-4">
@@ -644,14 +681,27 @@ const updateStudent = () => {
                         <InputError :message="form.errors.mother_name_bn" class="text-red-500" />
                     </div>
 
+                    <SelectDistrict :lang="'bn'" :fieldName="'name'" :valueField="'id'" :selectedBnDistrict="selectedBnDistrict" :selectedBnUpazila="selectedBnUpazila" 
+                        @district-selected="handleDistrictSelected" @upazila-selected="handleUpazilaSelected" />
+
                     <div class="col-span-6 sm:col-span-4">
-                        <InputLabel for="address_bn" value="Address (বাংলা)">
+                        <InputLabel for="post_office_bn" value="Post Office (বাংলা)">
                             <!-- <template #required>*</template> -->
                         </InputLabel>
-                        <TextArea id="address_bn" v-model="form.address_bn" class="mt-1 block w-full"
-                            :class="{ 'border-red-500 focus:border-red-500': form.errors.address_bn }" type="text"
-                            name="address_bn" />
-                        <InputError :message="form.errors.address_bn" class="text-red-500" />
+                        <TextInput id="post_office_bn" v-model="form.post_office_bn" required class="mt-1 block w-full"
+                            :class="{ 'border-red-500 focus:border-red-500': form.errors.post_office_bn }" type="text"
+                            name="post_office_bn" />
+                        <InputError :message="form.errors.post_office_bn" class="text-red-500" />
+                    </div>
+
+                    <div class="col-span-6 sm:col-span-4">
+                        <InputLabel for="village_bn" value="Village (বাংলা)">
+                            <!-- <template #required>*</template> -->
+                        </InputLabel>
+                        <TextInput id="village_bn" v-model="form.village_bn" required class="mt-1 block w-full"
+                            :class="{ 'border-red-500 focus:border-red-500': form.errors.village_bn }" type="text"
+                            name="village_bn" />
+                        <InputError :message="form.errors.village_bn" class="text-red-500" />
                     </div>
 
                     <div class="col-span-6 sm:col-span-4">
